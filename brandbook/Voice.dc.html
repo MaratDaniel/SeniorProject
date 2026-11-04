@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Voice</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;600;700&family=Golos+Text:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div style="width: 1280px; height: 800px; box-sizing: border-box; padding: 72px 80px; background: #F3F7F9; color: #0A2236; font-family: 'Golos Text', system-ui, sans-serif; display: grid; grid-template-columns: 440px 1fr; gap: 80px">
+<div style="display: flex; flex-direction: column; justify-content: space-between">
+<div>
+<h2 style="margin: 0; font-family: 'Unbounded', sans-serif; font-weight: 600; font-size: 36px; line-height: 1.2; letter-spacing: -0.02em; text-wrap: balance">Say what happened, then what to do.</h2>
+<p style="margin: 22px 0 0; font-size: 17px; line-height: 1.65; color: #2A3F4E">Adal speaks like a clerk who is calm, exact and on your side. Sentences are short and literal, with the number, the rule and the time.</p>
+</div>
+<div style="display: flex; flex-direction: column; gap: 14px; font-size: 15px; line-height: 1.5">
+<div style="display: grid; grid-template-columns: 56px 1fr; gap: 12px"><b style="color: #0B6E8A">Do</b><span>Use numbers, “you”, and a clear next step.</span></div>
+<div style="display: grid; grid-template-columns: 56px 1fr; gap: 12px"><b style="color: #A12B1F">Avoid</b><span>“Hurry!”, “Don’t miss out”, “Oops”, and blaming the user.</span></div>
+</div>
+</div>
+<div style="display: flex; flex-direction: column; justify-content: center">
+<div style="padding: 22px 0; border-top: 1px solid #D5E0E6"><div style="font-size: 13px; color: #4F6472; font-weight: 600; margin-bottom: 6px">Bid arrived a moment late</div><div style="font-size: 22px; line-height: 1.4; font-weight: 500">Your bid was not placed. Someone bid higher first. The price is now <span style="font-family: 'JetBrains Mono', monospace; font-weight: 700">240.00</span>.</div></div>
+<div style="padding: 22px 0; border-top: 1px solid #D5E0E6"><div style="font-size: 13px; color: #4F6472; font-weight: 600; margin-bottom: 6px">Last two minutes</div><div style="font-size: 22px; line-height: 1.4; font-weight: 500">A bid near the end extends the auction, so everyone gets a fair last chance. [Extension length to be confirmed]</div></div>
+<div style="padding: 22px 0; border-top: 1px solid #D5E0E6"><div style="font-size: 13px; color: #4F6472; font-weight: 600; margin-bottom: 6px">Finalizing a purchase</div><div style="font-size: 22px; line-height: 1.4; font-weight: 500">Enter a fresh code from your authenticator app to confirm this purchase.</div></div>
+<div style="padding: 22px 0; border-top: 1px solid #D5E0E6; border-bottom: 1px solid #D5E0E6"><div style="font-size: 13px; color: #4F6472; font-weight: 600; margin-bottom: 6px">Closed without a sale</div><div style="font-size: 22px; line-height: 1.4; font-weight: 500">No sale. The highest bid was below the seller’s reserve.</div></div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":800}}'>
+class Component extends DCLogic {
+renderVals() {
+return {};
+}
+}
+</script>
+</body>
+</html>

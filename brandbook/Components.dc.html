@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Interface</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;600;700&family=Golos+Text:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap">
+<style>
+body{margin:0}
+button{cursor:pointer;transition:scale 150ms ease-out,filter 150ms ease-out}
+button:disabled{cursor:not-allowed}
+@media (hover:hover){button:not(:disabled):hover{filter:brightness(0.92)}}
+button:not(:disabled):active{scale:0.96}
+:focus-visible{outline:2px solid #0B6E8A;outline-offset:2px}
+@media (prefers-reduced-motion:reduce){button{transition:none}button:not(:disabled):active{scale:1}}
+</style>
+</helmet>
+<div style="width: 1280px; height: 800px; box-sizing: border-box; padding: 64px 80px; background: #F3F7F9; color: #0A2236; font-family: 'Golos Text', system-ui, sans-serif; display: grid; grid-template-columns: 1fr 1fr; gap: 72px">
+<div style="display: flex; flex-direction: column; justify-content: space-between">
+<div>
+<h2 style="margin: 0; font-family: 'Unbounded', sans-serif; font-weight: 600; font-size: 36px; line-height: 1.2; letter-spacing: -0.02em; text-wrap: balance">The price is the loudest thing on the screen.</h2>
+<p style="margin: 18px 0 0; font-size: 16px; line-height: 1.6; color: #2A3F4E">One element wins the eye: the live price, in gold on night. Everything else stays quiet, with 44 px targets and visible labels.</p>
+</div>
+<div style="background: #0A2236; border-radius: 20px; padding: 28px 32px; color: #F3F7F9; display: flex; justify-content: space-between; align-items: flex-end">
+<div>
+<div style="font-size: 14px; color: #A9C7D5; font-weight: 600">Current price</div>
+<div style="font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 80px; line-height: 1; color: #F2B632; margin-top: 6px">240.00</div>
+</div>
+<div style="text-align: right"><div style="font-size: 14px; color: #7FE0BC; font-weight: 600">Live · 142 watching</div><div style="font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 28px; margin-top: 6px">00:14:59</div></div>
+</div>
+</div>
+<div style="display: flex; flex-direction: column; justify-content: center; gap: 36px">
+<div>
+<label for="bid-a" style="font-size: 14px; font-weight: 700">Your bid</label>
+<div style="display: flex; gap: 12px; margin-top: 8px">
+<input id="bid-a" type="text" value="245.00" style="flex: 1; min-width: 0; height: 56px; box-sizing: border-box; border: 2px solid #0B6E8A; border-radius: 12px; padding: 0 16px; font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 24px; color: #0A2236; background: #FFFFFF">
+<button style="height: 56px; border: 0; border-radius: 12px; background: #0B6E8A; color: #FFFFFF; font-family: 'Golos Text', sans-serif; font-weight: 700; font-size: 16px; padding: 0 32px">Place bid</button>
+</div>
+<div style="font-size: 14px; color: #4F6472; margin-top: 8px">Minimum bid 245.00 · increment 5.00</div>
+</div>
+<div>
+<label for="bid-b" style="font-size: 14px; font-weight: 700">When a bid is rejected</label>
+<input id="bid-b" type="text" value="220.00" style="display: block; width: 100%; box-sizing: border-box; margin-top: 8px; height: 56px; border: 2px solid #A12B1F; border-radius: 12px; padding: 0 16px; font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 24px; color: #0A2236; background: #FFFFFF">
+<div style="font-size: 14px; color: #A12B1F; font-weight: 600; margin-top: 8px">Bid must be at least 245.00.</div>
+</div>
+<div style="display: flex; gap: 12px; flex-wrap: wrap">
+<button style="height: 48px; border: 0; border-radius: 12px; background: #0B6E8A; color: #FFFFFF; font-family: 'Golos Text', sans-serif; font-weight: 700; font-size: 16px; padding: 0 24px">Accept this price</button>
+<button style="height: 48px; border: 1.5px solid #0A2236; border-radius: 12px; background: transparent; color: #0A2236; font-family: 'Golos Text', sans-serif; font-weight: 700; font-size: 16px; padding: 0 24px">Watch</button>
+<button style="height: 48px; border: 0; border-radius: 12px; background: #DCE5EA; color: #4F6472; font-family: 'Golos Text', sans-serif; font-weight: 700; font-size: 16px; padding: 0 24px" disabled>Closed · auction ended</button>
+</div>
+<div style="border-top: 1px solid #D5E0E6; padding-top: 22px">
+<div style="font-size: 16px; font-weight: 700">Confirm your purchase</div>
+<div style="font-size: 14px; color: #2A3F4E; margin-top: 4px; line-height: 1.5">Enter a fresh 6-digit code from your authenticator app.</div>
+<label for="otp" style="display: block; font-size: 14px; font-weight: 700; margin-top: 12px">Authenticator code</label>
+<input id="otp" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="6" value="48" style="margin-top: 8px; width: 100%; box-sizing: border-box; height: 52px; border: 2px solid #6C8494; border-radius: 10px; padding: 0 16px; background: #FFFFFF; color: #0A2236; font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 22px; letter-spacing: 0.4em">
+</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":800}}'>
+class Component extends DCLogic {
+renderVals() {
+return {};
+}
+}
+</script>
+</body>
+</html>

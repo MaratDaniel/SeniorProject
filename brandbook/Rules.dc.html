@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Usage Rules</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;600;700&family=Golos+Text:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div style="width: 1280px; height: 800px; box-sizing: border-box; padding: 64px 80px; background: #F3F7F9; color: #0A2236; font-family: 'Golos Text', system-ui, sans-serif; display: flex; flex-direction: column; gap: 40px">
+<h2 style="margin: 0; font-family: 'Unbounded', sans-serif; font-weight: 600; font-size: 36px; line-height: 1.2; letter-spacing: -0.02em; text-wrap: balance; max-width: 760px">Photographs, icons and access, in plain rules.</h2>
+<div style="flex: 1; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0; border-top: 1px solid #D5E0E6">
+<div style="padding: 32px 32px 0 0; border-right: 1px solid #D5E0E6; display: flex; flex-direction: column; gap: 18px">
+<div style="font-family: 'Unbounded', sans-serif; font-weight: 600; font-size: 22px; letter-spacing: -0.02em">Photography</div>
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px">
+<div style="aspect-ratio: 3 / 4; background: #DCE5EA; border-radius: 999px 999px 10px 10px; display: flex; align-items: center; justify-content: center; font-size: 13px; color: #4F6472; font-weight: 600">Full item</div>
+<div style="aspect-ratio: 3 / 4; background: #DCE5EA; border-radius: 999px 999px 10px 10px; display: flex; align-items: center; justify-content: center; font-size: 13px; color: #4F6472; font-weight: 600">Detail</div>
+</div>
+<div style="display: flex; flex-direction: column; gap: 10px; font-size: 15px; line-height: 1.5; color: #2A3F4E">
+<div>Show the real item, large, in even light. Portrait crop in an arch-topped frame, the shape of the mark.</div>
+<div>Include every flaw in a detail shot. Condition is part of the price.</div>
+<div>Never place the logo or text over a photograph.</div>
+</div>
+</div>
+<div style="padding: 32px; border-right: 1px solid #D5E0E6; display: flex; flex-direction: column; gap: 18px">
+<div style="font-family: 'Unbounded', sans-serif; font-weight: 600; font-size: 22px; letter-spacing: -0.02em">Icons</div>
+<div style="display: flex; gap: 22px; color: #0A2236">
+<svg width="32" height="32" viewBox="0 0 24 24" role="img" aria-label="Clock"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 7 V12 L15 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+<svg width="32" height="32" viewBox="0 0 24 24" role="img" aria-label="Eye"><path d="M2 12 C5 6 19 6 22 12 C19 18 5 18 2 12 Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><circle cx="12" cy="12" r="3" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+<svg width="32" height="32" viewBox="0 0 24 24" role="img" aria-label="Shield"><path d="M12 3 L20 6 V12 C20 17 16 20 12 21 C8 20 4 17 4 12 V6 Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
+<svg width="32" height="32" viewBox="0 0 24 24" role="img" aria-label="Bell"><path d="M6 17 V11 C6 7.5 8.5 5 12 5 C15.5 5 18 7.5 18 11 V17 L20 19 H4 Z M10 21 H14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+<svg width="32" height="32" viewBox="0 0 24 24" role="img" aria-label="Check"><path d="M5 12.5 L10 17.5 L19 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+</div>
+<div style="display: flex; flex-direction: column; gap: 10px; font-size: 15px; line-height: 1.5; color: #2A3F4E">
+<div>One outline set, 2 px stroke, round ends.</div>
+<div>Icons take the color of the text beside them.</div>
+<div>Fill an icon only to show the active state.</div>
+<div>An icon without a visible word needs an accessible name.</div>
+</div>
+</div>
+<div style="padding: 32px 0 0 32px; display: flex; flex-direction: column; gap: 18px">
+<div style="font-family: 'Unbounded', sans-serif; font-weight: 600; font-size: 22px; letter-spacing: -0.02em">Access</div>
+<div style="display: flex; align-items: center; gap: 14px"><span style="width: 56px; height: 44px; border-radius: 10px; background: #0B6E8A; color: #FFFFFF; display: inline-flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px; outline: 2px solid #0B6E8A; outline-offset: 3px">Bid</span><span style="font-size: 14px; color: #4F6472">44 px target, 2 px focus ring (light on night)</span></div>
+<div style="display: flex; flex-direction: column; gap: 10px; font-size: 15px; line-height: 1.5; color: #2A3F4E">
+<div>Every field has a visible label. A placeholder is not a label.</div>
+<div>Color never carries meaning alone. Pair it with a word or icon.</div>
+<div>Layouts are drawn for 360 px wide. Test 320 px and 200% zoom before release.</div>
+<div>Motion is off under reduced-motion settings. A cross-fade replaces it.</div>
+</div>
+</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":800}}'>
+class Component extends DCLogic {
+renderVals() {
+return {};
+}
+}
+</script>
+</body>
+</html>

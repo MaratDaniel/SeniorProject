@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>App screens</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300;12..96,400;12..96,500;12..96,600&family=Instrument+Sans:wght@400;500;600;700&family=Outfit:wght@500&display=swap">
+<style>
+body{margin:0}
+button{cursor:pointer;font-family:'Instrument Sans',system-ui,sans-serif;transition:scale 250ms cubic-bezier(.22,1,.36,1),filter 300ms ease-out}
+@media (hover:hover){button:not(:disabled):hover{filter:brightness(1.18)}}
+button:not(:disabled):active{scale:0.97}
+:focus-visible{outline:2px solid #3B5F4F;outline-offset:2px}
+@media (prefers-reduced-motion:reduce){button{transition:none}button:not(:disabled):active{scale:1}}
+</style>
+</helmet>
+<svg width="0" height="0" style="position: absolute" aria-hidden="true"><filter id="grain" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/></filter></svg>
+<div style="width: 1280px; height: 960px; box-sizing: border-box; padding: 80px 40px; background: #E3E8E3; color: #0F1512; font-family: 'Instrument Sans', system-ui, sans-serif; font-variant-numeric: tabular-nums; display: flex; justify-content: space-between">
+
+<div style="width: 360px; height: 800px; box-sizing: border-box; border: 1px solid #BFC8C1; border-radius: 32px; background: #F4F6F3; overflow: hidden; display: flex; flex-direction: column">
+<div style="display: flex; align-items: center; gap: 10px; padding: 18px 20px 10px"><svg width="26" height="26" viewBox="0 0 48 48" role="img" aria-label="Adal mark" style="color: #0F1512"><g><path d="M6 28 H42" stroke="currentColor" stroke-width="4.2" stroke-linecap="round" fill="none"/><circle cx="13" cy="19.2" r="6.8" fill="currentColor"/><circle cx="35" cy="19.2" r="6.8" fill="currentColor"/></g><path d="M24 31 L18 43 H30 Z" fill="currentColor"/><circle cx="24" cy="28" r="3.9" fill="#85601C"/></svg><span style="font-family: 'Outfit', system-ui, sans-serif; font-size: 24px font-weight: 500;">Adal</span></div>
+<div style="padding: 8px 20px 14px"><h2 style="margin: 0; font-family: 'Bricolage Grotesque', system-ui, sans-serif; font-weight: 300; font-size: 38px; line-height: 1.05; letter-spacing: -0.03em">Live <i style="font-style: normal; color: #85601C">now</i></h2></div>
+<div style="flex: 1; padding: 0 20px; display: flex; flex-direction: column; gap: 20px; overflow: hidden">
+<div style="display: flex; flex-direction: column; gap: 10px">
+<div style="position: relative; overflow: hidden; border-radius: 14px; height: 190px; background: #1E2124"><img src="./img/balance.jpg" alt="Gilt brass balance on a marble base" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 62%"></div>
+<div style="display: flex; justify-content: space-between; gap: 12px"><div><div style="font-weight: 600; font-size: 16px">[Listing title]</div><div style="font-size: 13px; color: #505B54; margin-top: 2px">English · closes 20:00</div></div><div style="text-align: right"><div style="font-weight: 500; font-size: 22px">240.00</div><div style="font-size: 13px; font-weight: 600; color: #3B5F4F">Live</div></div></div>
+</div>
+<div style="display: flex; gap: 14px; align-items: center">
+<div style="flex: 0 0 96px; height: 96px; position: relative; overflow: hidden; border-radius: 12px; background: #27302B"><img src="./img/scales.jpg" alt="Brass weights and small scales" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 45%"></div>
+<div style="flex: 1; min-width: 0"><div style="font-weight: 600; font-size: 16px">[Listing title]</div><div style="font-size: 13px; color: #505B54; margin-top: 2px">Dutch · falls every minute</div><div style="font-weight: 500; font-size: 20px; margin-top: 6px">180.00</div></div>
+</div>
+<div style="display: flex; gap: 14px; align-items: center">
+<div style="flex: 0 0 96px; height: 96px; position: relative; overflow: hidden; border-radius: 12px; background: #C9CBD2"><img src="./img/beam.jpg" alt="Iron beam balance" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 45%"></div>
+<div style="flex: 1; min-width: 0"><div style="font-weight: 600; font-size: 16px">[Listing title]</div><div style="font-size: 13px; color: #505B54; margin-top: 2px">Vickrey · closes Sat 18:00</div><div style="font-size: 13px; font-weight: 600; color: #85601C; margin-top: 6px">Ending soon</div></div>
+</div>
+</div>
+<nav aria-label="Tabs" style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); background: #FFFFFF; border-top: 1px solid #D5DBD5; padding: 6px 8px 16px">
+<button style="height: 56px; border: 0; background: transparent; color: #3B5F4F; font-weight: 700; font-size: 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px"><svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M16 16 L20 20" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>Browse</button>
+<button style="height: 56px; border: 0; background: transparent; color: #505B54; font-weight: 600; font-size: 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px"><svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 7 V12 H15.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>My bids</button>
+<button style="height: 56px; border: 0; background: transparent; color: #505B54; font-weight: 600; font-size: 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px"><svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M4 20 C4 16 8 14 12 14 C16 14 20 16 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>Account</button>
+</nav>
+</div>
+
+<div style="width: 360px; height: 800px; box-sizing: border-box; border: 1px solid #BFC8C1; border-radius: 32px; background: #F4F6F3; overflow: hidden; display: flex; flex-direction: column">
+<div style="position: relative; height: 270px; flex: 0 0 auto; overflow: hidden; background: #1E2124"><img src="./img/balance.jpg" alt="Gilt brass balance on a marble base" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 58%">
+<button aria-label="Back" style="position: absolute; left: 10px; top: 10px; width: 44px; height: 44px; border: 0; border-radius: 50%; background: rgba(244,246,243,0.85); color: #0F1512; display: inline-flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5 L8 12 L15 19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
+<div style="padding: 18px 20px 12px; display: flex; flex-direction: column; gap: 12px; flex: 1; overflow: hidden">
+<div><div style="font-size: 13px; color: #505B54">English · Lot 0412</div><div style="font-family: 'Bricolage Grotesque', system-ui, sans-serif; font-weight: 300; font-size: 30px; line-height: 1.08; letter-spacing: -0.03em; margin-top: 2px; overflow-wrap: break-word">[Listing title]</div></div>
+<div style="display: flex; justify-content: space-between; align-items: flex-end; gap: 12px"><div><div style="font-size: 13px; color: #505B54">Current price</div><div style="font-weight: 500; font-size: 52px; line-height: 1.05; letter-spacing: -0.03em">240.00</div></div><div style="text-align: right; padding-bottom: 6px"><div style="font-weight: 600; font-size: 20px">02:14:06</div><div style="font-size: 12px; color: #505B54">Closes Fri 6 Nov, 20:00</div></div></div>
+<div style="display: flex; align-items: center; gap: 8px; background: #E5EDE8; color: #3B5F4F; border-radius: 10px; padding: 9px 12px; font-size: 14px; font-weight: 600"><svg width="13" height="13" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 6.5 L5 9.5 L10 3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Winning: you hold the highest bid</div>
+</div>
+<div style="background: #FFFFFF; border-top: 1px solid #D5DBD5; padding: 14px 20px 20px; display: flex; flex-direction: column; gap: 10px">
+<div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px">
+<button style="height: 48px; border: 1.5px solid #3B5F4F; border-radius: 10px; background: #E5EDE8; color: #0F1512; font-weight: 600; font-size: 15px">245.00</button>
+<button style="height: 48px; border: 1px solid #98A39B; border-radius: 10px; background: #FFFFFF; color: #0F1512; font-weight: 600; font-size: 15px">250.00</button>
+<button style="height: 48px; border: 1px solid #98A39B; border-radius: 10px; background: #FFFFFF; color: #0F1512; font-weight: 600; font-size: 15px">260.00</button>
+</div>
+<div style="font-size: 13px; font-weight: 600; color: #27302B">A bid is a binding commitment to buy.</div>
+<button style="height: 54px; border: 0; border-radius: 10px; background: #3B5F4F; color: #F4F6F3; font-weight: 600; font-size: 16px">Place bid · 245.00</button>
+</div>
+</div>
+
+<div style="width: 360px; height: 800px; box-sizing: border-box; border: 1px solid #BFC8C1; border-radius: 32px; position: relative; overflow: hidden; background: radial-gradient(90% 70% at 40% 40%, #3C5E4F 0%, #3B5F4F 50%, #1E3228 100%); color: #F4F6F3; display: flex; flex-direction: column; justify-content: space-between; padding: 36px 28px 28px">
+<div style="position: absolute; inset: 0; filter: url(#grain); opacity: 0.22; mix-blend-mode: multiply"></div>
+<div style="position: absolute; left: 40%; top: 38%; width: 200px; height: 200px; margin: -100px 0 0 -100px; background: radial-gradient(circle, rgba(246,240,200,0.5) 0%, rgba(246,240,200,0) 65%)"></div>
+<div style="position: absolute; left: 40%; top: 38%; width: 7px; height: 7px; margin: -3px 0 0 -3px; border-radius: 50%; background: #F6F0C8"></div>
+<div style="position: relative; display: flex; align-items: center; gap: 10px"><svg width="26" height="26" viewBox="0 0 48 48" role="img" aria-label="Adal mark"><g><path d="M6 28 H42" stroke="currentColor" stroke-width="4.2" stroke-linecap="round" fill="none"/><circle cx="13" cy="19.2" r="6.8" fill="currentColor"/><circle cx="35" cy="19.2" r="6.8" fill="currentColor"/></g><path d="M24 31 L18 43 H30 Z" fill="currentColor"/><circle cx="24" cy="28" r="3.9" fill="#DDBB70"/></svg><span style="font-family: 'Outfit', system-ui, sans-serif; font-size: 24px font-weight: 500;">Adal</span></div>
+<div style="position: relative; display: flex; flex-direction: column; gap: 8px">
+<div style="font-size: 14px; font-weight: 500; color: #B4C7BC">Lot 0412 · sold to you</div>
+<div style="font-family: 'Bricolage Grotesque', system-ui, sans-serif; font-weight: 300; font-size: 76px; line-height: 1; letter-spacing: -0.03em">You <i style="font-style: normal; color: #DDBB70">won.</i></div>
+<div style="font-weight: 500; font-size: 48px; line-height: 1.1; letter-spacing: -0.03em; margin-top: 6px">240.00</div>
+<p style="margin: 10px 0 0; font-size: 16px; line-height: 1.55; color: #CFDAD2">Confirm with a fresh code from your authenticator app to complete the purchase.</p>
+</div>
+<div style="position: relative; display: flex; flex-direction: column; gap: 10px">
+<button style="height: 54px; border: 0; border-radius: 10px; background: #F4F6F3; color: #0F1512; font-weight: 600; font-size: 16px">Confirm purchase</button>
+<button style="height: 48px; border: 1px solid rgba(244,246,243,0.6); border-radius: 10px; background: transparent; color: #F4F6F3; font-weight: 600; font-size: 15px">View receipt</button>
+</div>
+</div>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":960}}'>
+class Component extends DCLogic {
+renderVals() {
+return {};
+}
+}
+</script>
+</body>
+</html>

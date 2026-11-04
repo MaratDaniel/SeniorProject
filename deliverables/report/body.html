@@ -1,0 +1,229 @@
+<header class="cover">
+  <div class="in">
+    <div class="cover-l">
+      <div class="brand">{{MARK_DARK}}<span>Adal</span></div>
+      <h1>A fair auction, built and <i>shown.</i></h1>
+      <p>End-of-term report and video plan for the Online Auction Service. A draft for the team to review and revise.</p>
+      <div class="cover-meta"><span><b>Team</b> Magzhan, Daniel, Sultanbek, Ayan, Zhibek</span><span><b>Advisor</b> Prof. Michel Lewis</span><span><b>Draft</b> 3 November 2026</span></div>
+    </div>
+    <figure class="cover-r"><img src="./img/auction-room.jpg" alt="Hand-coloured print of Christie&#8217;s Auction Room, London, 1808" width="2000" height="1604"></figure>
+  </div>
+</header>
+
+<div class="in shell">
+<nav class="rail" aria-label="Report sections">
+  <p>Words underlined like {{T}} are placeholders. Only the team can fill them in.</p>
+  <ul>
+    <li><a href="#summary">In short</a></li>
+    <li><a href="#mvp">What the MVP shows</a></li>
+    <li><a href="#architecture">Architecture and choices</a></li>
+    <li><a href="#sector">Sector assessment</a></li>
+    <li><a href="#brand">Brand language</a></li>
+    <li><a href="#management">How we run the project</a></li>
+    <li><a href="#rollout">Rollout timeline</a></li>
+    <li><a href="#video">The video</a></li>
+    <li><a href="#open">What is still open</a></li>
+  </ul>
+</nav>
+
+<main>
+<details class="toc-m"><summary>Contents</summary><ul>
+  <li><a href="#summary">In short</a></li><li><a href="#mvp">What the MVP shows</a></li><li><a href="#architecture">Architecture and choices</a></li><li><a href="#sector">Sector assessment</a></li><li><a href="#brand">Brand language</a></li><li><a href="#management">How we run the project</a></li><li><a href="#rollout">Rollout timeline</a></li><li><a href="#video">The video</a></li><li><a href="#open">What is still open</a></li>
+</ul></details>
+
+<section id="summary">
+  <h2>In <i>short.</i></h2>
+  <p class="lede">Adal is an auction service where bidding stays correct when many people bid at once: one winner and one price, every time.</p>
+  <div class="rows">
+    <div class="row"><b>The problem</b><div class="stack"><p>Most auction platforms offer one or two ways to sell, and rarely explain how they stay correct when bids arrive in the same instant. A buyer has to trust the price and the clock without seeing either work.</p></div></div>
+    <div class="row"><b>Our answer</b><div class="stack"><p>A seller picks the format per listing: English, Dutch, sealed first-price or sealed second-price (Vickrey). All four run on one engine. The server clock is the only authority, and the database decides who won by locking.</p></div></div>
+    <div class="row"><b>The fall MVP</b><div class="stack"><p>Accounts with email verification and a second factor, listings with browse and search, English auctions with sniping protection and live updates, automatic closing, one transaction per sale finalized with a fresh code, an audit log, concurrency tests and a usability test.</p></div></div>
+    <div class="row"><b>Where we are</b><div class="stack"><p>The requirements and design document (v2) and the brand system are finished. Engineering progress needs the team's own status: {{T}}.</p><p>{{DONE}} requirements and design v2 &nbsp;·&nbsp; {{DONE}} brand and interface boards &nbsp;·&nbsp; {{TBC}} backend and front end</p></div></div>
+    <div class="row"><b>What comes next</b><div class="stack"><p>Spring 2027 adds the Dutch, sealed first-price and Vickrey formats, notifications, the admin dashboard and the full evaluation.</p></div></div>
+  </div>
+</section>
+
+<section id="mvp">
+  <h2>What the MVP <i>shows.</i></h2>
+  <div class="split">
+    <div style="display:flex;flex-direction:column;gap:28px">
+      <p class="prose" style="max-width:56ch">The demo is one story told in order: a seller lists an item, two buyers compete for it, the clock closes it, and the winner pays. Each step is something the system must do correctly, not only look right.</p>
+      <ol class="steps">
+        <li><div><b>Register and secure the account</b><span>Email verification, then a TOTP second factor. It is mandatory for sellers and admins.</span></div></li>
+        <li><div><b>List an item</b><span>The seller chooses a format, sets start, end and a reserve that bidders never see.</span></div></li>
+        <li><div><b>Find it</b><span>Browse and search. Every card shows a word status and a written closing time.</span></div></li>
+        <li><div><b>Bid from two browsers</b><span>The price moves on both screens within a second. The beaten bidder is told "Outbid" in words.</span></div></li>
+        <li><div><b>Watch the close</b><span>A late bid extends the closing time (sniping protection). The auction then closes by itself.</span></div></li>
+        <li><div><b>Pay with a fresh code</b><span>The winner finalizes the purchase with a new MFA code. One sale makes exactly one transaction, and the audit log records it.</span></div></li>
+      </ol>
+    </div>
+    <figure class="photo"><div class="f"><img src="./img/scales.jpg" alt="A box of brass weights beside a small pair of scales, the demo lot" width="1535" height="1800" loading="lazy"></div><figcaption>Demo listing photographs are public-domain museum images (CC0). They are replaced by sellers' own photos.</figcaption></figure>
+  </div>
+</section>
+
+<section id="architecture">
+  <h2>Architecture and implementation <i>choices.</i></h2>
+  <p class="prose">Three layers in Docker containers. The browser shows state. Django applies the rules. PostgreSQL decides who won, and it is the only place where that is decided.</p>
+  <div class="arch" role="group" aria-label="Architecture, three layers inside Docker">
+    <span class="cap">Docker: the same stack on every machine</span>
+    <div class="layer"><h3>Browser</h3><div class="parts"><span>React</span><span>Responsive web app</span><span>Live price and countdown</span></div></div>
+    <div class="wire"><span>REST over HTTPS for actions &nbsp;·&nbsp; WebSocket for live updates</span></div>
+    <div class="layer"><h3>Application</h3><div class="parts"><span>Django REST Framework: accounts, listings, bids</span><span>Django Channels: pushes updates</span><span class="q">Auction engine, four strategy modules</span></div></div>
+    <div class="wire"><span>One transaction per bid, with the auction row locked</span></div>
+    <div class="layer"><h3>Data</h3><div class="parts"><span>PostgreSQL: row-level locking</span><span>Bids, auctions, transactions</span><span>Append-only audit log</span></div></div>
+  </div>
+
+  <div class="rows">
+    <div class="row"><b>One engine, four strategies</b><div class="stack"><p>English, Dutch, sealed first-price and Vickrey share one state machine and one place that validates a bid. Each format is a module that only decides what a valid bid is and who wins. Adding a format in spring does not touch the locking.</p></div></div>
+    <div class="row"><b>PostgreSQL row locking</b><div class="stack"><p>Two simultaneous bids cannot both read the same price and both win. The second waits for the first to commit, then is checked against the new price. The same mechanism makes sure a sale creates exactly one transaction.</p></div></div>
+    <div class="row"><b>Server clock</b><div class="stack"><p>Browsers show a countdown, but only the server's time decides whether a bid arrived in time. Nothing a client sends can move a deadline.</p></div></div>
+    <div class="row"><b>Channels for live updates</b><div class="stack"><p>Watchers hold a WebSocket and receive each accepted bid, so nobody refreshes. The target is that 95% of watchers see a new bid within 1 second.</p></div></div>
+    <div class="row"><b>React and Django REST</b><div class="stack"><p>A clear contract between screens and rules. Interface contracts let the front end build against mocked responses while the backend is still being written.</p></div></div>
+    <div class="row"><b>Security</b><div class="stack"><p>TOTP at login, and a second, fresh code to finalize a purchase. Controls follow the OWASP Top Ten (2021) items A01, A02, A03, A05, A07 and A09. Audit log entries cannot be edited through the application.</p></div></div>
+    <div class="row"><b>Docker</b><div class="stack"><p>One command starts the whole stack, so a teammate or an instructor can run the demo without setup.</p></div></div>
+  </div>
+
+  <h3>What happens to one bid</h3>
+  <ol class="steps">
+    <li><div><b>The bid arrives</b><span>The browser sends the amount over REST. The client's clock plays no part.</span></div></li>
+    <li><div><b>The auction row is locked</b><span>Any other bid on the same auction waits its turn.</span></div></li>
+    <li><div><b>Three checks</b><span>The auction is active, the server time is before the close, and the amount beats the current price by the minimum increment ({{T}}: fixed or a percentage).</span></div></li>
+    <li><div><b>Write and extend</b><span>The bid and the new price are stored. A bid near the end extends the close (sniping protection, length {{T}}).</span></div></li>
+    <li><div><b>Commit and release</b><span>The lock is freed. The next waiting bid is checked against the new price.</span></div></li>
+    <li><div><b>Broadcast</b><span>Channels sends the new price, time and status to every watcher.</span></div></li>
+  </ol>
+
+  <h3>Life of an auction</h3>
+  <div class="flow" role="img" aria-label="Scheduled, then active, then closed, no sale, or cancelled">
+    <span class="n">Scheduled</span><svg viewBox="0 0 22 12" aria-hidden="true"><path d="M0 6H20M15 1l5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+    <span class="n">Active</span><svg viewBox="0 0 22 12" aria-hidden="true"><path d="M0 6H20M15 1l5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+    <span class="n end">Closed, one winner</span><span class="n">No sale</span><span class="n bad">Cancelled</span>
+  </div>
+</section>
+
+<section id="sector">
+  <h2>Sector <i>assessment.</i></h2>
+  <p class="prose">We compare against the two systems that define the sector for us: eBay, which sells by ascending bids with automatic bidding, and the Royal FloraHolland clock, where the price falls until someone accepts. Sources: eBay and Royal FloraHolland public help pages, read on 4 November 2026. Cells marked {{T}} still need a check, a score or a screenshot by the team.</p>
+  <div class="tw"><table>
+    <thead><tr><th>Criterion</th><th>Adal</th><th>eBay</th><th>FloraHolland clock</th></tr></thead>
+    <tbody>
+      <tr><td>Selling formats</td><td class="us">English, Dutch, sealed first-price and Vickrey, chosen per listing</td><td>Ascending bids with automatic bidding</td><td>Falling-price clock</td></tr>
+      <tr><td>Bids at the same instant</td><td class="us">Row-level locking, server clock, one winner and one price, tested with concurrent bids</td><td>Highest bid wins; automatic bidding raises it up to your maximum</td><td>First buyer to stop the clock takes the lot</td></tr>
+      <tr><td>Live updates</td><td class="us">95% of watchers see a new bid within 1 second</td><td>Price and bids refresh on the listing page</td><td>Live clock; buy remotely or in the hall</td></tr>
+      <tr><td>Account security</td><td class="us">Email verification, TOTP at login, a fresh code to finalize a purchase</td><td>Account login; two-step verification optional ({{T}}, check)</td><td>Buyer account ({{T}}, check)</td></tr>
+      <tr><td>Usability</td><td class="us">One bidding desk for every format: price, written closing time, three presets, a binding-commitment line, a button that repeats the amount</td><td>{{T}}, scored</td><td>{{T}}, scored</td></tr>
+      <tr><td>Design</td><td class="us">One identity across website and app, photography first, status always a word plus an icon</td><td>{{T}}, screenshot</td><td>{{T}}, screenshot</td></tr>
+    </tbody></table></div>
+  <div class="rows">
+    <div class="row"><b>How we score usability and design</b><div class="stack"><p>Each system gets 1 to 5 on the same five questions, on the same pages: can a first-time bidder place a bid without help; is the closing time written out; is the result of a bid shown where the bid was made; is state conveyed by words as well as color; is the page readable on a phone.</p></div></div>
+    <div class="row"><b>Where we are stronger</b><div class="stack"><p>Variety of formats on one engine, a correctness story we can test and show, and a second factor at the point of purchase.</p></div></div>
+    <div class="row"><b>Where we are not</b><div class="stack"><p>Scale, reputation and fraud scoring, real payments and identity checks (KYC) are out of scope. We say so plainly in the report.</p></div></div>
+  </div>
+</section>
+
+<section id="brand">
+  <h2>Brand <i>language.</i></h2>
+  <p class="lede">Adal means fair and honest. In an auction, fairness is balance: the same rules, the same clock, the same weight for every bid.</p>
+  <div class="markrow">
+    <div class="mk-l">{{MARK_LIGHT}}<span>Adal</span></div>
+    <div class="mk-d">{{MARK_DARK}}<span>Adal</span></div>
+  </div>
+  <p class="prose">The mark is two identical weights on a level beam, resting on a fulcrum with one brass point where it balances. The beam is always level. It settles once when it first appears, as at the top of this page.</p>
+
+  <div class="sw" role="img" aria-label="Palette: stone, card, moss, ink, brass">
+    <div style="flex:4;background:#F4F6F3;color:#0F1512"><b>Stone</b>#F4F6F3, the page</div>
+    <div style="flex:3;background:#3B5F4F;color:#F4F6F3"><b>Moss</b>#3B5F4F, action</div>
+    <div style="flex:2;background:#0F1512;color:#F4F6F3"><b>Ink</b>#0F1512, text</div>
+    <div style="flex:1;background:#85601C;color:#F4F6F3"><b>Brass</b>#85601C</div>
+  </div>
+  <p class="sub">Almost everything is stone and ink. Moss carries action. Brass is rare: the balance point, Outbid, and Ending soon.</p>
+
+  <div class="type">
+    <div><div class="big">Every bid weighs the <i>same.</i></div><small>Bricolage Grotesque Light for the few big statements, with one word in brass.</small></div>
+    <div><div class="figs">245.00</div><small>Instrument Sans for everything read, with tabular figures so a ticking price never shifts.</small></div>
+  </div>
+
+  <div class="split">
+    <div style="display:flex;flex-direction:column;gap:28px">
+      <div class="statuses" aria-label="Status vocabulary"><span class="pill live">{{DOT}}Live</span><span class="pill live">{{CHECK}}Winning</span><span class="pill out">{{DOWN}}Outbid</span><span class="pill soon">{{CLOCK}}Ending soon</span><span class="pill plain">Upcoming</span><span class="pill plain">No sale</span></div>
+      <div class="desk" aria-label="The bidding desk, an illustration">
+        <div class="top"><span>Current price</span><span class="pill live">{{DOT}}Live</span></div>
+        <div class="price">245.00</div>
+        <div class="when"><b>Ends in 02:14:09</b> &nbsp;·&nbsp; Closes Thursday 12 November, 18:00</div>
+        <div class="presets" role="group" aria-label="Bid amount"><button type="button" aria-pressed="true">250.00</button><button type="button" aria-pressed="false">255.00</button><button type="button" aria-pressed="false">265.00</button></div>
+        <p class="legal">A bid is a binding commitment to buy.</p>
+        <button class="btn" type="button">Place bid · 250.00</button>
+      </div>
+      <p class="sub">The bidding desk is the one raised object in the system. Figures are illustrative. The currency is still undecided.</p>
+    </div>
+    <figure class="photo"><div class="f"><img src="./img/balance.jpg" alt="A gilt brass balance on a marble base, its pans level" width="1500" height="1125" loading="lazy"></div><figcaption>Real photography of real objects leads every page. The mark is never placed on a photograph.</figcaption></figure>
+  </div>
+
+  <div class="rows">
+    <div class="row"><b>Rules we keep</b><div class="stack"><p>The closing time is always written out beside a countdown. One primary action per view. Status is never color alone. No exclamation marks, no hype words.</p></div></div>
+    <div class="row"><b>The boards</b><div class="stack"><p>A seven-board brandbook covers the cover, mark, color and type, components, a website home page and auction page, and three app screens. Every screen in the demo is built from it.</p></div></div>
+  </div>
+</section>
+
+<section id="management">
+  <h2>How we run <i>the project.</i></h2>
+  <div class="rows">
+    <div class="row"><b>Method</b><div class="stack"><p>Requirements first, then short weekly iterations on one board. The MVP ships in fall; the rest of the formats follow in spring. Concurrency tests start in week 10 beside the locking work, so correctness is checked while it is being built, not at the end.</p><p>Name we use for this: {{T}}, for example Agile with weekly sprints.</p></div></div>
+    <div class="row"><b>Tools</b><div class="stack"><p>A GitHub Projects board where every task has one owner, one reviewer, a due week and the requirement IDs it covers. Git feature branches and pull requests, with at least one reviewer per merge. A Gantt chart and a PERT network, updated at the weekly sync.</p><p>Team chat: {{T}}.</p></div></div>
+    <div class="row"><b>Who does what</b><div class="stack"><p><b>Ayan and Sultanbek</b> own the database and backend: schema, accounts and TOTP, the engine, locking, real-time and the tests.</p><p><b>Magzhan</b> owns the React front end: login, listings, the live auction page and checkout. <b>Daniel</b> owns the design system, brand and wireframes, the usability test and this presentation.</p><p><b>Zhibek</b> owns architecture, interface contracts, the feature comparison, design reviews and the demo script.</p><p>Every member has work in every week. Team lead: {{T}}.</p></div></div>
+    <div class="row"><b>Communication</b><div class="stack"><p>Daily questions in chat. A weekly sync on {{T}} to move the board and update the charts below. Regular meetings with Prof. Lewis. Open decisions live in one table and are settled in review sessions.</p></div></div>
+    <div class="row"><b>Risks we watch</b><div class="stack">
+      <p><b>Correctness under concurrency</b> is the core claim, so it is on the critical path and tested from week 10.</p>
+      <p><b>Late integration</b> is reduced by interface contracts and mocked responses.</p>
+      <p><b>Scope</b> is held by the fall and spring split: only the English format is in the MVP.</p>
+      <p><b>Open decisions</b> (increment, sniping length, sealed-bid revision, currency) are tracked until the team decides.</p>
+    </div></div>
+  </div>
+
+  <h3>Gantt chart, weeks 6 to 14</h3>
+  <p class="sub">Filled bars are done. Outlined bars are planned. Week windows come from the work packages in the requirements document; convert weeks to dates with the course calendar ({{T}}).</p>
+  <div class="legend"><span><i style="background:var(--moss)"></i>Done</span><span><i style="background:var(--bar-plan);box-shadow:inset 0 0 0 1.5px var(--moss)"></i>Planned</span><span><i style="background:var(--bar-plan);box-shadow:inset 0 0 0 1.5px var(--ink)"></i>Planned, critical path</span><span><i style="background:var(--brass);width:3px;height:16px"></i>This week</span></div>
+  <div class="nowpick"><label for="nowsel">We are in</label><select id="nowsel"><option value="">no week selected</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option><option>11</option><option>12</option><option>13</option><option>14</option></select><span>Pick the current week to draw the marker. It is saved in your browser only.</span></div>
+  {{GANTT}}
+
+  <h3>PERT network and critical path</h3>
+  <p class="sub">Each step shows its planned weeks. The backend chain has no slack: a slip anywhere on it moves the MVP. Windows overlap by design, so the lines show dependency, not strict finish-to-start. Three-point estimates (optimistic, likely, pessimistic) can be added once real progress is confirmed.</p>
+  {{PERT}}
+</section>
+
+<section id="rollout">
+  <h2>Rollout <i>timeline.</i></h2>
+  <p class="prose">Functionality arrives in the order that lets each step be demonstrated on its own.</p>
+  <div class="rows">
+    <div class="row"><b>Weeks 6 to 8<br><span style="font-family:var(--sans);font-size:14px;color:var(--muted)">Foundation</span></b><div class="stack"><p>Database schema, architecture and state machine, wireframes and brand, feature comparison.</p></div></div>
+    <div class="row"><b>Weeks 8 to 10<br><span style="font-family:var(--sans);font-size:14px;color:var(--muted)">Identity</span></b><div class="stack"><p>Accounts, email verification and TOTP; login and MFA screens; interface contracts and the React scaffold.</p></div></div>
+    <div class="row"><b>Weeks 8 to 12<br><span style="font-family:var(--sans);font-size:14px;color:var(--muted)">The auction core</span></b><div class="stack"><p>The engine and English strategy, locking, closing and sniping protection; listings, browse and search.</p></div></div>
+    <div class="row"><b>Weeks 11 to 13<br><span style="font-family:var(--sans);font-size:14px;color:var(--muted)">Live and paid</span></b><div class="stack"><p>Real-time updates, transactions and step-up MFA; the live auction page and checkout; the audit log.</p></div></div>
+    <div class="row"><b>Weeks 12 to 14<br><span style="font-family:var(--sans);font-size:14px;color:var(--muted)">Proof</span></b><div class="stack"><p>Concurrency and load tests, usability test, MVP integration, final report and presentation.</p></div></div>
+    <div class="row"><b>Spring 2027<br><span style="font-family:var(--sans);font-size:14px;color:var(--muted)">Beyond the MVP</span></b><div class="stack"><p>Dutch, sealed first-price and Vickrey formats on the same engine; notifications; the admin dashboard; the full evaluation. Stretch: a tamper-evident bid ledger and reputation checks.</p></div></div>
+  </div>
+</section>
+
+<section id="video">
+  <h2>The <i>video.</i></h2>
+  <p class="prose">A story told in short chapters, each 20 to 45 seconds. The bar shows how the time is spent; each chapter below gives what is on screen and a line to say. Speakers follow each member's package and are suggestions.</p>
+  {{STORY}}
+</section>
+
+<section id="open">
+  <h2>What is still <i>open.</i></h2>
+  <p class="prose">Things only the team can supply. Tick them as they arrive; your ticks are saved in your browser only.</p>
+  <div class="todo" id="todo">
+    <label><input type="checkbox" data-k="status"><span><b>A real status for every task</b>Done, in progress or late, so the Gantt can show today's position.</span></label>
+    <label><input type="checkbox" data-k="demo"><span><b>A demo build or screen recording</b>Register and MFA, create a listing, bid from two browsers, close, checkout.</span></label>
+    <label><input type="checkbox" data-k="tests"><span><b>Test numbers</b>Concurrent-bid results and the first latency measurement, so the video shows evidence.</span></label>
+    <label><input type="checkbox" data-k="process"><span><b>Method name, chat tool, weekly sync time, team lead</b>The four items marked as placeholders above.</span></label>
+    <label><input type="checkbox" data-k="shots"><span><b>Competitor screenshots</b>eBay and the FloraHolland clock, for the design comparison.</span></label>
+    <label><input type="checkbox" data-k="dates"><span><b>Course dates</b>The start date, to turn weeks into calendar dates.</span></label>
+    <label><input type="checkbox" data-k="length"><span><b>Video length and format</b>Confirm 6 to 7 minutes with the instructors.</span></label>
+    <label><input type="checkbox" data-k="decide"><span><b>Four open product decisions</b>Currency, minimum increment, sniping extension, and whether a sealed bid can be revised.</span></label>
+  </div>
+  <div class="foot"><span>Source: Online Auction Service, Requirements and Design v2, and the Adal brandbook.</span><span>Photographs: Cleveland Museum of Art and The Metropolitan Museum of Art, public domain (CC0).</span></div>
+</section>
+</main>
+</div>

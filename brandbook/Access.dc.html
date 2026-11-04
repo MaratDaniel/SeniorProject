@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Contrast and Status</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;600;700&family=Golos+Text:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div style="width: 1280px; height: 800px; box-sizing: border-box; padding: 56px 80px; background: #F3F7F9; color: #0A2236; font-family: 'Golos Text', system-ui, sans-serif; display: grid; grid-template-columns: 1fr 1.15fr; gap: 80px">
+<div style="display: flex; flex-direction: column; gap: 24px">
+<div>
+<h2 style="margin: 0; font-family: 'Unbounded', sans-serif; font-weight: 600; font-size: 36px; line-height: 1.2; letter-spacing: -0.02em; text-wrap: balance">Measured, not claimed.</h2>
+<p style="margin: 14px 0 0; font-size: 16px; line-height: 1.6; color: #2A3F4E; text-wrap: pretty">Every text pair clears 4.5 to 1, and every control edge clears 3 to 1. Dividers are decorative and are never the only edge of a control.</p>
+</div>
+<div style="display: flex; flex-direction: column">
+<div style="display: grid; grid-template-columns: 1fr auto; padding: 9px 0; border-top: 1px solid #D5E0E6; font-size: 15px"><span>Night on mist</span><span style="font-family: 'JetBrains Mono', monospace; font-weight: 700">15.0 : 1</span></div>
+<div style="display: grid; grid-template-columns: 1fr auto; padding: 9px 0; border-top: 1px solid #D5E0E6; font-size: 15px"><span>Body text on mist</span><span style="font-family: 'JetBrains Mono', monospace; font-weight: 700">10.2 : 1</span></div>
+<div style="display: grid; grid-template-columns: 1fr auto; padding: 9px 0; border-top: 1px solid #D5E0E6; font-size: 15px"><span>Muted text on mist</span><span style="font-family: 'JetBrains Mono', monospace; font-weight: 700">5.7 : 1</span></div>
+<div style="display: grid; grid-template-columns: 1fr auto; padding: 9px 0; border-top: 1px solid #D5E0E6; font-size: 15px"><span>White on sky</span><span style="font-family: 'JetBrains Mono', monospace; font-weight: 700">5.8 : 1</span></div>
+<div style="display: grid; grid-template-columns: 1fr auto; padding: 9px 0; border-top: 1px solid #D5E0E6; font-size: 15px"><span>Sun price on night</span><span style="font-family: 'JetBrains Mono', monospace; font-weight: 700">8.9 : 1</span></div>
+<div style="display: grid; grid-template-columns: 1fr auto; padding: 9px 0; border-top: 1px solid #D5E0E6; font-size: 15px"><span>Muted on night</span><span style="font-family: 'JetBrains Mono', monospace; font-weight: 700">9.1 : 1</span></div>
+<div style="display: grid; grid-template-columns: 1fr auto; padding: 9px 0; border-top: 1px solid #D5E0E6; font-size: 15px"><span>Error on night</span><span style="font-family: 'JetBrains Mono', monospace; font-weight: 700">7.3 : 1</span></div>
+<div style="display: grid; grid-template-columns: 1fr auto; padding: 9px 0; border-top: 1px solid #D5E0E6; font-size: 15px"><span>Live green on mist</span><span style="font-family: 'JetBrains Mono', monospace; font-weight: 700">4.9 : 1</span></div>
+<div style="display: grid; grid-template-columns: 1fr auto; padding: 9px 0; border-top: 1px solid #D5E0E6; font-size: 15px"><span>Error red on mist</span><span style="font-family: 'JetBrains Mono', monospace; font-weight: 700">6.8 : 1</span></div>
+<div style="display: grid; grid-template-columns: 1fr auto; padding: 9px 0; border-top: 1px solid #D5E0E6; border-bottom: 1px solid #D5E0E6; font-size: 15px"><span>Control edge on white</span><span style="font-family: 'JetBrains Mono', monospace; font-weight: 700">3.9 : 1</span></div>
+</div>
+</div>
+<div style="display: flex; flex-direction: column; gap: 20px">
+<div>
+<h2 style="margin: 0; font-family: 'Unbounded', sans-serif; font-weight: 600; font-size: 36px; line-height: 1.2; letter-spacing: -0.02em; text-wrap: balance">Status is always a word.</h2>
+<p style="margin: 14px 0 0; font-size: 16px; line-height: 1.6; color: #2A3F4E; text-wrap: pretty">Ten fixed words with icons. The first five are the auction’s own status, one for each state in the system.</p>
+</div>
+<div style="display: flex; flex-direction: column">
+<div style="font-size: 13px; font-weight: 700; color: #4F6472; padding-bottom: 6px">Auction status · system state</div>
+<div style="display: grid; grid-template-columns: 28px 130px 1fr auto; align-items: center; padding: 9px 0; border-top: 1px solid #D5E0E6; font-size: 14px"><svg width="18" height="18" viewBox="0 0 20 20" aria-hidden="true" style="color: #4F6472"><circle cx="10" cy="10" r="7.5" fill="none" stroke="currentColor" stroke-width="2"/></svg><b style="color: #4F6472; font-size: 16px">Upcoming</b><span style="color: #4F6472">Not open yet</span><code style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #4F6472">scheduled</code></div>
+<div style="display: grid; grid-template-columns: 28px 130px 1fr auto; align-items: center; padding: 9px 0; border-top: 1px solid #D5E0E6; font-size: 14px"><svg width="18" height="18" viewBox="0 0 20 20" aria-hidden="true" style="color: #0B7A5A"><circle cx="10" cy="10" r="5" fill="currentColor"/></svg><b style="color: #0B7A5A; font-size: 16px">Live</b><span style="color: #4F6472">Open for bids</span><code style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #4F6472">active</code></div>
+<div style="display: grid; grid-template-columns: 28px 130px 1fr auto; align-items: center; padding: 9px 0; border-top: 1px solid #D5E0E6; font-size: 14px"><svg width="18" height="18" viewBox="0 0 20 20" aria-hidden="true" style="color: #0A2236"><path d="M4 10.5 L8 14.5 L16 5.5" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg><b style="color: #0A2236; font-size: 16px">Sold</b><span style="color: #4F6472">Closed with a winner</span><code style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #4F6472">closed</code></div>
+<div style="display: grid; grid-template-columns: 28px 130px 1fr auto; align-items: center; padding: 9px 0; border-top: 1px solid #D5E0E6; font-size: 14px"><svg width="18" height="18" viewBox="0 0 20 20" aria-hidden="true" style="color: #4F6472"><path d="M4 10 H16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><b style="color: #4F6472; font-size: 16px">No sale</b><span style="color: #4F6472">Ended below reserve or no bids</span><code style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #4F6472">no_sale</code></div>
+<div style="display: grid; grid-template-columns: 28px 130px 1fr auto; align-items: center; padding: 9px 0; border-top: 1px solid #D5E0E6; font-size: 14px"><svg width="18" height="18" viewBox="0 0 20 20" aria-hidden="true" style="color: #A12B1F"><path d="M5 5 L15 15 M15 5 L5 15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><b style="color: #A12B1F; font-size: 16px">Cancelled</b><span style="color: #4F6472">Withdrawn by the seller</span><code style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #4F6472">cancelled</code></div>
+</div>
+<div style="display: flex; flex-direction: column">
+<div style="font-size: 13px; font-weight: 700; color: #4F6472; padding-bottom: 6px">Your bid and the clock</div>
+<div style="display: grid; grid-template-columns: 28px 130px 1fr; align-items: center; padding: 9px 0; border-top: 1px solid #D5E0E6; font-size: 14px"><svg width="18" height="18" viewBox="0 0 20 20" aria-hidden="true" style="color: #0B7A5A"><path d="M4 10.5 L8 14.5 L16 5.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><b style="color: #0B7A5A; font-size: 16px">Winning</b><span style="color: #4F6472">You hold the highest bid</span></div>
+<div style="display: grid; grid-template-columns: 28px 130px 1fr; align-items: center; padding: 9px 0; border-top: 1px solid #D5E0E6; font-size: 14px"><svg width="18" height="18" viewBox="0 0 20 20" aria-hidden="true" style="color: #A12B1F"><path d="M10 3 L18 17 H2 Z M10 8 V12 M10 14.5 V14.6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><b style="color: #A12B1F; font-size: 16px">Outbid</b><span style="color: #4F6472">Someone bid higher than you</span></div>
+<div style="display: grid; grid-template-columns: 28px 130px 1fr; align-items: center; padding: 9px 0; border-top: 1px solid #D5E0E6; font-size: 14px"><svg width="18" height="18" viewBox="0 0 20 20" aria-hidden="true" style="color: #A12B1F"><circle cx="10" cy="10" r="7.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M10 5.5 V10 L13 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><b style="color: #A12B1F; font-size: 16px">Ending soon</b><span style="color: #4F6472">Under one hour left</span></div>
+<div style="display: grid; grid-template-columns: 28px 130px 1fr; align-items: center; padding: 9px 0; border-top: 1px solid #D5E0E6; font-size: 14px"><svg width="18" height="18" viewBox="0 0 20 20" aria-hidden="true" style="color: #0B7A5A"><path d="M4 10.5 L8 14.5 L16 5.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><b style="color: #0B7A5A; font-size: 16px">Reserve met</b><span style="color: #4F6472">The seller’s minimum is reached</span></div>
+<div style="display: grid; grid-template-columns: 28px 130px 1fr; align-items: center; padding: 9px 0; border-top: 1px solid #D5E0E6; border-bottom: 1px solid #D5E0E6; font-size: 14px"><svg width="18" height="18" viewBox="0 0 20 20" aria-hidden="true" style="color: #4F6472"><path d="M4 10 H16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><b style="color: #4F6472; font-size: 16px">No reserve</b><span style="color: #4F6472">Sells to the highest bidder</span></div>
+</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":800}}'>
+class Component extends DCLogic {
+renderVals() {
+return {};
+}
+}
+</script>
+</body>
+</html>

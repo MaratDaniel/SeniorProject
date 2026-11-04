@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Bidding Behavior</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;600;700&family=Golos+Text:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap">
+<style>
+body{margin:0}
+button{cursor:pointer;transition:scale 150ms ease-out,filter 150ms ease-out}
+@media (hover:hover){button:not(:disabled):hover{filter:brightness(0.92)}}
+button:not(:disabled):active{scale:0.96}
+:focus-visible{outline:2px solid #0B6E8A;outline-offset:2px}
+.on-night :focus-visible{outline-color:#F3F7F9}
+@media (prefers-reduced-motion:reduce){button{transition:none}button:not(:disabled):active{scale:1}}
+</style>
+</helmet>
+<div style="width: 1280px; height: 800px; box-sizing: border-box; padding: 64px 80px; background: #F3F7F9; color: #0A2236; font-family: 'Golos Text', system-ui, sans-serif; display: grid; grid-template-columns: 420px 1fr; gap: 80px">
+<div style="background: #FFFFFF; box-shadow: 0 0 0 1px rgba(10, 34, 54, 0.06), 0 4px 16px rgba(10, 34, 54, 0.08); border-radius: 20px; padding: 28px; display: flex; flex-direction: column; gap: 18px; align-self: start">
+<div style="display: flex; justify-content: space-between; align-items: baseline; font-size: 14px; font-weight: 600"><span style="color: #0B7A5A">Live</span><span style="color: #4F6472">Closes Fri 6 Nov, 20:00 your time</span></div>
+<div style="background: #E6F4EE; color: #0B4F3A; border-radius: 10px; padding: 10px 14px; font-size: 14px; font-weight: 600">Winning: you hold the highest bid</div>
+<div>
+<div style="font-size: 14px; color: #4F6472; font-weight: 600">Current price</div>
+<div style="font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 52px; line-height: 1.1">240.00</div>
+<div style="font-size: 14px; color: #4F6472; margin-top: 4px">14 bids · Reserve met</div>
+</div>
+<div style="display: flex; flex-direction: column; gap: 10px">
+<div style="font-size: 14px; font-weight: 700">Choose your bid</div>
+<div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px">
+<button style="height: 48px; border: 2px solid #0B6E8A; border-radius: 12px; background: #E3F1F5; color: #0A2236; font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 16px">245.00</button>
+<button style="height: 48px; border: 1.5px solid #6C8494; border-radius: 12px; background: #FFFFFF; color: #0A2236; font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 16px">250.00</button>
+<button style="height: 48px; border: 1.5px solid #6C8494; border-radius: 12px; background: #FFFFFF; color: #0A2236; font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 16px">260.00</button>
+</div>
+</div>
+<div style="display: flex; flex-direction: column; gap: 6px"><label for="custom" style="font-size: 14px; font-weight: 700">Or enter another amount</label><input id="custom" type="text" placeholder="Minimum 245.00" style="height: 48px; box-sizing: border-box; border: 1.5px solid #6C8494; border-radius: 12px; padding: 0 14px; font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 16px; color: #0A2236; background: #FFFFFF"><div style="font-size: 13px; color: #4F6472">Presets add 5, 10 and 20. Minimum increment 5.00.</div></div>
+<div style="font-size: 14px; line-height: 1.5; color: #2A3F4E; font-weight: 600">A bid is a binding commitment to buy.</div>
+<button style="height: 52px; border: 0; border-radius: 12px; background: #0B6E8A; color: #FFFFFF; font-family: 'Golos Text', sans-serif; font-weight: 700; font-size: 16px">Place bid · 245.00</button>
+
+</div>
+<div style="display: flex; flex-direction: column; gap: 30px">
+<div>
+<h2 style="margin: 0; font-family: 'Unbounded', sans-serif; font-weight: 600; font-size: 36px; line-height: 1.2; letter-spacing: -0.02em; text-wrap: balance">One clear action, and an immediate answer.</h2>
+</div>
+<div style="display: flex; flex-direction: column">
+<div style="padding: 13px 0; border-top: 1px solid #D5E0E6; font-size: 16px; line-height: 1.5">Three preset increments. The first is preselected.</div>
+<div style="padding: 13px 0; border-top: 1px solid #D5E0E6; font-size: 16px; line-height: 1.5">The button repeats the amount, so nobody bids blind.</div>
+<div style="padding: 13px 0; border-top: 1px solid #D5E0E6; font-size: 16px; line-height: 1.5">The result appears in place within one second. Never navigate away.</div>
+<div style="padding: 13px 0; border-top: 1px solid #D5E0E6; border-bottom: 1px solid #D5E0E6; font-size: 16px; line-height: 1.5">The closing time is always written out beside the countdown. A bid near the end extends the auction; the length is shown here once decided.</div>
+</div>
+<div class="on-night" style="background: #0A2236; color: #F3F7F9; border-radius: 16px; padding: 18px 20px; display: flex; align-items: center; gap: 16px">
+<div style="flex: 1; min-width: 0"><div style="display: flex; align-items: center; gap: 6px; font-size: 14px; font-weight: 700; color: #FF8F84"><svg width="16" height="16" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 3 L18 17 H2 Z M10 8 V12 M10 14.5 V14.6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Outbid</div><div style="font-size: 15px; margin-top: 2px">New high bid <span style="font-family: 'JetBrains Mono', monospace; font-weight: 700">260.00</span></div></div>
+<button style="height: 44px; border: 0; border-radius: 10px; background: #F3F7F9; color: #0A2236; font-family: 'Golos Text', sans-serif; font-weight: 700; font-size: 15px; padding: 0 18px">Bid 265.00</button>
+</div>
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px">
+<div><div style="font-size: 14px; font-weight: 700; margin-bottom: 8px">More than an hour left</div><div style="font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 34px; color: #0A2236">02:14:06</div></div>
+<div><div style="font-size: 14px; font-weight: 700; margin-bottom: 8px; color: #A12B1F">Final hour, with the label</div><div style="font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 34px; color: #A12B1F">00:04:51</div></div>
+</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":800}}'>
+class Component extends DCLogic {
+renderVals() {
+return {};
+}
+}
+</script>
+</body>
+</html>

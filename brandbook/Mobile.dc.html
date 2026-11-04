@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Mobile Bidding Desk</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;600;700&family=Golos+Text:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap">
+<style>
+body{margin:0}
+button{cursor:pointer;transition:scale 150ms ease-out,filter 150ms ease-out}
+@media (hover:hover){button:not(:disabled):hover{filter:brightness(0.92)}}
+button:not(:disabled):active{scale:0.96}
+:focus-visible{outline:2px solid #0B6E8A;outline-offset:2px}
+@media (prefers-reduced-motion:reduce){button{transition:none}button:not(:disabled):active{scale:1}}
+</style>
+</helmet>
+<div style="width: 360px; height: 800px; box-sizing: border-box; background: #F3F7F9; color: #0A2236; font-family: 'Golos Text', system-ui, sans-serif; display: flex; flex-direction: column; position: relative; overflow: hidden">
+<div style="display: flex; align-items: center; justify-content: space-between; padding: 14px 16px; background: #FFFFFF; border-bottom: 1px solid #D5E0E6">
+<div style="display: flex; align-items: center; gap: 10px"><svg width="28" height="28" viewBox="0 0 48 48" role="img" aria-label="Adal mark"><path d="M9 42 C9 24 17 14 24 6 C31 14 39 24 39 42" fill="none" stroke="#0A2236" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="24" cy="32" r="4.2" fill="#F2B632"/></svg><span style="font-family: 'Unbounded', sans-serif; font-weight: 700; font-size: 24px; letter-spacing: -0.02em">Adal</span></div>
+<button aria-label="Menu" style="width: 44px; height: 44px; border: 0; background: transparent; color: #0A2236; display: inline-flex; align-items: center; justify-content: center"><svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7 H20 M4 12 H20 M4 17 H20" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
+</div>
+<div style="padding: 16px; display: flex; flex-direction: column; gap: 14px; flex: 1; overflow: hidden">
+<div style="height: 200px; background: #DCE5EA; border-radius: 999px 999px 14px 14px; display: flex; align-items: flex-end; justify-content: center; padding-bottom: 18px; color: #4F6472; font-size: 14px; font-weight: 600">[Listing photo]</div>
+<div>
+<div style="font-size: 14px; font-weight: 700; color: #3B55C9">English auction</div>
+<div style="font-family: 'Unbounded', sans-serif; font-weight: 600; font-size: 24px; line-height: 1.2; letter-spacing: -0.02em; margin-top: 2px; overflow-wrap: break-word">[Listing title]</div>
+</div>
+<div style="background: #0A2236; border-radius: 16px; padding: 16px 18px; color: #F3F7F9">
+<div style="display: flex; justify-content: space-between; font-size: 13px; font-weight: 600"><span style="color: #A9C7D5">Current price</span><span style="color: #7FE0BC">Live</span></div>
+<div style="font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 52px; line-height: 1.1; color: #F2B632">240.00</div>
+<div style="display: flex; justify-content: space-between; align-items: baseline; margin-top: 4px; gap: 8px"><span style="font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 20px">02:14:06</span><span style="font-size: 13px; color: #A9C7D5; text-align: right">Closes Fri 6 Nov, 20:00</span></div>
+</div>
+<div style="background: #E6F4EE; color: #0B4F3A; border-radius: 10px; padding: 8px 12px; font-size: 14px; font-weight: 600">Winning: you hold the highest bid</div>
+</div>
+<div style="background: #FFFFFF; border-top: 1px solid #D5E0E6; padding: 14px 16px 18px; display: flex; flex-direction: column; gap: 10px">
+<div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px">
+<button style="height: 48px; border: 2px solid #0B6E8A; border-radius: 12px; background: #E3F1F5; color: #0A2236; font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 15px">245.00</button>
+<button style="height: 48px; border: 1.5px solid #6C8494; border-radius: 12px; background: #FFFFFF; color: #0A2236; font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 15px">250.00</button>
+<button style="height: 48px; border: 1.5px solid #6C8494; border-radius: 12px; background: #FFFFFF; color: #0A2236; font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 15px">260.00</button>
+</div>
+<div style="font-size: 14px; font-weight: 600; color: #2A3F4E">A bid is a binding commitment to buy.</div>
+<button style="height: 52px; border: 0; border-radius: 12px; background: #0B6E8A; color: #FFFFFF; font-family: 'Golos Text', sans-serif; font-weight: 700; font-size: 16px">Place bid · 245.00</button>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":360,"height":800}}'>
+class Component extends DCLogic {
+renderVals() {
+return {};
+}
+}
+</script>
+</body>
+</html>

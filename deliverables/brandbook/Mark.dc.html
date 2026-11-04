@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Mark and name</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300;12..96,400;12..96,500;12..96,600&family=Instrument+Sans:wght@400;500;600;700&family=Outfit:wght@500&display=swap">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<svg width="0" height="0" style="position: absolute" aria-hidden="true"><filter id="grain" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/></filter></svg>
+<div style="width: 1280px; height: 800px; box-sizing: border-box; padding: 64px 72px; background: #F4F6F3; color: #0F1512; font-family: 'Instrument Sans', system-ui, sans-serif; display: flex; flex-direction: column; gap: 48px">
+<h2 style="margin: 0; font-family: 'Bricolage Grotesque', system-ui, sans-serif; font-weight: 300; font-size: 56px; line-height: 1.1; letter-spacing: -0.03em; max-width: 860px; text-wrap: balance">Two equal weights on a level beam: <i style="font-style: normal; color: #85601C">every</i> bidder counts the same.</h2>
+<div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; flex: 1">
+<div style="background: #FFFFFF; border: 1px solid #D5DBD5; border-radius: 16px; display: flex; align-items: center; justify-content: center; gap: 14px"><svg width="64" height="64" viewBox="0 0 48 48" role="img" aria-label="Adal mark" style="color: #0F1512"><g><path d="M6 28 H42" stroke="currentColor" stroke-width="4.2" stroke-linecap="round" fill="none"/><circle cx="13" cy="19.2" r="6.8" fill="currentColor"/><circle cx="35" cy="19.2" r="6.8" fill="currentColor"/></g><path d="M24 31 L18 43 H30 Z" fill="currentColor"/><circle cx="24" cy="28" r="3.9" fill="#85601C"/></svg><span style="font-family: 'Outfit', system-ui, sans-serif; font-weight: 500; font-size: 56px;">Adal</span></div>
+<div style="position: relative; overflow: hidden; border-radius: 16px; background: radial-gradient(100% 90% at 35% 40%, #3C5E4F, #243A31); display: flex; align-items: center; justify-content: center; gap: 14px; color: #F4F6F3"><div style="position: absolute; inset: 0; filter: url(#grain); opacity: 0.2; mix-blend-mode: multiply"></div><svg width="64" height="64" viewBox="0 0 48 48" role="img" aria-label="Adal mark reversed" style="position: relative"><g><path d="M6 28 H42" stroke="currentColor" stroke-width="4.2" stroke-linecap="round" fill="none"/><circle cx="13" cy="19.2" r="6.8" fill="currentColor"/><circle cx="35" cy="19.2" r="6.8" fill="currentColor"/></g><path d="M24 31 L18 43 H30 Z" fill="currentColor"/><circle cx="24" cy="28" r="3.9" fill="#DDBB70"/></svg><span style="position: relative; font-family: 'Outfit', system-ui, sans-serif; font-weight: 500; font-size: 56px;">Adal</span></div>
+<div style="background: #3B5F4F; border-radius: 16px; display: flex; align-items: center; justify-content: center; gap: 14px; color: #F4F6F3"><svg width="64" height="64" viewBox="0 0 48 48" role="img" aria-label="Adal mark on moss"><g><path d="M6 28 H42" stroke="currentColor" stroke-width="4.2" stroke-linecap="round" fill="none"/><circle cx="13" cy="19.2" r="6.8" fill="currentColor"/><circle cx="35" cy="19.2" r="6.8" fill="currentColor"/></g><path d="M24 31 L18 43 H30 Z" fill="currentColor"/><circle cx="24" cy="28" r="3.9" fill="#DDBB70"/></svg><span style="font-family: 'Outfit', system-ui, sans-serif; font-weight: 500; font-size: 56px;">Adal</span></div>
+</div>
+<div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 40px; font-size: 16px; line-height: 1.6; color: #27302B">
+<div><b style="font-weight: 600; color: #0F1512">Name.</b> Adal means fair and honest. In an auction, fairness is balance: the same rules, the same clock and the same weight for every bid.</div>
+<div><b style="font-weight: 600; color: #0F1512">Mark.</b> Two identical weights on a level beam, resting on a fulcrum with one brass point where it balances. Clear space equals one weight’s diameter. Minimum size 24px.</div>
+<div><b style="font-weight: 600; color: #0F1512">Never.</b> Tilt the beam, make the weights differ, recolor the brass point, or place the mark over a busy photograph. The beam settles level once when it first appears.</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":800}}'>
+class Component extends DCLogic {
+renderVals() {
+return {};
+}
+}
+</script>
+</body>
+</html>

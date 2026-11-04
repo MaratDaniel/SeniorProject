@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Color and type</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300;12..96,400;12..96,500;12..96,600&family=Instrument+Sans:wght@400;500;600;700&family=Outfit:wght@500&display=swap">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div style="width: 1280px; height: 800px; box-sizing: border-box; padding: 64px 72px; background: #F4F6F3; color: #0F1512; font-family: 'Instrument Sans', system-ui, sans-serif; display: grid; grid-template-columns: 1fr 1fr; gap: 72px">
+<div style="display: flex; flex-direction: column; gap: 24px">
+<h2 style="margin: 0; font-family: 'Bricolage Grotesque', system-ui, sans-serif; font-weight: 300; font-size: 48px; line-height: 1.1; letter-spacing: -0.03em">Color</h2>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; flex: 1">
+<div style="background: #F4F6F3; border: 1px solid #D5DBD5; border-radius: 14px; padding: 20px; display: flex; flex-direction: column; justify-content: flex-end"><b style="font-size: 17px; font-weight: 600">Paper</b><span style="font-size: 14px; color: #505B54">#F4F6F3 · ground</span></div>
+<div style="background: #3B5F4F; color: #F4F6F3; border-radius: 14px; padding: 20px; display: flex; flex-direction: column; justify-content: flex-end"><b style="font-size: 17px; font-weight: 600">Moss</b><span style="font-size: 14px; color: #B4C7BC">#3B5F4F · actions</span></div>
+<div style="background: #0F1512; color: #F4F6F3; border-radius: 14px; padding: 20px; display: flex; flex-direction: column; justify-content: flex-end"><b style="font-size: 17px; font-weight: 600">Ink</b><span style="font-size: 14px; color: #A9B5AD">#0F1512 · text</span></div>
+<div style="background: #85601C; color: #F4F6F3; border-radius: 14px; padding: 20px; display: flex; flex-direction: column; justify-content: flex-end"><b style="font-size: 17px; font-weight: 600">Brass</b><span style="font-size: 14px; color: #F1EAD8">#85601C · outbid, ending</span></div>
+</div>
+<p style="margin: 0; font-size: 15px; line-height: 1.6; color: #27302B">Surfaces: card #FFFFFF, rule #D5DBD5, moss tint #E5EDE8, brass tint #F1EAD8. Ink on paper 17.0 to 1, paper on moss 6.6, paper on brass 5.2, muted text #505B54 6.5.</p>
+</div>
+<div style="display: flex; flex-direction: column; gap: 24px">
+<h2 style="margin: 0; font-family: 'Bricolage Grotesque', system-ui, sans-serif; font-weight: 300; font-size: 48px; line-height: 1.1; letter-spacing: -0.03em">Type</h2>
+<div style="display: flex; flex-direction: column; border-top: 1px solid #D5DBD5">
+<div style="padding: 20px 0; border-bottom: 1px solid #D5DBD5"><div style="font-family: 'Bricolage Grotesque', system-ui, sans-serif; font-weight: 300; font-size: 60px; line-height: 1.05; letter-spacing: -0.03em">Closes <i style="font-style: normal; color: #85601C">tonight</i></div><div style="font-size: 14px; color: #505B54; margin-top: 8px">Bricolage Grotesque Light, one word in brass. Headlines only.</div></div>
+<div style="padding: 20px 0; border-bottom: 1px solid #D5DBD5"><div style="font-weight: 400; font-size: 20px; line-height: 1.6">Every bid is checked against the live auction.</div><div style="font-size: 14px; color: #505B54; margin-top: 8px">Instrument Sans 400 and 500. 16px body at 1.6.</div></div>
+<div style="padding: 20px 0; border-bottom: 1px solid #D5DBD5"><div style="font-weight: 500; font-size: 36px; font-variant-numeric: tabular-nums; letter-spacing: -0.01em">240.00 · 02:14:06</div><div style="font-size: 14px; color: #505B54; margin-top: 8px">Instrument Sans 500 with tabular figures for prices and timers.</div></div>
+</div>
+<p style="margin: 0; font-size: 15px; line-height: 1.6; color: #27302B">Soft radii (10 for controls, 16 for cards), 1px rules, and slow transitions of 300 to 900 milliseconds.</p>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":800}}'>
+class Component extends DCLogic {
+renderVals() {
+return {};
+}
+}
+</script>
+</body>
+</html>

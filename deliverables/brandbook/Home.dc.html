@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Website home</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300;12..96,400;12..96,500;12..96,600&family=Instrument+Sans:wght@400;500;600;700&family=Outfit:wght@500&display=swap">
+<style>
+body{margin:0}
+a{color:inherit}
+@keyframes rise{from{transform:translateY(12px)}to{transform:none}}
+.rise{animation:rise 900ms cubic-bezier(.22,1,.36,1) both}
+a.btn{transition:scale 250ms cubic-bezier(.22,1,.36,1),filter 300ms ease-out}
+@media (hover:hover){a.btn:hover{filter:brightness(1.12)}}
+a.btn:active{scale:0.97}
+a.lot{display:block;text-decoration:none;color:#0F1512}
+a.lot .pic{transition:transform 1100ms cubic-bezier(.22,1,.36,1)}
+@media (hover:hover){a.lot:hover .pic{transform:scale(1.04)}}
+:focus-visible{outline:2px solid #3B5F4F;outline-offset:3px}
+@keyframes settle{0%{transform:rotate(-7deg)}60%{transform:rotate(2deg)}100%{transform:rotate(0)}}
+.beam{transform-box:view-box;transform-origin:24px 28px;animation:settle 1800ms cubic-bezier(.22,1,.36,1) 300ms both}
+@media (prefers-reduced-motion:reduce){.rise,.beam{animation:none}a.btn,a.lot .pic{transition:none}a.btn:active{scale:1}a.lot:hover .pic{transform:none}}
+</style>
+</helmet>
+<svg width="0" height="0" style="position: absolute" aria-hidden="true"><filter id="grain" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/></filter></svg>
+<div style="width: 100%; box-sizing: border-box; background: #F4F6F3; color: #0F1512; font-family: 'Instrument Sans', system-ui, sans-serif; font-variant-numeric: tabular-nums">
+
+<section style="position: relative; overflow: hidden; background: radial-gradient(90% 90% at 38% 60%, #3C5E4F 0%, #3B5F4F 45%, #1E3228 100%); color: #F4F6F3; min-height: 680px; display: flex; flex-direction: column">
+<div style="position: absolute; inset: 0; filter: url(#grain); opacity: 0.22; mix-blend-mode: multiply"></div>
+<div style="position: absolute; left: 62%; top: 58%; width: 260px; height: 260px; margin: -130px 0 0 -130px; background: radial-gradient(circle, rgba(246,240,200,0.5) 0%, rgba(246,240,200,0) 65%)"></div>
+<div style="position: absolute; left: 62%; top: 58%; width: 8px; height: 8px; margin: -4px 0 0 -4px; border-radius: 50%; background: #F6F0C8"></div>
+<header style="position: relative; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; padding: 28px 48px">
+<div style="display: flex; align-items: center; gap: 12px"><svg width="30" height="30" viewBox="0 0 48 48" role="img" aria-label="Adal mark"><g class="beam"><path d="M6 28 H42" stroke="currentColor" stroke-width="4.2" stroke-linecap="round" fill="none"/><circle cx="13" cy="19.2" r="6.8" fill="currentColor"/><circle cx="35" cy="19.2" r="6.8" fill="currentColor"/></g><path d="M24 31 L18 43 H30 Z" fill="currentColor"/><circle cx="24" cy="28" r="3.9" fill="#DDBB70"/></svg><span style="font-family: 'Outfit', system-ui, sans-serif; font-weight: 500; font-size: 28px;">Adal</span></div>
+<nav aria-label="Main" style="display: flex; flex-wrap: wrap; gap: 32px; font-size: 15px; font-weight: 500"><a href="#live" style="text-decoration: none">Live auctions</a><a href="#formats" style="text-decoration: none">How selling works</a><a href="#close" style="text-decoration: none">Sell</a></nav>
+<a class="btn" href="#close" style="display: inline-flex; align-items: center; height: 44px; padding: 0 20px; border: 1px solid rgba(244,246,243,0.6); border-radius: 10px; font-weight: 600; font-size: 15px; text-decoration: none; box-sizing: border-box">Sign in</a>
+</header>
+<div class="rise" style="position: relative; flex: 1; max-width: 1200px; width: 100%; margin: 0 auto; padding: 64px 48px 80px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: flex-end; gap: 28px">
+<h1 style="margin: 0; font-family: 'Bricolage Grotesque', system-ui, sans-serif; font-weight: 300; font-size: 88px; line-height: 1.04; letter-spacing: -0.03em; max-width: 860px; text-wrap: balance">Every bid counted. <i style="font-style: normal; color: #DDBB70">One</i> winner, one price.</h1>
+<p style="margin: 0; font-size: 19px; line-height: 1.6; color: #CFDAD2; max-width: 520px">Adal checks each bid against the live auction and the server’s clock, so the result is the same for everyone, even when many people bid in the same second.</p>
+<div style="display: flex; flex-wrap: wrap; gap: 12px"><a class="btn" href="#live" style="display: inline-flex; align-items: center; height: 52px; padding: 0 28px; border-radius: 10px; background: #F4F6F3; color: #0F1512; font-weight: 600; font-size: 16px; text-decoration: none; box-sizing: border-box">Browse live auctions</a><a class="btn" href="#formats" style="display: inline-flex; align-items: center; height: 52px; padding: 0 24px; border-radius: 10px; border: 1px solid rgba(244,246,243,0.6); font-weight: 600; font-size: 16px; text-decoration: none; box-sizing: border-box">How selling works</a></div>
+</div>
+</section>
+
+<section aria-label="Fair by design" style="max-width: 1200px; margin: 0 auto; padding: 72px 48px 0; box-sizing: border-box">
+<div style="display: flex; flex-wrap: wrap; gap: 32px 56px; padding-top: 28px; border-top: 1px solid #D5DBD5; position: relative">
+<span aria-hidden="true" style="position: absolute; left: 50%; top: -4px; width: 8px; height: 8px; margin-left: -4px; border-radius: 50%; background: #85601C"></span>
+<div style="flex: 1 1 240px; display: flex; flex-direction: column; gap: 6px"><b style="font-family: 'Bricolage Grotesque', system-ui, sans-serif; font-weight: 400; font-size: 24px">One clock</b><span style="font-size: 16px; line-height: 1.55; color: #27302B">Every bid is timed by the server, not by your device.</span></div>
+<div style="flex: 1 1 240px; display: flex; flex-direction: column; gap: 6px"><b style="font-family: 'Bricolage Grotesque', system-ui, sans-serif; font-weight: 400; font-size: 24px">The same rules</b><span style="font-size: 16px; line-height: 1.55; color: #27302B">Each bid is checked against the live auction before it counts.</span></div>
+<div style="flex: 1 1 240px; display: flex; flex-direction: column; gap: 6px"><b style="font-family: 'Bricolage Grotesque', system-ui, sans-serif; font-weight: 400; font-size: 24px">One result</b><span style="font-size: 16px; line-height: 1.55; color: #27302B">One winner, one price, and one transaction for every sale.</span></div>
+</div>
+</section>
+
+<section id="live" style="max-width: 1200px; margin: 0 auto; padding: 72px 48px 80px; box-sizing: border-box; display: flex; flex-direction: column; gap: 40px">
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 12px"><h2 style="margin: 0; font-family: 'Bricolage Grotesque', system-ui, sans-serif; font-weight: 300; font-size: 52px; line-height: 1.1; letter-spacing: -0.03em">Live <i style="font-style: normal; color: #85601C">now</i></h2><span style="font-size: 15px; color: #505B54">Times are shown in your timezone</span></div>
+<div style="display: flex; flex-wrap: wrap; gap: 40px">
+<a class="lot" href="Auction.dc.html" style="flex: 6 1 420px; min-width: 0; display: flex; flex-direction: column; gap: 16px">
+<div style="position: relative; overflow: hidden; border-radius: 16px; aspect-ratio: 4 / 5; background: #1E2124"><div class="pic" style="position: absolute; inset: 0"><img src="./img/balance.jpg" alt="Gilt brass balance on a marble base" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 60%"></div></div>
+<div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px"><div><div style="font-weight: 600; font-size: 20px">[Listing title]</div><div style="font-size: 15px; color: #505B54; margin-top: 4px">English · closes Fri 6 Nov, 20:00</div></div><div style="text-align: right"><div style="font-weight: 500; font-size: 28px; letter-spacing: -0.01em">240.00</div><div style="font-size: 14px; font-weight: 600; color: #3B5F4F">Live</div></div></div>
+</a>
+<div style="flex: 5 1 340px; min-width: 0; display: flex; flex-direction: column; gap: 40px">
+<a class="lot" href="Auction.dc.html" style="display: flex; flex-direction: column; gap: 14px">
+<div style="position: relative; overflow: hidden; border-radius: 16px; aspect-ratio: 3 / 2; background: #27302B"><div class="pic" style="position: absolute; inset: 0"><img src="./img/scales.jpg" alt="Brass weights and small scales in a wooden box" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 45%"></div></div>
+<div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px"><div><div style="font-weight: 600; font-size: 18px">[Listing title]</div><div style="font-size: 15px; color: #505B54; margin-top: 4px">Dutch · price falls every minute</div></div><div style="text-align: right"><div style="font-weight: 500; font-size: 24px">180.00</div><div style="font-size: 14px; font-weight: 600; color: #3B5F4F">Live</div></div></div>
+</a>
+<a class="lot" href="Auction.dc.html" style="display: flex; flex-direction: column; gap: 14px">
+<div style="position: relative; overflow: hidden; border-radius: 16px; aspect-ratio: 3 / 2; background: #C9CBD2"><div class="pic" style="position: absolute; inset: 0"><img src="./img/beam.jpg" alt="16th-century iron beam balance" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 42%"></div></div>
+<div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px"><div><div style="font-weight: 600; font-size: 18px">[Listing title]</div><div style="font-size: 15px; color: #505B54; margin-top: 4px">Vickrey · closes Sat 7 Nov, 18:00</div></div><div style="text-align: right"><div style="font-size: 16px; color: #505B54">Hidden</div><div style="font-size: 14px; font-weight: 600; color: #85601C">Ending soon</div></div></div>
+</a>
+</div>
+</div>
+</section>
+
+<section id="formats" style="border-top: 1px solid #D5DBD5">
+<div style="max-width: 1200px; margin: 0 auto; padding: 88px 48px; box-sizing: border-box; display: flex; flex-wrap: wrap; gap: 40px 72px">
+<h2 style="flex: 1 1 300px; margin: 0; font-family: 'Bricolage Grotesque', system-ui, sans-serif; font-weight: 300; font-size: 52px; line-height: 1.1; letter-spacing: -0.03em; text-wrap: balance">Sellers choose <i style="font-style: normal; color: #85601C">how</i> the item is sold.</h2>
+<div style="flex: 2 1 480px; min-width: 0; display: flex; flex-direction: column; border-top: 1px solid #D5DBD5">
+<div style="display: flex; flex-wrap: wrap; gap: 6px 24px; align-items: baseline; padding: 22px 0; border-bottom: 1px solid #D5DBD5"><b style="flex: 0 0 120px; font-family: 'Bricolage Grotesque', system-ui, sans-serif; font-weight: 400; font-size: 24px">English</b><span style="flex: 1 1 280px; font-size: 17px; line-height: 1.55; color: #27302B">Bids rise in the open. The highest bid at the close wins.</span></div>
+<div style="display: flex; flex-wrap: wrap; gap: 6px 24px; align-items: baseline; padding: 22px 0; border-bottom: 1px solid #D5DBD5"><b style="flex: 0 0 120px; font-family: 'Bricolage Grotesque', system-ui, sans-serif; font-weight: 400; font-size: 24px">Dutch</b><span style="flex: 1 1 280px; font-size: 17px; line-height: 1.55; color: #27302B">The price falls on a clock. The first person to accept it wins.</span></div>
+<div style="display: flex; flex-wrap: wrap; gap: 6px 24px; align-items: baseline; padding: 22px 0; border-bottom: 1px solid #D5DBD5"><b style="flex: 0 0 120px; font-family: 'Bricolage Grotesque', system-ui, sans-serif; font-weight: 400; font-size: 24px">Sealed</b><span style="flex: 1 1 280px; font-size: 17px; line-height: 1.55; color: #27302B">One hidden bid each. The highest bid wins and pays that bid.</span></div>
+<div style="display: flex; flex-wrap: wrap; gap: 6px 24px; align-items: baseline; padding: 22px 0; border-bottom: 1px solid #D5DBD5"><b style="flex: 0 0 120px; font-family: 'Bricolage Grotesque', system-ui, sans-serif; font-weight: 400; font-size: 24px">Vickrey</b><span style="flex: 1 1 280px; font-size: 17px; line-height: 1.55; color: #27302B">One hidden bid each. The highest bid wins and pays the second-highest.</span></div>
+</div>
+</div>
+</section>
+
+<footer id="close" style="background: #3B5F4F; color: #F4F6F3; padding: 48px; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 16px; font-size: 15px"><div style="display: flex; align-items: center; gap: 12px"><svg width="28" height="28" viewBox="0 0 48 48" role="img" aria-label="Adal mark"><g><path d="M6 28 H42" stroke="currentColor" stroke-width="4.2" stroke-linecap="round" fill="none"/><circle cx="13" cy="19.2" r="6.8" fill="currentColor"/><circle cx="35" cy="19.2" r="6.8" fill="currentColor"/></g><path d="M24 31 L18 43 H30 Z" fill="currentColor"/><circle cx="24" cy="28" r="3.9" fill="#DDBB70"/></svg><span style="font-family: 'Outfit', system-ui, sans-serif; font-size: 26px font-weight: 500;">Adal</span></div><span style="color: #CFDAD2; max-width: 520px">A bid is a binding commitment to buy. Demo photographs: The Metropolitan Museum of Art, public domain (CC0).</span></footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":1500}}'>
+class Component extends DCLogic {
+renderVals() {
+return {};
+}
+}
+</script>
+</body>
+</html>

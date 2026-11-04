@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Formats and Status</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;600;700&family=Golos+Text:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div style="width: 1280px; height: 800px; box-sizing: border-box; background: #F3F7F9; color: #0A2236; font-family: 'Golos Text', system-ui, sans-serif; display: flex; flex-direction: column">
+<div style="padding: 64px 80px 36px; display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: end">
+<h2 style="margin: 0; font-family: 'Unbounded', sans-serif; font-weight: 600; font-size: 36px; line-height: 1.2; letter-spacing: -0.02em; text-wrap: balance">Four formats. One engine. One color each.</h2>
+<p style="margin: 0; font-size: 16px; line-height: 1.6; color: #2A3F4E">A format color marks only the format name and its price curve, never anything else. Status stays neutral so the two never compete.</p>
+</div>
+<div style="flex: 1; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); border-top: 1px solid #D5E0E6">
+<div style="padding: 32px 28px 32px 80px; border-right: 1px solid #D5E0E6; display: flex; flex-direction: column; gap: 14px">
+<svg width="120" height="64" viewBox="0 0 120 64" aria-hidden="true"><path d="M4 56 H34 V42 H64 V28 H94 V10 H116" fill="none" stroke="#3B55C9" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+<div style="font-family: 'Unbounded', sans-serif; font-weight: 600; font-size: 24px; color: #3B55C9; letter-spacing: -0.02em">English</div>
+<div style="font-size: 15px; line-height: 1.55; color: #2A3F4E">Bids climb in the open. The highest bidder wins at their bid, and late bids extend the end.</div>
+<div style="font-size: 13px; color: #4F6472; margin-top: auto">For collectibles</div>
+</div>
+<div style="padding: 32px 28px; border-right: 1px solid #D5E0E6; display: flex; flex-direction: column; gap: 14px">
+<svg width="120" height="64" viewBox="0 0 120 64" aria-hidden="true"><path d="M4 10 H34 V24 H64 V38 H94 V54 H116" fill="none" stroke="#A3265F" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+<div style="font-family: 'Unbounded', sans-serif; font-weight: 600; font-size: 24px; color: #A3265F; letter-spacing: -0.02em">Dutch</div>
+<div style="font-size: 15px; line-height: 1.55; color: #2A3F4E">The server lowers the price on a clock. The first valid acceptance wins.</div>
+<div style="font-size: 13px; color: #4F6472; margin-top: auto">For perishable goods</div>
+</div>
+<div style="padding: 32px 28px; border-right: 1px solid #D5E0E6; display: flex; flex-direction: column; gap: 14px">
+<svg width="120" height="64" viewBox="0 0 120 64" aria-hidden="true"><rect x="10" y="12" width="100" height="42" rx="6" fill="none" stroke="#0A2236" stroke-width="4"/><path d="M14 16 L60 40 L106 16" fill="none" stroke="#0A2236" stroke-width="4" stroke-linejoin="round"/></svg>
+<div style="font-family: 'Unbounded', sans-serif; font-weight: 600; font-size: 24px; color: #0A2236; letter-spacing: -0.02em">Sealed</div>
+<div style="font-size: 15px; line-height: 1.55; color: #2A3F4E">One hidden bid each. The highest bidder wins and pays their own bid.</div>
+<div style="font-size: 13px; color: #4F6472; margin-top: auto">For one-off deals</div>
+</div>
+<div style="padding: 32px 80px 32px 28px; display: flex; flex-direction: column; gap: 14px">
+<svg width="120" height="64" viewBox="0 0 120 64" aria-hidden="true"><rect x="10" y="12" width="100" height="42" rx="6" fill="none" stroke="#6D3FC4" stroke-width="4"/><path d="M14 16 L60 40 L106 16" fill="none" stroke="#6D3FC4" stroke-width="4" stroke-linejoin="round"/><path d="M40 4 H80" stroke="#6D3FC4" stroke-width="4" stroke-linecap="round"/></svg>
+<div style="font-family: 'Unbounded', sans-serif; font-weight: 600; font-size: 24px; color: #6D3FC4; letter-spacing: -0.02em">Vickrey</div>
+<div style="font-size: 15px; line-height: 1.55; color: #2A3F4E">Sealed bids. The highest bidder wins and pays the second-highest bid, or the reserve.</div>
+<div style="font-size: 13px; color: #4F6472; margin-top: auto">For true-value bids</div>
+</div>
+</div>
+<div style="background: #0A2236; color: #F3F7F9; padding: 22px 80px; display: flex; align-items: center; justify-content: space-between; font-size: 15px; font-weight: 600">
+<span style="display: inline-flex; align-items: center; gap: 8px"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.2" fill="none" stroke="#F3F7F9" stroke-width="1.8"/><path d="M8 4.5 V8 L10.5 9.5" fill="none" stroke="#F3F7F9" stroke-width="1.8" stroke-linecap="round"/></svg>Upcoming</span>
+<span style="display: inline-flex; align-items: center; gap: 8px"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="4" fill="#7FE0BC"/></svg>Live</span>
+<span style="display: inline-flex; align-items: center; gap: 8px"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5 L6.5 12 L13 4.5" fill="none" stroke="#F2B632" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Sold</span>
+<span style="display: inline-flex; align-items: center; gap: 8px"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8 H13" stroke="#F3F7F9" stroke-width="2" stroke-linecap="round"/></svg>No sale</span>
+<span style="display: inline-flex; align-items: center; gap: 8px"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 4 L12 12 M12 4 L4 12" stroke="#F3F7F9" stroke-width="2" stroke-linecap="round"/></svg>Cancelled</span>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":800}}'>
+class Component extends DCLogic {
+renderVals() {
+return {};
+}
+}
+</script>
+</body>
+</html>
