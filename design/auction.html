@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Box of brass weights with small balance | Adal</title>
+<meta name="description" content="Auction page with the bidding desk and every state it can be in.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300;12..96,400;12..96,500;12..96,600&family=Instrument+Sans:wght@400;500;600;700&family=Outfit:wght@500&display=swap">
+<link rel="stylesheet" href="adal.css">
+<script src="adal.js"></script>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>
+<symbol id="mark" viewBox="0 0 190 150"><circle cx="45" cy="37" r="32" fill="currentColor"/><circle cx="148" cy="37" r="32" fill="currentColor"/><rect x="2" y="69" width="189" height="20" rx="10" fill="currentColor"/><path d="M96 97 68 149h57z" fill="currentColor"/><circle cx="96" cy="78" r="18" style="fill:var(--mark-dot,#85601C)"/></symbol>
+<symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></symbol>
+<symbol id="i-down" viewBox="0 0 24 24"><path d="M12 5v14M6 13l6 6 6-6"/></symbol>
+<symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+<symbol id="i-alert" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16.5v.01"/></symbol>
+<symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.01"/></symbol>
+<symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></symbol>
+<symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+<symbol id="i-upload" viewBox="0 0 24 24"><path d="M12 16V5M7 10l5-5 5 5M5 19h14"/></symbol>
+<symbol id="i-dot" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4" style="fill:currentColor"/></symbol>
+<symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+<symbol id="i-eye" viewBox="0 0 24 24"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></symbol>
+</defs></svg>
+<a class="skip" href="#main">Skip to content</a>
+<div class="ann" role="region" aria-label="Notices"><div class="ann-track"><ul><li>Sample screens: items, prices and times are illustrations</li><li>Checkout is simulated: no real payments</li><li>One winner, one price</li><li>The server clock decides what arrived in time</li></ul><ul aria-hidden="true"><li>Sample screens: items, prices and times are illustrations</li><li>Checkout is simulated: no real payments</li><li>One winner, one price</li><li>The server clock decides what arrived in time</li></ul><ul aria-hidden="true"><li>Sample screens: items, prices and times are illustrations</li><li>Checkout is simulated: no real payments</li><li>One winner, one price</li><li>The server clock decides what arrived in time</li></ul><ul aria-hidden="true"><li>Sample screens: items, prices and times are illustrations</li><li>Checkout is simulated: no real payments</li><li>One winner, one price</li><li>The server clock decides what arrived in time</li></ul></div></div>
+<header class="site-head"><div class="wrap">
+<a class="brand" href="index.html"><svg aria-hidden="true"><use href="#mark"/></svg>Adal</a>
+<nav class="site-nav" aria-label="Main" data-glide data-glide-hover><a href="auctions.html" aria-current="page">Auctions</a><a href="sell.html">Sell</a><a href="index.html#how">How it works</a></nav>
+<div class="acts"><a class="btn second" href="account.html#sign-in">Sign in</a><a class="btn" href="account.html#create" style="min-height:48px;padding:0 20px">Create account</a></div></div></header>
+<style>
+.crumbs{padding:28px 0 8px;font-size:15px;color:var(--muted)}
+.crumbs a{color:var(--muted)}
+.crumbs span[aria-current]{color:var(--ink)}
+.lot-top{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);gap:64px;align-items:start;padding-top:16px}
+.photo{position:sticky;top:24px}
+.photo .ph{border-radius:var(--r-surf);overflow:hidden;background:var(--moss-deep);aspect-ratio:4/5}
+.photo img{width:100%;height:100%;object-fit:cover}
+.photo figcaption{font-size:13px;color:var(--muted);margin-top:10px}
+.side{display:flex;flex-direction:column;gap:24px;min-width:0}
+.side h1{font:300 clamp(34px,3.6vw,48px)/1.1 var(--display);letter-spacing:-.03em;color:var(--ink);text-wrap:balance}
+.side .by{color:var(--muted);font-size:16px}
+.desk .figure{margin-top:2px}
+.desk .big-note{font:400 24px/1.2 var(--display);color:var(--ink)}
+.desk [hidden]{display:none!important}
+.sec{padding:56px 0 0}
+.sec h2{font:400 28px/1.2 var(--display);color:var(--ink);margin-bottom:20px}
+.sec .cols{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);gap:64px;align-items:start}
+.dl{display:grid;grid-template-columns:120px 1fr;gap:0}
+.dl dt,.dl dd{padding:14px 0;border-bottom:1px solid var(--rule)}
+.dl dt{font:600 14px/1.6 var(--text);color:var(--muted)}
+.dl dd{color:var(--ink)}
+.rules li{display:grid;grid-template-columns:24px 1fr;gap:12px;padding:14px 0}
+.rules .icon{margin-top:4px;color:var(--moss)}
+@media (max-width:960px){
+  .lot-top,.sec .cols{grid-template-columns:1fr;gap:32px}
+  .photo{position:static}
+  .photo .ph{aspect-ratio:4/3}
+}
+</style>
+
+<div class="proto" role="region" aria-label="Prototype states, not part of the product">
+  <div class="wrap">
+    <span class="eyebrow">Prototype states</span>
+    <div id="states" data-glide role="group" aria-label="Choose a state to preview"></div>
+  </div>
+</div>
+
+<main id="main" class="wrap">
+  <nav class="crumbs" aria-label="Breadcrumb"><a href="auctions.html">Auctions</a> / <span aria-current="page">Box of brass weights with small balance</span></nav>
+
+  <div class="lot-top">
+    <figure class="photo">
+      <div class="ph"><img src="img/scales.jpg" alt="A wooden box of brass weights beside a small pair of balance scales"></div>
+      <figcaption>Sample listing photo. Public domain.</figcaption>
+    </figure>
+
+    <div class="side">
+      <div>
+        <h1>Box of brass weights with small balance</h1>
+        <p class="by" style="margin-top:12px">Sold by Seller 12</p>
+      </div>
+
+      <div id="offline" class="banner desk" hidden style="box-shadow:none;background:var(--brass-tint);color:var(--brass);padding:14px 16px;border-radius:var(--r-ctl);flex-direction:row;gap:10px;font-weight:500;font-size:15px;line-height:1.5">
+        <svg class="icon" aria-hidden="true" style="margin-top:2px"><use href="#i-alert"/></svg>
+        <span>Connection lost. Prices on this page may be out of date. Bidding resumes when we reconnect.</span>
+      </div>
+
+      <section class="desk" id="desk" aria-label="Bidding desk">
+        <div class="row">
+          <span class="pill live" id="pill"></span>
+          <span class="meta">English auction</span>
+        </div>
+        <div>
+          <p class="label" id="price-label">Current price</p>
+          <p class="figure" id="price">245.00</p>
+        </div>
+        <p class="meta" id="time"></p>
+        <div id="note" role="status" aria-live="polite"></div>
+        <form id="bid-form" onsubmit="return false" style="display:flex;flex-direction:column;gap:20px">
+          <fieldset class="presets" id="presets" aria-label="Choose your bid"></fieldset>
+          <div class="field" id="custom-f">
+            <label for="custom">Other amount</label>
+            <input class="input" id="custom" inputmode="decimal" placeholder="260.00 or more">
+            <span class="hint" id="custom-hint">The lowest bid you can place now is shown on the first preset.</span>
+          </div>
+          <button class="btn block" id="go" type="submit"></button>
+        </form>
+        <a class="btn block" id="checkout" href="checkout.html" hidden>Continue to checkout</a>
+        <a class="btn second block" id="browse" href="auctions.html" hidden>Browse other auctions</a>
+        <hr class="rule">
+        <p class="fine" id="fine">A bid is a binding commitment. Bids are checked against the live auction, and the server clock decides the order.</p>
+      </section>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="cols">
+      <div>
+        <h2>About this lot</h2>
+        <p class="measure">A wooden box of brass weights beside a small pair of balance scales. The listing text, condition notes and provenance written by the seller appear here.</p>
+        <p class="sample" style="margin-top:12px">Sample text for layout. Replace with the seller's description.</p>
+      </div>
+      <div>
+        <h2>Details</h2>
+        <dl class="dl">
+          <dt>Format</dt><dd>English, ascending bids</dd>
+          <dt>Opened</dt><dd>Wednesday 11 November, 18:00</dd>
+          <dt>Closes</dt><dd>Thursday 12 November, 18:00</dd>
+          <dt>Reserve</dt><dd id="reserve">Reserve met</dd>
+          <dt>Bids</dt><dd>14</dd>
+        </dl>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="cols">
+      <div>
+        <h2>How this auction works</h2>
+        <ul class="rules ruled">
+          <li><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg><span>The highest bid when the clock reaches the closing time wins.</span></li>
+          <li><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg><span>Each new bid must be above the current price by at least the increment.</span></li>
+          <li><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg><span>A bid in the last minutes extends the closing time, so nobody wins on a last-second bid they could not answer.</span></li>
+          <li><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg><span>The reserve price is hidden. You are only told whether it is met.</span></li>
+        </ul>
+      </div>
+      <div>
+        <h2>Bid history</h2>
+        <table class="tbl">
+          <thead><tr><th scope="col">Time</th><th scope="col">Bidder</th><th scope="col" class="num">Amount</th></tr></thead>
+          <tbody id="history">
+            <tr><td>17:47:12</td><td>Bidder 7</td><td class="num"><b>245.00</b></td></tr>
+            <tr><td>17:44:03</td><td>Bidder 3</td><td class="num">240.00</td></tr>
+            <tr><td>17:39:51</td><td>Bidder 7</td><td class="num">235.00</td></tr>
+            <tr><td>17:31:20</td><td>Bidder 9</td><td class="num">225.00</td></tr>
+          </tbody>
+        </table>
+        <p class="sample" style="margin-top:12px">Bidders are shown by number, never by name.</p>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer class="site-foot"><div class="wrap">
+<div class="cols">
+<div><a class="brand" href="index.html" style="padding:0"><svg aria-hidden="true" style="width:40px;height:32px"><use href="#mark"/></svg>Adal</a><p style="margin-top:16px;max-width:32ch">Fair and honest. An online auction service where every bid weighs the same.</p></div>
+<div><h2>Buy</h2><a href="auctions.html">Browse auctions</a><a href="index.html#how">How bidding works</a></div>
+<div><h2>Sell</h2><a href="sell.html">Create a listing</a><a href="index.html#formats">Selling formats</a></div>
+<div><h2>Account</h2><a href="account.html#sign-in">Sign in</a><a href="account.html#create">Create account</a></div>
+</div>
+<div class="base"><span>Adal &middot; Senior project, Fall 2026</span><span>Sample lots and prices on these pages are illustrations.</span></div>
+</div></footer>
+<script>
+(function(){
+  var I=function(n){return '<svg class="icon" aria-hidden="true"><use href="#i-'+n+'"/></svg>'};
+  var S={
+    live:{label:'Live',pill:['live','dot','Live'],price:'245.00',time:'<b>Ends in <span data-t="760">00:12:40</span></b> &middot; Closes Thursday 12 November, 18:00',presets:['250.00','255.00','265.00'],go:'Place bid &middot; 250.00',reserve:'Reserve met'},
+    ending:{label:'Ending soon',pill:['live','dot','Live'],price:'245.00',time:'<span class="ending">'+I('clock')+'Ending soon</span> <b>Ends in <span data-t="130">00:02:10</span></b> &middot; Closes Thursday 12 November, 18:00',note:['info','A bid in the last minutes extends the closing time.'],presets:['250.00','255.00','265.00'],go:'Place bid &middot; 250.00',reserve:'Reserve met'},
+    winning:{label:'You are winning',pill:['win','check','Winning'],price:'250.00',time:'<b>Ends in <span data-t="610">00:10:10</span></b> &middot; Closes Thursday 12 November, 18:00',note:['ok','Your bid of 250.00 is the highest. If someone outbids you, this changes here at once.'],presets:['255.00','260.00','270.00'],go:'You hold the highest bid',off:true,reserve:'Reserve met'},
+    outbid:{label:'Outbid',pill:['out','down','Outbid'],price:'255.00',time:'<b>Ends in <span data-t="540">00:09:00</span></b> &middot; Closes Thursday 12 November, 18:00',note:['bad','Someone bid 255.00. Your last bid was 250.00. Choose a new amount to bid again.'],presets:['260.00','265.00','275.00'],go:'Place bid &middot; 260.00',reserve:'Reserve met'},
+    rejected:{label:'Bid not placed',pill:['live','dot','Live'],price:'255.00',time:'<b>Ends in <span data-t="500">00:08:20</span></b> &middot; Closes Thursday 12 November, 18:00',note:['bad','Your bid of 250.00 was not placed. The price moved to 255.00 before it reached the server. Pick 260.00 or more and try again.'],presets:['260.00','265.00','275.00'],go:'Place bid &middot; 260.00',reserve:'Reserve met'},
+    offline:{label:'Connection lost',pill:['out','alert','Offline'],price:'245.00',time:'<b>Last update 17:47:12</b> &middot; Closes Thursday 12 November, 18:00',presets:['250.00','255.00','265.00'],go:'Bidding paused',off:true,offline:true,reserve:'Reserve met'},
+    won:{label:'You won',pill:['win','check','Closed'],plabel:'Final price',price:'260.00',time:'<b>Closed</b> Thursday 12 November, 18:00',big:'You won this auction.',closed:'won',reserve:'Reserve met'},
+    nosale:{label:'No sale',pill:['plain','',' No sale'],plabel:'Last bid',price:'245.00',time:'<b>Closed</b> Thursday 12 November, 18:00',big:'There is no winner. The reserve price was not met.',closed:'nosale',reserve:'Reserve not met'}
+  };
+  var order=['live','ending','winning','outbid','rejected','offline','won','nosale'];
+  var $=function(id){return document.getElementById(id)};
+  var timer=null;
+
+  function fmt(s){var h=Math.floor(s/3600),m=Math.floor(s%3600/60),x=s%60;return [h,m,x].map(function(n){return String(n).padStart(2,'0')}).join(':')}
+  function tick(){
+    clearInterval(timer);
+    var el=document.querySelector('[data-t]'); if(!el) return;
+    var s=+el.getAttribute('data-t');
+    timer=setInterval(function(){s=Math.max(0,s-1);el.textContent=fmt(s);},1000);
+  }
+  function setBtn(){
+    var c=document.querySelector('#presets input:checked');
+    if(c && !$('go').disabled) $('go').innerHTML='Place bid &middot; '+c.value;
+  }
+  function render(key){
+    var s=S[key];
+    var p=$('pill'); p.className='pill '+s.pill[0];
+    p.innerHTML=(s.pill[1]?I(s.pill[1]):'')+s.pill[2].trim();
+    $('price-label').textContent=s.plabel||'Current price';
+    Adal.num($('price'),s.price);
+    $('time').innerHTML=s.time;
+    $('reserve').textContent=s.reserve;
+    var n=$('note');
+    if(s.big){n.innerHTML='<p class="big-note">'+s.big+'</p>'}
+    else if(s.note){
+      var k=s.note[0];
+      n.innerHTML=k==='bad'?'<div class="banner">'+I('alert')+'<span>'+s.note[1]+'</span></div>':
+        '<p class="msg '+(k==='ok'?'ok':'')+'" style="'+(k==='info'?'color:var(--muted);font-weight:400':'')+'">'+I(k==='ok'?'check':'info')+'<span>'+s.note[1]+'</span></p>';
+    } else n.innerHTML='';
+    var closed=!!s.closed;
+    $('bid-form').hidden=closed;
+    $('checkout').hidden=s.closed!=='won';
+    $('browse').hidden=s.closed!=='nosale';
+    $('fine').hidden=closed; $('desk').querySelector('hr').hidden=closed;
+    $('offline').hidden=!s.offline;
+    if(!closed){
+      var first=true;
+      $('presets').innerHTML=s.presets.map(function(v,i){
+        return '<label class="preset"><input type="radio" name="bid" value="'+v+'"'+(i===0&&!s.off?' checked':'')+(s.off?' disabled':'')+'><span>'+v+'</span></label>';
+      }).join('');
+      $('go').innerHTML=s.go; $('go').disabled=!!s.off;
+      $('custom').disabled=!!s.off;
+      $('custom').placeholder=s.presets[0]+' or more';
+      $('custom-hint').textContent='The lowest bid you can place now is '+s.presets[0]+'.';
+      Adal.glide($('presets'));
+    }
+    Array.prototype.forEach.call($('states').children,function(b){b.setAttribute('aria-pressed',b.dataset.k===key)});
+    tick();
+    if(history.replaceState) history.replaceState(null,'','#'+key);
+  }
+  $('presets').addEventListener('change',setBtn);
+  $('bid-form').addEventListener('submit',function(){
+    if($('go').disabled) return;
+    var c=document.querySelector('#presets input:checked'), v=parseFloat($('custom').value), min=parseFloat($('custom').placeholder);
+    var amt=(c&&isNaN(v))?parseFloat(c.value):(v>=min?v:(c?parseFloat(c.value):min));
+    var f=function(n){return n.toFixed(2)};
+    S.winning.price=f(amt);
+    S.winning.presets=[f(amt+5),f(amt+10),f(amt+20)];
+    S.winning.note=['ok','Your bid of '+f(amt)+' is the highest. If someone outbids you, this changes here at once.'];
+    $('custom').value='';
+    render('winning');
+    Adal.toast('Bid placed','Your bid of '+f(amt)+' is now the highest.');
+  });
+  $('states').innerHTML=order.map(function(k){return '<button type="button" data-k="'+k+'" aria-pressed="false">'+S[k].label+'</button>'}).join('');
+  $('states').addEventListener('click',function(e){var b=e.target.closest('button'); if(b) render(b.dataset.k)});
+  var h=location.hash.slice(1); render(S[h]?h:'live');
+})();
+</script>
+
+</body>
+</html>

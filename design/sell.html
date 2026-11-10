@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Create a listing | Adal</title>
+<meta name="description" content="A seller chooses the auction format, price and schedule, and sees the rules bidders will see.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300;12..96,400;12..96,500;12..96,600&family=Instrument+Sans:wght@400;500;600;700&family=Outfit:wght@500&display=swap">
+<link rel="stylesheet" href="adal.css">
+<script src="adal.js"></script>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>
+<symbol id="mark" viewBox="0 0 190 150"><circle cx="45" cy="37" r="32" fill="currentColor"/><circle cx="148" cy="37" r="32" fill="currentColor"/><rect x="2" y="69" width="189" height="20" rx="10" fill="currentColor"/><path d="M96 97 68 149h57z" fill="currentColor"/><circle cx="96" cy="78" r="18" style="fill:var(--mark-dot,#85601C)"/></symbol>
+<symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></symbol>
+<symbol id="i-down" viewBox="0 0 24 24"><path d="M12 5v14M6 13l6 6 6-6"/></symbol>
+<symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+<symbol id="i-alert" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16.5v.01"/></symbol>
+<symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.01"/></symbol>
+<symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></symbol>
+<symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+<symbol id="i-upload" viewBox="0 0 24 24"><path d="M12 16V5M7 10l5-5 5 5M5 19h14"/></symbol>
+<symbol id="i-dot" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4" style="fill:currentColor"/></symbol>
+<symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+<symbol id="i-eye" viewBox="0 0 24 24"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></symbol>
+</defs></svg>
+<a class="skip" href="#main">Skip to content</a>
+<div class="ann" role="region" aria-label="Notices"><div class="ann-track"><ul><li>Sample screens: items, prices and times are illustrations</li><li>Checkout is simulated: no real payments</li><li>One winner, one price</li><li>The server clock decides what arrived in time</li></ul><ul aria-hidden="true"><li>Sample screens: items, prices and times are illustrations</li><li>Checkout is simulated: no real payments</li><li>One winner, one price</li><li>The server clock decides what arrived in time</li></ul><ul aria-hidden="true"><li>Sample screens: items, prices and times are illustrations</li><li>Checkout is simulated: no real payments</li><li>One winner, one price</li><li>The server clock decides what arrived in time</li></ul><ul aria-hidden="true"><li>Sample screens: items, prices and times are illustrations</li><li>Checkout is simulated: no real payments</li><li>One winner, one price</li><li>The server clock decides what arrived in time</li></ul></div></div>
+<header class="site-head"><div class="wrap">
+<a class="brand" href="index.html"><svg aria-hidden="true"><use href="#mark"/></svg>Adal</a>
+<nav class="site-nav" aria-label="Main" data-glide data-glide-hover><a href="auctions.html">Auctions</a><a href="sell.html" aria-current="page">Sell</a><a href="index.html#how">How it works</a></nav>
+<div class="acts"><a class="btn second" href="account.html#sign-in">Account</a></div></div></header>
+<style>
+.page-head{padding:56px 0 40px;display:flex;flex-direction:column;gap:16px}
+.lay{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,.75fr);gap:72px;align-items:start}
+.sec{padding:40px 0;border-top:1px solid var(--rule);display:flex;flex-direction:column;gap:24px}
+.sec:first-child{border-top:0;padding-top:0}
+.sec .legend{font:400 28px/1.2 var(--display);color:var(--ink)}
+.sec .num{color:var(--muted);margin-right:12px;font-weight:300}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.drop{border:2px dashed var(--edge);border-radius:var(--r-surf);padding:32px;display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center;background:var(--card)}
+.drop .icon{width:32px;height:32px;color:var(--moss)}
+.drop.has{display:grid;grid-template-columns:96px 1fr auto;text-align:left;align-items:center;border-style:solid;border-width:1px;border-color:var(--rule);padding:16px}
+.drop img{width:96px;height:96px;object-fit:cover;border-radius:var(--r-ctl)}
+.fmt{display:grid;grid-template-columns:1fr 1fr;gap:12px;border:0;padding:0;margin:0}
+.fmt label{position:relative;display:block}
+.fmt input{position:absolute;inset:0;opacity:0;margin:0;cursor:pointer}
+.fmt label>span{display:flex;flex-direction:column;gap:4px;height:100%;padding:18px 20px;background:var(--card);border:1px solid var(--edge);border-radius:var(--r-ctl);transition:background .3s var(--ease),border-color .3s var(--ease)}
+.fmt b{font:400 22px/1.2 var(--display);color:var(--ink)}
+.fmt small{font-size:14px;color:var(--muted);line-height:1.45}
+.fmt input:checked+span{border:1.5px solid var(--moss);background:var(--moss-tint)}
+.fmt input:focus-visible+span{outline:2px solid var(--moss);outline-offset:2px}
+.fmt input:disabled+span{border-style:dashed;background:transparent;opacity:.85}
+.fmt input:disabled{cursor:not-allowed}
+.fmt .soon{font:600 13px/1.4 var(--text);color:var(--muted)}
+.form-acts{display:flex;gap:12px;flex-wrap:wrap;padding-top:32px;border-top:1px solid var(--rule)}
+.preview{position:sticky;top:24px;display:flex;flex-direction:column;gap:16px}
+.preview .card{background:var(--card);border-radius:var(--r-surf);padding:20px;display:flex;flex-direction:column;gap:16px;border:1px solid var(--rule)}
+.preview .ph{aspect-ratio:4/3;border-radius:var(--r-ctl);overflow:hidden;background:var(--moss-deep)}
+.preview .ph img{width:100%;height:100%;object-fit:cover}
+.preview h2{font:400 24px/1.2 var(--display);color:var(--ink);overflow-wrap:anywhere}
+.preview .price b{font:500 32px/1 var(--text);letter-spacing:-.02em;color:var(--ink)}
+.preview ul li{display:grid;grid-template-columns:24px 1fr;gap:10px;padding:10px 0;font-size:15px;color:var(--body)}
+.preview ul .icon{margin-top:3px;color:var(--moss)}
+.secure{display:flex;gap:12px;align-items:center;padding:14px 16px;border-radius:var(--r-ctl);background:var(--moss-tint);color:var(--moss);font-weight:500;font-size:15px}
+@media (max-width:960px){.lay{grid-template-columns:1fr;gap:40px}.preview{position:static}.fmt,.two{grid-template-columns:1fr}}
+</style>
+
+<main id="main" class="wrap">
+  <header class="page-head">
+    <h1 class="headline">Create a <i>listing</i></h1>
+    <p class="lede">Choose how the item is sold, set the price and the schedule, and check what bidders will see before you publish.</p>
+    <p class="secure" style="align-self:flex-start"><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg>Signed in with two-step sign-in, required for selling</p>
+  </header>
+
+  <div class="lay">
+    <form id="f" onsubmit="return false">
+
+      <section class="sec" role="group" aria-labelledby="g1">
+        <h2 class="legend" id="g1"><span class="num">1</span>The item</h2>
+        <div class="field"><label for="title">Title</label><input class="input" id="title" value="Box of brass weights with small balance" maxlength="80"><span class="hint">Say what it is in plain words. Up to 80 characters.</span></div>
+        <div class="field"><label for="desc">Description</label><textarea class="textarea" id="desc" placeholder="Condition, size, history, anything a buyer should know before bidding."></textarea></div>
+        <div class="field">
+          <span class="label">Photos</span>
+          <div class="drop" id="drop">
+            <svg class="icon" aria-hidden="true"><use href="#i-upload"/></svg>
+            <p><b>Drop photos here</b> or choose them from your device</p>
+            <button class="btn second" type="button" id="pick">Choose photos</button>
+            <p class="note">JPEG or PNG. The first photo is the cover.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="sec" role="group" aria-labelledby="g2">
+        <h2 class="legend" id="g2"><span class="num">2</span>How it is sold</h2>
+        <div class="fmt" role="radiogroup" aria-label="Selling format" data-glide>
+          <label><input type="radio" name="fmt" value="english" checked><span><b>English</b><small>The price rises with each bid. Highest bid at close wins.</small></span></label>
+          <label><input type="radio" name="fmt" value="dutch" disabled><span><b>Dutch</b><small>The price falls on a schedule. First to accept wins.</small><span class="soon">Coming soon</span></span></label>
+          <label><input type="radio" name="fmt" value="sealed1" disabled><span><b>Sealed first-price</b><small>One hidden bid each. Highest wins and pays their bid.</small><span class="soon">Coming soon</span></span></label>
+          <label><input type="radio" name="fmt" value="sealed2" disabled><span><b>Sealed second-price</b><small>One hidden bid each. Highest wins, pays the second-highest.</small><span class="soon">Coming soon</span></span></label>
+        </div>
+      </section>
+
+      <section class="sec" role="group" aria-labelledby="g3">
+        <h2 class="legend" id="g3"><span class="num">3</span>Price and schedule</h2>
+        <div class="two">
+          <div class="field"><label for="start">Starting price</label><input class="input" id="start" inputmode="decimal" value="200.00"><span class="hint">The first bid must be at least this.</span></div>
+          <div class="field"><label for="reserve">Reserve price <span style="font-weight:400;color:var(--muted)">(optional)</span></label><input class="input" id="reserve" inputmode="decimal" placeholder="Not set"><span class="hint">Bidders never see this number. They only see whether it is met.</span></div>
+        </div>
+        <div class="two">
+          <div class="field"><label for="opens">Opens</label><input class="input" id="opens" type="datetime-local" value="2026-11-11T18:00"></div>
+          <div class="field"><label for="closes">Closes</label><input class="input" id="closes" type="datetime-local" value="2026-11-12T18:00"></div>
+        </div>
+        <div class="field bad" id="err-wrap" hidden><p class="msg" role="alert"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg><span>The closing time must be after the opening time. Move the closing time later and try again.</span></p></div>
+      </section>
+
+      <div class="form-acts">
+        <button class="btn" type="submit" id="publish">Publish auction</button>
+        <button class="btn second" type="button">Save draft</button>
+      </div>
+    </form>
+
+    <aside class="preview" aria-label="What bidders will see">
+      <div class="card">
+        <div class="ph"><img src="img/scales.jpg" alt="Sample listing photo"></div>
+        <span class="pill plain" style="padding:0">Opens Wednesday 11 November, 18:00</span>
+        <h2 id="pv-title">Box of brass weights with small balance</h2>
+        <p class="price"><span class="label">Starting price</span><br><b id="pv-price">200.00</b></p>
+        <ul class="ruled">
+          <li><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg><span>English auction: the highest bid at the close wins.</span></li>
+          <li><svg class="icon" aria-hidden="true"><use href="#i-clock"/></svg><span id="pv-close">Closes Thursday 12 November, 18:00</span></li>
+          <li><svg class="icon" aria-hidden="true"><use href="#i-eye"/></svg><span id="pv-res">No reserve price</span></li>
+        </ul>
+      </div>
+      <p class="note">Rules are shown on the auction page before anyone bids. Changing them after the first bid is not allowed.</p>
+    </aside>
+  </div>
+</main>
+
+<footer class="site-foot"><div class="wrap">
+<div class="cols">
+<div><a class="brand" href="index.html" style="padding:0"><svg aria-hidden="true" style="width:40px;height:32px"><use href="#mark"/></svg>Adal</a><p style="margin-top:16px;max-width:32ch">Fair and honest. An online auction service where every bid weighs the same.</p></div>
+<div><h2>Buy</h2><a href="auctions.html">Browse auctions</a><a href="index.html#how">How bidding works</a></div>
+<div><h2>Sell</h2><a href="sell.html">Create a listing</a><a href="index.html#formats">Selling formats</a></div>
+<div><h2>Account</h2><a href="account.html#sign-in">Sign in</a><a href="account.html#create">Create account</a></div>
+</div>
+<div class="base"><span>Adal &middot; Senior project, Fall 2026</span><span>Sample lots and prices on these pages are illustrations.</span></div>
+</div></footer>
+<script>
+(function(){
+  var $=function(i){return document.getElementById(i)};
+  $('title').addEventListener('input',function(){$('pv-title').textContent=this.value||'Untitled item'});
+  $('start').addEventListener('input',function(){$('pv-price').textContent=this.value||'0.00'});
+  $('reserve').addEventListener('input',function(){$('pv-res').textContent=this.value?'Reserve price set. Bidders see whether it is met.':'No reserve price'});
+  function chk(){
+    var bad=$('closes').value && $('opens').value && $('closes').value<=$('opens').value;
+    $('err-wrap').hidden=!bad; $('closes').setAttribute('aria-invalid',bad?'true':'false'); $('err-wrap').parentNode.querySelector('#closes').closest('.field').classList.toggle('bad',bad);
+    if(!bad){var d=new Date($('closes').value); if(!isNaN(d)) $('pv-close').textContent='Closes '+d.toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long'})+', '+d.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'})}
+  }
+  $('opens').addEventListener('change',chk); $('closes').addEventListener('change',chk);
+  $('pick').addEventListener('click',function(){
+    var d=$('drop'); d.className='drop';
+    d.innerHTML='<p><b>scales.jpg</b></p><div class="prog" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" style="width:100%;max-width:320px"><i></i></div><p class="note" id="pct" aria-live="polite">Uploading 0%</p>';
+    var bar=d.querySelector('.prog i'),pb=d.querySelector('.prog'),pct=$('pct'),n=0;
+    var t=setInterval(function(){
+      n=Math.min(100,n+(window.Adal&&Adal.reduce?100:8+Math.round(Math.random()*14)));
+      bar.style.width=n+'%'; pb.setAttribute('aria-valuenow',n); pct.textContent=n<100?'Uploading '+n+'%':'Uploaded';
+      if(n>=100){clearInterval(t);setTimeout(function(){
+        d.className='drop has';
+        d.innerHTML='<img src="img/scales.jpg" alt="Selected photo"><div><p><b>scales.jpg</b></p><p class="note">Cover photo</p></div><button class="link-btn" type="button" id="rm">Remove</button>';
+        $('rm').addEventListener('click',function(){location.reload()});
+        if(window.Adal) Adal.toast('Photo added','It is the cover photo of this listing.');
+      },350)}
+    },180);
+  });
+})();
+</script>
+
+</body>
+</html>

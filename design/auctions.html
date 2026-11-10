@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Auctions | Adal</title>
+<meta name="description" content="Browse live, ending and upcoming auctions on Adal.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300;12..96,400;12..96,500;12..96,600&family=Instrument+Sans:wght@400;500;600;700&family=Outfit:wght@500&display=swap">
+<link rel="stylesheet" href="adal.css">
+<script src="adal.js"></script>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>
+<symbol id="mark" viewBox="0 0 190 150"><circle cx="45" cy="37" r="32" fill="currentColor"/><circle cx="148" cy="37" r="32" fill="currentColor"/><rect x="2" y="69" width="189" height="20" rx="10" fill="currentColor"/><path d="M96 97 68 149h57z" fill="currentColor"/><circle cx="96" cy="78" r="18" style="fill:var(--mark-dot,#85601C)"/></symbol>
+<symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></symbol>
+<symbol id="i-down" viewBox="0 0 24 24"><path d="M12 5v14M6 13l6 6 6-6"/></symbol>
+<symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+<symbol id="i-alert" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16.5v.01"/></symbol>
+<symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.01"/></symbol>
+<symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></symbol>
+<symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+<symbol id="i-upload" viewBox="0 0 24 24"><path d="M12 16V5M7 10l5-5 5 5M5 19h14"/></symbol>
+<symbol id="i-dot" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4" style="fill:currentColor"/></symbol>
+<symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+<symbol id="i-eye" viewBox="0 0 24 24"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></symbol>
+</defs></svg>
+<a class="skip" href="#main">Skip to content</a>
+<div class="ann" role="region" aria-label="Notices"><div class="ann-track"><ul><li>Sample screens: items, prices and times are illustrations</li><li>Checkout is simulated: no real payments</li><li>One winner, one price</li><li>The server clock decides what arrived in time</li></ul><ul aria-hidden="true"><li>Sample screens: items, prices and times are illustrations</li><li>Checkout is simulated: no real payments</li><li>One winner, one price</li><li>The server clock decides what arrived in time</li></ul><ul aria-hidden="true"><li>Sample screens: items, prices and times are illustrations</li><li>Checkout is simulated: no real payments</li><li>One winner, one price</li><li>The server clock decides what arrived in time</li></ul><ul aria-hidden="true"><li>Sample screens: items, prices and times are illustrations</li><li>Checkout is simulated: no real payments</li><li>One winner, one price</li><li>The server clock decides what arrived in time</li></ul></div></div>
+<header class="site-head"><div class="wrap">
+<a class="brand" href="index.html"><svg aria-hidden="true"><use href="#mark"/></svg>Adal</a>
+<nav class="site-nav" aria-label="Main" data-glide data-glide-hover><a href="auctions.html" aria-current="page">Auctions</a><a href="sell.html">Sell</a><a href="index.html#how">How it works</a></nav>
+<div class="acts"><a class="btn second" href="account.html#sign-in">Sign in</a><a class="btn" href="account.html#create" style="min-height:48px;padding:0 20px">Create account</a></div></div></header>
+<style>
+.page-head{padding:64px 0 40px;display:flex;flex-direction:column;gap:16px}
+.filters{display:grid;grid-template-columns:minmax(0,1.6fr) repeat(3,minmax(0,1fr));gap:16px;align-items:end;padding:24px 0;border-top:1px solid var(--rule);border-bottom:1px solid var(--rule)}
+.search{position:relative}
+.search .icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--muted);pointer-events:none}
+.search .input{padding-left:44px}
+.chips{display:flex;gap:8px;flex-wrap:wrap;padding:20px 0 0}
+.chip{min-height:44px;display:inline-flex;align-items:center;gap:8px;padding:0 18px;border-radius:999px;border:1px solid var(--edge);background:transparent;color:var(--body);font:600 15px/1 var(--text);cursor:pointer}
+.chip:hover{background:var(--moss-tint)}
+.chip[aria-pressed="true"]{background:var(--moss-tint);border:1.5px solid var(--moss);color:var(--moss)}
+.count{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:32px 0 32px;flex-wrap:wrap}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:56px 40px}
+.grid .ph{aspect-ratio:4/5}
+.grid .ph.land{aspect-ratio:4/5}
+.grid .ph img.crop{object-position:50% 70%}
+.pager{display:flex;justify-content:center;gap:12px;padding-top:64px}
+@media (max-width:960px){.grid{grid-template-columns:repeat(2,1fr)}.filters{grid-template-columns:1fr 1fr}.filters .search-f{grid-column:1/-1}}
+@media (max-width:620px){.grid{grid-template-columns:1fr}.filters{grid-template-columns:1fr}}
+</style>
+
+<main id="main">
+  <div class="wrap">
+    <header class="page-head split">
+      <h1 class="headline">Every lot, with its rules <i>shown</i> first</h1>
+      <div class="ph-band"><img src="img/balance.jpg" alt=""></div>
+    </header>
+
+    <form class="filters" role="search" aria-label="Filter auctions" onsubmit="return false">
+      <div class="field search-f">
+        <label for="q">Search</label>
+        <div class="search">
+          <svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg>
+          <input class="input" id="q" type="search" placeholder="Search by item name">
+        </div>
+      </div>
+      <div class="field">
+        <label for="fmt">Selling format</label>
+        <select class="select" id="fmt"><option>All formats</option><option>English</option><option>Dutch</option><option>Sealed first-price</option><option>Sealed second-price</option></select>
+      </div>
+      <div class="field">
+        <label for="sort">Sort by</label>
+        <select class="select" id="sort"><option>Ending soonest</option><option>Newest</option><option>Price, low to high</option><option>Price, high to low</option></select>
+      </div>
+      <div class="field">
+        <label for="seller">Seller</label>
+        <select class="select" id="seller"><option>All sellers</option></select>
+      </div>
+    </form>
+
+    <div class="chips" role="group" aria-label="Auction status" data-glide>
+      <button class="chip" type="button" aria-pressed="true">All</button>
+      <button class="chip" type="button" aria-pressed="false">Live</button>
+      <button class="chip" type="button" aria-pressed="false">Ending soon</button>
+      <button class="chip" type="button" aria-pressed="false">Upcoming</button>
+      <button class="chip" type="button" aria-pressed="false">Closed</button>
+    </div>
+
+    <div class="count">
+      <p class="label" aria-live="polite">6 auctions</p>
+      <p class="sample">Sample lots. Items, prices and times are illustrations.</p>
+    </div>
+
+    <ul class="grid reveal">
+      <li>
+        <a class="lot" href="auction.html">
+          <div class="ph"><img src="img/scales.jpg" alt="A wooden box of brass weights beside a small pair of balance scales"></div>
+          <div class="top"><span class="ending"><svg class="icon" aria-hidden="true"><use href="#i-clock"/></svg>Ending soon</span><span class="fmt">English</span></div>
+          <h2>Box of brass weights with small balance</h2>
+          <div class="price"><b>245.00</b><span>Ends in 00:12:40</span></div>
+          <p class="note">Closes Thursday 12 November, 18:00 &middot; 14 bids</p>
+        </a>
+      </li>
+      <li>
+        <a class="lot" href="auction.html">
+          <div class="ph"><img src="img/balance.jpg" alt="A gilt brass balance on a marble base, its two empty pans level"></div>
+          <div class="top"><span class="pill live"><svg class="icon" aria-hidden="true"><use href="#i-dot"/></svg>Live</span><span class="fmt">English</span></div>
+          <h2>Gilt brass balance on marble base</h2>
+          <div class="price"><b>1,180.00</b><span>Current price</span></div>
+          <p class="note">Closes Friday 13 November, 20:00 &middot; 31 bids</p>
+        </a>
+      </li>
+      <li>
+        <a class="lot" href="auction.html">
+          <div class="ph"><img class="crop" src="img/beam.jpg" alt="An iron beam balance with a hook at each end, hanging level from a central ring"></div>
+          <div class="top"><span class="pill live"><svg class="icon" aria-hidden="true"><use href="#i-dot"/></svg>Live</span><span class="fmt">Dutch</span></div>
+          <h2>Iron beam balance with hooks</h2>
+          <div class="price"><b>640.00</b><span>Price falls to 600.00 at 17:30</span></div>
+          <p class="note">Closes Thursday 12 November, 21:00</p>
+        </a>
+      </li>
+      <li>
+        <a class="lot" href="auction.html">
+          <div class="ph"><img src="img/auction-room.jpg" alt="Hand-coloured print of an auction room" style="object-position:50% 60%"></div>
+          <div class="top"><span class="pill plain">Upcoming</span><span class="fmt">Sealed first-price</span></div>
+          <h2>Print of an auction room, 1808</h2>
+          <div class="price"><span>Opens Saturday 14 November, 09:00</span></div>
+          <p class="note">Bids are hidden until the auction closes</p>
+        </a>
+      </li>
+      <li>
+        <a class="lot" href="auction.html">
+          <div class="ph"><img class="crop" src="img/scales.jpg" alt="A wooden box of brass weights beside a small pair of balance scales" style="object-position:30% 40%"></div>
+          <div class="top"><span class="pill plain">Closed</span><span class="fmt">English</span></div>
+          <h2>Pocket balance in a wooden case</h2>
+          <div class="price"><b>310.00</b><span>No sale</span></div>
+          <p class="note">The reserve price was not met</p>
+        </a>
+      </li>
+      <li>
+        <a class="lot" href="auction.html">
+          <div class="ph"><img src="img/balance.jpg" alt="A gilt brass balance on a marble base" style="object-position:70% 50%"></div>
+          <div class="top"><span class="pill plain">Closed</span><span class="fmt">Sealed second-price</span></div>
+          <h2>Small brass balance, marble plinth</h2>
+          <div class="price"><b>420.00</b><span>Sold</span></div>
+          <p class="note">Winner paid the second-highest bid</p>
+        </a>
+      </li>
+    </ul>
+
+    <nav class="pager" aria-label="Pages">
+      <a class="btn second" href="#" aria-disabled="true">Previous</a>
+      <a class="btn second" href="#">Next</a>
+    </nav>
+  </div>
+</main>
+<script>
+document.querySelectorAll('.chips .chip').forEach(function(b){b.addEventListener('click',function(){
+  b.parentNode.querySelectorAll('.chip').forEach(function(c){c.setAttribute('aria-pressed',c===b)});
+})});
+</script>
+<footer class="site-foot"><div class="wrap">
+<div class="cols">
+<div><a class="brand" href="index.html" style="padding:0"><svg aria-hidden="true" style="width:40px;height:32px"><use href="#mark"/></svg>Adal</a><p style="margin-top:16px;max-width:32ch">Fair and honest. An online auction service where every bid weighs the same.</p></div>
+<div><h2>Buy</h2><a href="auctions.html">Browse auctions</a><a href="index.html#how">How bidding works</a></div>
+<div><h2>Sell</h2><a href="sell.html">Create a listing</a><a href="index.html#formats">Selling formats</a></div>
+<div><h2>Account</h2><a href="account.html#sign-in">Sign in</a><a href="account.html#create">Create account</a></div>
+</div>
+<div class="base"><span>Adal &middot; Senior project, Fall 2026</span><span>Sample lots and prices on these pages are illustrations.</span></div>
+</div></footer>
+</body>
+</html>

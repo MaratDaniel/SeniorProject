@@ -1,0 +1,248 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Adal | An auction where every bid weighs the same</title>
+<meta name="description" content="Adal is an online auction service with four selling formats on one engine. One winner and one price, every time.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300;12..96,400;12..96,500;12..96,600&family=Instrument+Sans:wght@400;500;600;700&family=Outfit:wght@500&display=swap">
+<link rel="stylesheet" href="adal.css">
+<script src="adal.js"></script>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>
+<symbol id="mark" viewBox="0 0 190 150"><circle cx="45" cy="37" r="32" fill="currentColor"/><circle cx="148" cy="37" r="32" fill="currentColor"/><rect x="2" y="69" width="189" height="20" rx="10" fill="currentColor"/><path d="M96 97 68 149h57z" fill="currentColor"/><circle cx="96" cy="78" r="18" style="fill:var(--mark-dot,#85601C)"/></symbol>
+<symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></symbol>
+<symbol id="i-down" viewBox="0 0 24 24"><path d="M12 5v14M6 13l6 6 6-6"/></symbol>
+<symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+<symbol id="i-alert" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16.5v.01"/></symbol>
+<symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.01"/></symbol>
+<symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></symbol>
+<symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+<symbol id="i-upload" viewBox="0 0 24 24"><path d="M12 16V5M7 10l5-5 5 5M5 19h14"/></symbol>
+<symbol id="i-dot" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4" style="fill:currentColor"/></symbol>
+<symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+<symbol id="i-eye" viewBox="0 0 24 24"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></symbol>
+</defs></svg>
+<a class="skip" href="#main">Skip to content</a>
+
+<style>
+.band{background:var(--sage);padding:80px 0}
+.promises{display:grid;grid-template-columns:repeat(3,1fr);list-style:none;margin:0;padding:0}
+.promises li{padding:0 40px;display:flex;flex-direction:column;gap:16px}
+.promises li:first-child{padding-left:0}.promises li:last-child{padding-right:0}
+.promises li+li{border-left:1px dashed var(--moss)}
+.promises .title{font:300 clamp(30px,3vw,40px)/1.15 var(--display);letter-spacing:-.02em;color:var(--ink);text-wrap:balance}
+.promises p{color:var(--body)}
+
+section.block{padding-top:96px}
+.sec-head{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;margin-bottom:48px;flex-wrap:wrap}
+
+.gallery{display:grid;grid-template-columns:1.15fr .85fr;gap:48px 48px}
+.gallery .big .ph{aspect-ratio:4/5}
+.gallery .big h3{font-size:32px}
+.gallery .side{display:flex;flex-direction:column;gap:48px}
+.gallery .side .ph{aspect-ratio:4/3}
+
+.how{display:grid;grid-template-columns:1fr 1fr;gap:96px;align-items:start}
+.how ol{margin-top:40px;counter-reset:s}
+.how li{counter-increment:s;display:grid;grid-template-columns:56px 1fr;gap:16px;padding:24px 0;align-items:baseline}
+.how li::before{content:counter(s);font:300 40px/1 var(--display);color:var(--muted)}
+.how li b{display:block;font:400 24px/1.2 var(--display);color:var(--ink);margin-bottom:6px}
+.how li span{color:var(--muted)}
+.how .desk{margin-top:0}
+.desk-wrap{position:relative}
+
+.formats li{display:grid;grid-template-columns:200px minmax(0,1fr) auto;gap:40px;padding:32px 0;align-items:center}
+.formats .dg{width:200px;height:80px;color:var(--moss)}
+.formats .dg path[pathLength]{stroke-dasharray:1;stroke-dashoffset:0}
+html.js .formats .dg path[pathLength]{stroke-dashoffset:1;transition:stroke-dashoffset 1.6s var(--ease) .3s}
+html.js .reveal.in .formats .dg path[pathLength]{stroke-dashoffset:0}
+.formats .dg circle{transition:opacity .6s var(--ease) 1.4s}
+html.js .formats .dg circle{opacity:0}html.js .reveal.in .formats .dg circle{opacity:1}
+.formats li:hover .dg{color:var(--moss-deep)}
+.formats h3{font:400 28px/1.2 var(--display);color:var(--ink)}
+.formats p{color:var(--muted)}
+.formats .tag{font:600 14px/1.4 var(--text);color:var(--moss);white-space:nowrap}
+.formats .tag.soon{color:var(--muted)}
+
+.secure{margin-top:96px;padding:96px 0}
+.secure .wrap{display:grid;grid-template-columns:1.2fr .8fr;gap:96px;align-items:center}
+.secure p{max-width:52ch}
+.secure ul{display:flex;flex-direction:column}
+.secure li{display:flex;gap:14px;padding:20px 0;border-top:1px solid rgba(244,246,243,.22);color:var(--soft)}
+.secure li:last-child{border-bottom:1px solid rgba(244,246,243,.22)}
+.secure li .icon{margin-top:4px;color:var(--brass-on-dark)}
+
+@media (max-width:960px){
+  .promises,.how,.secure .wrap{grid-template-columns:1fr;gap:40px}
+  .gallery{grid-template-columns:1fr}
+  .gallery .side{gap:48px}
+  .formats li{grid-template-columns:1fr;gap:16px}
+  .hero-in{padding-top:180px;padding-bottom:96px}
+  .hero .cred{display:none}
+}
+.site-foot{margin-top:0}
+.faqwrap{display:grid;grid-template-columns:.8fr 1.2fr;gap:96px;align-items:start}
+@media (max-width:960px){.faqwrap{grid-template-columns:1fr;gap:32px}}
+</style>
+
+<div class="ann" role="region" aria-label="Notices"><div class="ann-track"><ul><li>Sample screens: items, prices and times are illustrations</li><li>Checkout is simulated: no real payments</li><li>One winner, one price</li><li>The server clock decides what arrived in time</li></ul><ul aria-hidden="true"><li>Sample screens: items, prices and times are illustrations</li><li>Checkout is simulated: no real payments</li><li>One winner, one price</li><li>The server clock decides what arrived in time</li></ul><ul aria-hidden="true"><li>Sample screens: items, prices and times are illustrations</li><li>Checkout is simulated: no real payments</li><li>One winner, one price</li><li>The server clock decides what arrived in time</li></ul><ul aria-hidden="true"><li>Sample screens: items, prices and times are illustrations</li><li>Checkout is simulated: no real payments</li><li>One winner, one price</li><li>The server clock decides what arrived in time</li></ul></div></div>
+<header class="site-head"><div class="wrap">
+<a class="brand" href="index.html"><svg aria-hidden="true"><use href="#mark"/></svg>Adal</a>
+<nav class="site-nav" aria-label="Main" data-glide data-glide-hover><a href="auctions.html">Auctions</a><a href="sell.html">Sell</a><a href="index.html#how">How it works</a></nav>
+<div class="acts"><a class="btn second" href="account.html#sign-in">Sign in</a><a class="btn" href="account.html#create" style="min-height:48px;padding:0 20px">Create account</a></div></div></header>
+<main id="main">
+  <section class="hero-split" aria-labelledby="h-hero">
+    <div class="hs-copy rise">
+      <h1 class="display" id="h-hero" data-words>An auction where every bid weighs the <i>same</i>.</h1>
+      <p class="lede">Adal is an online auction service with four selling formats on one engine. One winner and one price, every time, even when many people bid at the same moment.</p>
+      <div class="acts">
+        <a class="btn" href="auctions.html">Browse auctions <svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+        <a class="btn second" href="sell.html">Sell an item</a>
+      </div>
+      <div class="spec">
+        <div><h2>Checked on the server</h2><p>Every bid is validated against the live auction before it counts.</p></div>
+        <svg viewBox="0 0 112 112" fill="none" stroke="currentColor" stroke-width="1.5" stroke-dasharray="2 5" stroke-linecap="round" aria-hidden="true"><circle cx="56" cy="56" r="52"/><circle cx="56" cy="64" r="38"/><circle cx="56" cy="72" r="24"/><circle cx="56" cy="80" r="11"/></svg>
+      </div>
+    </div>
+    <div class="hs-photo"><img src="img/auction-room.jpg" alt="Hand-coloured print of Christie's Auction Room, London, 1808: a crowd in a skylit hall facing the auctioneer's rostrum"><p class="cred">Print: Christie's Auction Room, 1808. Public domain.</p></div>
+  </section>
+
+  <section class="band"><div class="wrap">
+    <ul class="promises" aria-label="What Adal promises">
+      <li>
+        <h2 class="title">One winner, one price</h2>
+        <p>Every bid is checked against the live auction. Two people cannot win the same lot.</p>
+      </li>
+      <li>
+        <h2 class="title">One clock</h2>
+        <p>The server decides what arrived in time, not your browser. The closing time is written beside every countdown.</p>
+      </li>
+      <li>
+        <h2 class="title">Everyone sees it at once</h2>
+        <p>New bids, the price and the time left update for every watcher without refreshing the page.</p>
+      </li>
+    </ul>
+  </div></section>
+
+  <div class="wrap">
+
+    <section class="block reveal" aria-labelledby="h-open">
+      <div class="sec-head">
+        <h2 class="headline" id="h-open">Lots open <i>now</i></h2>
+        <a class="btn second" href="auctions.html">All auctions</a>
+      </div>
+      <div class="gallery">
+        <a class="lot big" href="auction.html">
+          <div class="ph"><img src="img/scales.jpg" alt="A wooden box of brass weights beside a small pair of balance scales"></div>
+          <div class="top"><span class="pill live"><svg class="icon" aria-hidden="true"><use href="#i-dot"/></svg>Live</span><span class="fmt">English auction</span></div>
+          <h3>Box of brass weights with small balance</h3>
+          <div class="price"><b>245.00</b><span>Current price</span><span class="ending"><svg class="icon" aria-hidden="true"><use href="#i-clock"/></svg>Ends in 00:12:40</span></div>
+        </a>
+        <div class="side">
+          <a class="lot" href="auction.html">
+            <div class="ph"><img src="img/balance.jpg" alt="A gilt brass balance on a marble base, its two empty pans level"></div>
+            <div class="top"><span class="pill live"><svg class="icon" aria-hidden="true"><use href="#i-dot"/></svg>Live</span><span class="fmt">English auction</span></div>
+            <h3>Gilt brass balance on marble base</h3>
+            <div class="price"><b>1,180.00</b><span>Current price</span><span>Closes Friday 13 November, 20:00</span></div>
+          </a>
+          <a class="lot" href="auction.html">
+            <div class="ph"><img src="img/auction-room.jpg" alt="Hand-coloured print of an auction room"></div>
+            <div class="top"><span class="pill plain">Upcoming</span><span class="fmt">Sealed first-price</span></div>
+            <h3>Print of an auction room, 1808</h3>
+            <div class="price"><span>Opens Saturday 14 November, 09:00</span></div>
+          </a>
+        </div>
+      </div>
+      <p class="sample" style="margin-top:32px">Sample lots. Items, prices and times on this page are illustrations.</p>
+    </section>
+
+    <section class="block reveal" id="how" aria-labelledby="h-how">
+      <div class="how">
+        <div>
+          <h2 class="headline" id="h-how">The rules come <i>before</i> the bid.</h2>
+          <ol class="ruled">
+            <li><div><b>See the rules</b><span>The format, the closing time, the increment and whether the reserve is met are on the page before you bid.</span></div></li>
+            <li><div><b>Place one bid</b><span>Choose a preset or enter an amount. The button repeats the amount you are about to commit.</span></div></li>
+            <li><div><b>The server decides</b><span>Your bid is validated against the live state of the auction. If the price moved, you are told what to do next.</span></div></li>
+          </ol>
+        </div>
+        <div class="desk-wrap">
+          <div class="desk" role="group" aria-label="Sample bidding desk">
+            <div class="row"><span class="pill live"><svg class="icon" aria-hidden="true"><use href="#i-dot"/></svg>Live</span><span class="meta">English auction</span></div>
+            <div>
+              <p class="label">Current price</p>
+              <p class="figure">245.00</p>
+            </div>
+            <p class="meta"><b>Ends in 00:12:40</b> &middot; Closes Thursday 12 November, 18:00</p>
+            <fieldset class="presets" aria-label="Choose your bid" data-glide>
+              <label class="preset"><input type="radio" name="p" checked><span>250.00</span></label>
+              <label class="preset"><input type="radio" name="p"><span>255.00</span></label>
+              <label class="preset"><input type="radio" name="p"><span>265.00</span></label>
+            </fieldset>
+            <a class="btn block" href="auction.html">Place bid &middot; 250.00</a>
+            <p class="fine">A bid is a binding commitment. Sample desk with example amounts.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="block reveal" id="formats" aria-labelledby="h-formats">
+      <h2 class="headline" id="h-formats" style="margin-bottom:48px">Four ways to sell, on <i>one</i> engine.</h2>
+      <ul class="ruled formats">
+        <li><svg class="dg" viewBox="0 0 200 80" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path pathLength="1" d="M4 68H44V52H84V38H124V24H164V12H196"/><circle cx="196" cy="12" r="5" fill="currentColor" stroke="none"/></svg><div><h3>English</h3><p>The price rises with each bid. The highest bid at the close wins.</p></div><span class="tag">Available</span></li>
+        <li><svg class="dg" viewBox="0 0 200 80" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path pathLength="1" d="M4 12H44V26H84V40H124V54"/><path d="M124 54H196" stroke-dasharray="2 5" stroke-width="1.5"/><circle cx="124" cy="54" r="5" fill="currentColor" stroke="none"/></svg><div><h3>Dutch</h3><p>The price falls on a schedule. The first buyer to accept the current price wins.</p></div><span class="tag soon">Coming soon</span></li>
+        <li><svg class="dg" viewBox="0 0 200 80" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 74H196" stroke-width="1" opacity=".4"/><circle cx="40" cy="56" r="5"/><circle cx="80" cy="40" r="5"/><circle cx="120" cy="16" r="5" fill="currentColor"/><circle cx="160" cy="48" r="5"/><path d="M120 16H196" stroke-dasharray="2 5" stroke-width="1.5"/></svg><div><h3>Sealed first-price</h3><p>Everyone submits one hidden bid. The highest bidder wins and pays what they bid.</p></div><span class="tag soon">Coming soon</span></li>
+        <li><svg class="dg" viewBox="0 0 200 80" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 74H196" stroke-width="1" opacity=".4"/><circle cx="40" cy="56" r="5"/><circle cx="80" cy="40" r="5"/><circle cx="120" cy="16" r="5" fill="currentColor"/><circle cx="160" cy="48" r="5"/><path d="M120 40H196" stroke-dasharray="2 5" stroke-width="1.5"/></svg><div><h3>Sealed second-price</h3><p>Everyone submits one hidden bid. The highest bidder wins and pays the second-highest bid.</p></div><span class="tag soon">Coming soon</span></li>
+      </ul>
+    </section>
+    <section class="block reveal" id="faq" aria-labelledby="h-faq">
+      <div class="faqwrap">
+        <h2 class="headline" id="h-faq">Questions, <i>answered</i> plainly.</h2>
+        <div class="acc">
+          <div class="acc-item open"><h3><button class="acc-btn" type="button" aria-expanded="true" aria-controls="a1">What happens if two people bid at the same moment?<svg class="pm icon" aria-hidden="true"><use href="#i-plus"/></svg></button></h3>
+            <div class="acc-panel" id="a1" role="region"><div><p>Every bid is checked against the live state of the auction when it is processed. The server clock decides the order, and only one bid can be the highest. The other bidder is told straight away that the price moved, and what to do next.</p></div></div></div>
+          <div class="acc-item"><h3><button class="acc-btn" type="button" aria-expanded="false" aria-controls="a2">Can I see the reserve price?<svg class="pm icon" aria-hidden="true"><use href="#i-plus"/></svg></button></h3>
+            <div class="acc-panel" id="a2" role="region"><div><p>No. A seller may set a reserve, and it stays hidden from bidders. In an English auction you are only told whether it is met.</p></div></div></div>
+          <div class="acc-item"><h3><button class="acc-btn" type="button" aria-expanded="false" aria-controls="a3">Why does Adal ask for a code when I buy?<svg class="pm icon" aria-hidden="true"><use href="#i-plus"/></svg></button></h3>
+            <div class="acc-panel" id="a3" role="region"><div><p>Finishing a purchase needs a fresh code from your authenticator app, so someone using your signed-in browser cannot buy in your name. Sellers and admins also use a code every time they sign in.</p></div></div></div>
+          <div class="acc-item"><h3><button class="acc-btn" type="button" aria-expanded="false" aria-controls="a4">When does an auction close?<svg class="pm icon" aria-hidden="true"><use href="#i-plus"/></svg></button></h3>
+            <div class="acc-panel" id="a4" role="region"><div><p>At the closing time written beside each countdown, set by the server clock. In an English auction, a bid in the last minutes extends the closing time.</p></div></div></div>
+          <div class="acc-item"><h3><button class="acc-btn" type="button" aria-expanded="false" aria-controls="a5">Is any money really charged?<svg class="pm icon" aria-hidden="true"><use href="#i-plus"/></svg></button></h3>
+            <div class="acc-panel" id="a5" role="region"><div><p>Not in this version. Checkout is simulated: no card is charged and no money moves.</p></div></div></div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <section class="secure dark" aria-labelledby="h-secure">
+    <div class="wrap">
+      <div>
+        <h2 class="headline" id="h-secure">A stolen session cannot finish a <i>purchase</i>.</h2>
+        <p class="lede" style="margin-top:24px">Sellers and admins sign in with a second step. Finishing a purchase asks for a fresh code every time, so a signed-in browser alone is not enough.</p>
+        <div style="margin-top:32px;display:flex;gap:12px;flex-wrap:wrap">
+          <a class="btn" href="account.html#create">Create an account</a>
+          <a class="btn second" href="account.html#sign-in">Sign in</a>
+        </div>
+      </div>
+      <ul aria-label="Security measures">
+        <li><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg><span>Email verification for every account</span></li>
+        <li><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg><span>Authenticator code at sign-in, required for sellers</span></li>
+        <li><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg><span>A fresh code to finalize a purchase</span></li>
+      </ul>
+    </div>
+  </section>
+</main>
+<footer class="site-foot"><div class="wrap">
+<div class="cols">
+<div><a class="brand" href="index.html" style="padding:0"><svg aria-hidden="true" style="width:40px;height:32px"><use href="#mark"/></svg>Adal</a><p style="margin-top:16px;max-width:32ch">Fair and honest. An online auction service where every bid weighs the same.</p></div>
+<div><h2>Buy</h2><a href="auctions.html">Browse auctions</a><a href="index.html#how">How bidding works</a></div>
+<div><h2>Sell</h2><a href="sell.html">Create a listing</a><a href="index.html#formats">Selling formats</a></div>
+<div><h2>Account</h2><a href="account.html#sign-in">Sign in</a><a href="account.html#create">Create account</a></div>
+</div>
+<div class="base"><span>Adal &middot; Senior project, Fall 2026</span><span>Sample lots and prices on these pages are illustrations.</span></div>
+</div></footer>
+</body>
+</html>

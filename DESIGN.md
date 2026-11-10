@@ -9,13 +9,13 @@ colors:
   ink: "#0F1512"
   body-text: "#27302B"
   muted: "#505B54"
-  moss: "#3B5F4F"
-  moss-tint: "#E5EDE8"
-  moss-deep: "#243A31"
+  moss: "#40705A"
+  moss-tint: "#E6F0EA"
+  moss-deep: "#2F5545"
   brass: "#85601C"
   brass-tint: "#F1EAD8"
-  brass-on-dark: "#DDBB70"
-  on-dark-soft: "#CFDAD2"
+  brass-on-dark: "#F0CF84"
+  on-dark-soft: "#E3ECE6"
 typography:
   display:
     fontFamily: "Bricolage Grotesque, system-ui, sans-serif"
@@ -131,15 +131,15 @@ Confirmed rejections: loud colors, the earlier arch and clock marks, hard black 
 A cool, muted palette. Almost everything is paper and ink; moss carries action; brass marks the few things that need attention.
 
 ### Primary
-- **Sage Moss** (#3B5F4F): primary buttons, links, the selected preset outline, the footer, and the dark photographic fields (moss-deep #243A31 as their edge, lifted to #3C5E4F at the centre of the gradient).
+- **Sage Moss** (#40705A): primary buttons, links, the selected preset outline, and the dark photographic fields (moss-deep #2F5545 as their edge, lifted to #3F6E59 at the centre of the gradient).
 
 ### Secondary
-- **Brass** (#85601C): Outbid, Ending soon, and the balance point in the mark. On dark fields the mark's point is a lighter brass (#DDBB70, 7.4:1 on moss-deep). Brass text on paper is 5.2:1.
+- **Brass** (#85601C): Outbid, Ending soon, and the balance point in the mark. On dark fields the mark's point is a lighter brass (#F0CF84, 5.6:1 on moss-deep). Brass text on paper is 5.2:1.
 
 ### Neutral
 - **Paper** (#F4F6F3): the page ground. **Card** (#FFFFFF): desks, fields. **Rule** (#D5DBD5): dividers only. **Control Edge** (#98A39B): borders of fields and presets.
 - **Ink** (#0F1512): headings and figures. **Body Text** (#27302B) and **Muted** (#505B54, 6.5:1 on paper): reading and secondary text.
-- **Moss Tint** (#E5EDE8) and **Brass Tint** (#F1EAD8): status and selected-preset fills.
+- **Moss Tint** (#E6F0EA) and **Brass Tint** (#F1EAD8): status and selected-preset fills.
 
 ### Named Rules
 **The One Brass Rule.** Brass is for the balance point, Outbid and Ending soon. It is never a button, a decoration or a large field.

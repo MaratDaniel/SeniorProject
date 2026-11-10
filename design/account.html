@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Sign in | Adal</title>
+<meta name="description" content="Create an account, verify email, sign in and set up two-step sign-in on Adal.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300;12..96,400;12..96,500;12..96,600&family=Instrument+Sans:wght@400;500;600;700&family=Outfit:wght@500&display=swap">
+<link rel="stylesheet" href="adal.css">
+<script src="adal.js"></script>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>
+<symbol id="mark" viewBox="0 0 190 150"><circle cx="45" cy="37" r="32" fill="currentColor"/><circle cx="148" cy="37" r="32" fill="currentColor"/><rect x="2" y="69" width="189" height="20" rx="10" fill="currentColor"/><path d="M96 97 68 149h57z" fill="currentColor"/><circle cx="96" cy="78" r="18" style="fill:var(--mark-dot,#85601C)"/></symbol>
+<symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></symbol>
+<symbol id="i-down" viewBox="0 0 24 24"><path d="M12 5v14M6 13l6 6 6-6"/></symbol>
+<symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+<symbol id="i-alert" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16.5v.01"/></symbol>
+<symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.01"/></symbol>
+<symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></symbol>
+<symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+<symbol id="i-upload" viewBox="0 0 24 24"><path d="M12 16V5M7 10l5-5 5 5M5 19h14"/></symbol>
+<symbol id="i-dot" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4" style="fill:currentColor"/></symbol>
+<symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+<symbol id="i-eye" viewBox="0 0 24 24"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></symbol>
+</defs></svg>
+<a class="skip" href="#main">Skip to content</a>
+
+<style>
+body{background:var(--paper)}
+.split{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,6fr);min-height:100vh}
+.side{position:relative;padding:48px;display:flex;flex-direction:column;justify-content:space-between;overflow:hidden;isolation:isolate}
+.side .ph{position:absolute;inset:0;z-index:-1}
+.side .ph img{width:100%;height:100%;object-fit:cover;object-position:50% 40%;opacity:.5;mix-blend-mode:luminosity}
+.side .ph::after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,rgba(47,85,69,.94),rgba(47,85,69,.5) 60%,rgba(47,85,69,.78))}
+.side .quote{font:300 clamp(30px,3.2vw,44px)/1.12 var(--display);letter-spacing:-.025em;color:var(--paper);max-width:14ch}
+.side .quote i{font-style:normal;font-weight:400;color:var(--brass-on-dark)}
+.side .cred{font-size:13px;color:rgba(244,246,243,.75);margin-top:20px}
+.main{display:flex;flex-direction:column;min-width:0}
+.proto{border-bottom:1px dashed var(--edge)}
+.form-area{flex:1;display:grid;place-items:center;padding:48px var(--gutter)}
+.panel{width:100%;max-width:440px;display:flex;flex-direction:column;gap:28px}
+.panel[hidden]{display:none}
+.panel h1{font:300 clamp(34px,3.6vw,44px)/1.1 var(--display);letter-spacing:-.03em;color:var(--ink);text-wrap:balance}
+.panel h1 i{font-style:normal;font-weight:400;color:var(--brass)}
+.panel form{display:flex;flex-direction:column;gap:20px}
+.panel .alt{font-size:16px;color:var(--muted)}
+.row2{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.check{display:flex;gap:12px;align-items:flex-start;font-size:15px;line-height:1.5}
+.check input{width:22px;height:22px;margin:1px 0 0;accent-color:var(--moss);flex:none}
+.steps li{display:grid;grid-template-columns:44px 1fr;gap:12px;padding:16px 0;align-items:baseline}
+.steps li::before{content:counter(s);counter-increment:s;font:300 32px/1 var(--display);color:var(--muted)}
+.steps{counter-reset:s}
+.qr{display:grid;grid-template-columns:132px 1fr;gap:20px;align-items:center;padding:16px;border:1px solid var(--rule);border-radius:var(--r-surf);background:var(--card)}
+.qr svg{width:132px;height:132px}
+.key{font:500 17px/1.4 var(--text);letter-spacing:.12em;color:var(--ink);word-break:break-all}
+.mail{display:flex;gap:14px;padding:20px;border-radius:var(--r-surf);background:var(--moss-tint);color:var(--moss)}
+.mail p{color:var(--body)}
+@media (max-width:900px){.split{grid-template-columns:1fr}.side{min-height:200px;padding:28px var(--gutter)}.side .quote,.side .cred{display:none}}
+</style>
+
+<div class="split dark-wrap">
+  <aside class="side dark" aria-label="Adal">
+    <div class="ph"><img src="img/beam.jpg" alt=""></div>
+    <a class="brand" href="index.html"><svg aria-hidden="true"><use href="#mark"/></svg>Adal</a>
+    <div>
+      <p class="quote">Every bid weighs the <i>same</i>.</p>
+      <p class="cred">Beam balance, public domain.</p>
+    </div>
+  </aside>
+
+  <div class="main">
+    <div class="proto" role="region" aria-label="Prototype states, not part of the product">
+      <div class="wrap" style="max-width:none">
+        <span class="eyebrow">Prototype states</span>
+        <div id="states" data-glide role="group" aria-label="Choose a state to preview"></div>
+      </div>
+    </div>
+
+    <main id="main" class="form-area">
+
+      <section class="panel enter" id="sign-in" aria-labelledby="t-in" hidden>
+        <h1 id="t-in">Sign in to <i>Adal</i></h1>
+        <div class="banner msg" id="in-err" role="alert" hidden style="background:var(--brass-tint);padding:12px 14px;border-radius:var(--r-ctl)">
+          <svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg>
+          <span>The email or password does not match. Check them and try again, or reset your password.</span>
+        </div>
+        <form onsubmit="return go('code')">
+          <div class="field"><label for="e1">Email</label><input class="input" id="e1" type="email" autocomplete="email" placeholder="name@example.com" required></div>
+          <div class="field"><label for="p1">Password</label>
+            <div class="pwd"><input class="input" id="p1" type="password" autocomplete="current-password" required><button type="button" class="link-btn" data-show="p1">Show</button></div>
+          </div>
+          <div class="row2"><label class="check"><input type="checkbox"> Keep me signed in on this device</label><a href="#reset">Forgot password</a></div>
+          <button class="btn block" type="submit">Sign in</button>
+        </form>
+        <p class="alt">New to Adal? <a href="#create">Create an account</a></p>
+      </section>
+
+      <section class="panel enter" id="create" aria-labelledby="t-cr" hidden>
+        <h1 id="t-cr">Create your <i>account</i></h1>
+        <form onsubmit="return go('verify')">
+          <div class="field"><label for="n2">Display name</label><input class="input" id="n2" autocomplete="nickname" required><span class="hint">Other bidders only see a number, never this name.</span></div>
+          <div class="field"><label for="e2">Email</label><input class="input" id="e2" type="email" autocomplete="email" required></div>
+          <div class="field"><label for="p2">Password</label>
+            <div class="pwd"><input class="input" id="p2" type="password" autocomplete="new-password" aria-describedby="p2h" required><button type="button" class="link-btn" data-show="p2">Show</button></div>
+            <span class="hint" id="p2h">At least 12 characters. A phrase of several words works well.</span>
+          </div>
+          <div class="field"><span class="label">I want to</span>
+            <fieldset class="presets" style="grid-template-columns:1fr 1fr" aria-label="Role">
+              <label class="preset"><input type="radio" name="role" checked><span>Buy</span></label>
+              <label class="preset"><input type="radio" name="role"><span>Buy and sell</span></label>
+            </fieldset>
+            <span class="hint">Selling needs two-step sign-in, set up after you verify your email.</span>
+          </div>
+          <button class="btn block" type="submit">Create account</button>
+        </form>
+        <p class="alt">Already have an account? <a href="#sign-in">Sign in</a></p>
+      </section>
+
+      <section class="panel enter" id="verify" aria-labelledby="t-ve" hidden>
+        <h1 id="t-ve">Check your <i>email</i></h1>
+        <div class="mail"><svg class="icon" aria-hidden="true" viewBox="0 0 24 24" style="width:24px;height:24px;margin-top:2px"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
+          <p>We sent a verification link to <b>name@example.com</b>. Open it to confirm this address and activate your account.</p></div>
+        <p class="alt">The link works for one use. Nothing arrived? Check your spam folder, then <button class="link-btn" type="button">send it again</button>.</p>
+        <a class="btn second" href="#setup">Prototype: I opened the link</a>
+      </section>
+
+      <section class="panel enter" id="code" aria-labelledby="t-co" hidden>
+        <h1 id="t-co">Enter your <i>code</i></h1>
+        <p class="alt">Open your authenticator app and type the 6-digit code for Adal.</p>
+        <div class="banner msg" id="code-err" role="alert" hidden style="background:var(--brass-tint);padding:12px 14px;border-radius:var(--r-ctl)">
+          <svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg>
+          <span>That code is not right or has expired. Wait for the next code and try again.</span>
+        </div>
+        <form onsubmit="return go('done')">
+          <div class="field"><label for="c1">6-digit code</label><input class="input codebox" id="c1" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="000000" required></div>
+          <button class="btn block" type="submit">Continue</button>
+        </form>
+        <p class="alt">Lost your device? <a href="#recovery">Use a recovery code</a></p>
+      </section>
+
+      <section class="panel enter" id="setup" aria-labelledby="t-se" hidden>
+        <h1 id="t-se">Turn on <span style="white-space:nowrap">two-step</span> <i>sign-in</i></h1>
+        <p class="alt">Sellers and admins must use it. It adds a code from your phone to your password.</p>
+        <ol class="steps ruled">
+          <li><span>Install an authenticator app, such as one from your phone's app store.</span></li>
+          <li><span>Scan this code, or type the key by hand.</span></li>
+          <li><span>Enter the 6-digit code the app shows.</span></li>
+        </ol>
+        <div class="qr">
+          <svg viewBox="0 0 29 29" aria-label="Sample QR code, not a real code" role="img" shape-rendering="crispEdges">
+            <rect width="29" height="29" fill="#fff"/>
+            <g fill="#0F1512">
+              <path d="M1 1h7v7H1zM21 1h7v7h-7zM1 21h7v7H1z"/>
+            </g>
+            <g fill="#fff"><path d="M2 2h5v5H2zM22 2h5v5h-5zM2 22h5v5H2z"/></g>
+            <g fill="#0F1512"><path d="M3 3h3v3H3zM23 3h3v3h-3zM3 23h3v3H3z"/>
+              <path d="M10 1h2v2h-2zM13 2h3v2h-3zM11 5h2v2h-2zM15 6h3v2h-3zM18 1h2v3h-2zM10 9h3v2h-3zM14 10h2v3h-2zM18 9h3v2h-3zM9 13h2v3H9zM12 14h3v2h-3zM17 13h2v2h-2zM21 11h3v2h-3zM25 10h3v3h-3zM1 10h3v2H1zM5 12h2v3H5zM2 15h3v2H2zM8 17h3v2H8zM12 18h2v3h-2zM16 17h3v2h-3zM20 15h2v3h-2zM24 15h3v2h-3zM22 19h3v3h-3zM26 20h2v3h-2zM10 22h3v2h-3zM14 23h2v3h-2zM18 22h3v3h-3zM23 25h3v2h-3zM10 26h2v2h-2z"/></g>
+          </svg>
+          <div><p class="label">Key</p><p class="key">JBSWY3DP EHPK3PXP</p><p class="note" style="margin-top:6px">Sample key for layout.</p></div>
+        </div>
+        <form onsubmit="return go('done')">
+          <div class="field"><label for="c2">6-digit code</label><input class="input codebox" id="c2" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="000000" required></div>
+          <button class="btn block" type="submit">Turn on two-step sign-in</button>
+        </form>
+      </section>
+
+      <section class="panel enter" id="done" aria-labelledby="t-do" hidden>
+        <h1 id="t-do">You are <i>signed in</i></h1>
+        <p class="alt">Welcome back. Pick up where you left off.</p>
+        <div style="display:flex;gap:12px;flex-wrap:wrap"><a class="btn" href="auctions.html">Browse auctions</a><a class="btn second" href="sell.html">Sell an item</a></div>
+      </section>
+
+      <section class="panel enter" id="reset" aria-labelledby="t-re" hidden>
+        <h1 id="t-re">Reset your <i>password</i></h1>
+        <form onsubmit="return false">
+          <div class="field"><label for="e3">Email</label><input class="input" id="e3" type="email" autocomplete="email" required><span class="hint">We send a one-use link if an account exists for this address.</span></div>
+          <button class="btn block" type="submit">Send reset link</button>
+        </form>
+        <p class="alt"><a href="#sign-in">Back to sign in</a></p>
+      </section>
+
+      <section class="panel enter" id="recovery" aria-labelledby="t-rc" hidden>
+        <h1 id="t-rc">Use a recovery <i>code</i></h1>
+        <p class="alt">Each recovery code works once. You saved them when you turned on two-step sign-in.</p>
+        <form onsubmit="return go('done')">
+          <div class="field"><label for="r1">Recovery code</label><input class="input" id="r1" autocomplete="off" required></div>
+          <button class="btn block" type="submit">Continue</button>
+        </form>
+        <p class="alt"><a href="#code">Back to the 6-digit code</a></p>
+      </section>
+
+    </main>
+  </div>
+</div>
+
+<script>
+(function(){
+  var views=[['sign-in','Sign in'],['sign-in-error','Sign in, wrong password'],['create','Create account'],['verify','Verify email'],['code','Code at sign-in'],['code-error','Wrong code'],['setup','Set up two-step'],['recovery','Recovery code'],['reset','Reset password'],['done','Signed in']];
+  var st=document.getElementById('states');
+  st.innerHTML=views.map(function(v){return '<button type="button" data-k="'+v[0]+'" aria-pressed="false">'+v[1]+'</button>'}).join('');
+  function show(k){
+    var base=k.replace('-error','');
+    document.querySelectorAll('.panel').forEach(function(p){p.hidden=p.id!==base});
+    document.getElementById('in-err').hidden=k!=='sign-in-error';
+    document.getElementById('code-err').hidden=k!=='code-error';
+    Array.prototype.forEach.call(st.children,function(b){b.setAttribute('aria-pressed',b.dataset.k===k)});
+    var f=document.querySelector('#'+base+' input');
+    document.title=document.querySelector('#'+base+' h1').textContent+' | Adal';
+  }
+  window.go=function(k){location.hash=k;return false};
+  function route(){var h=location.hash.slice(1)||'sign-in'; if(!views.some(function(v){return v[0]===h})) h='sign-in'; show(h)}
+  window.addEventListener('hashchange',function(){route();window.scrollTo(0,0)}); route(); window.scrollTo(0,0);
+  st.addEventListener('click',function(e){var b=e.target.closest('button'); if(b) location.hash=b.dataset.k});
+  document.querySelectorAll('[data-show]').forEach(function(b){b.addEventListener('click',function(){
+    var i=document.getElementById(b.dataset.show),s=i.type==='password'; i.type=s?'text':'password'; b.textContent=s?'Hide':'Show'})});
+})();
+</script>
+
+</body>
+</html>

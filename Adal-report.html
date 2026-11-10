@@ -5,8 +5,8 @@
 :root{
   --bg:#F4F6F3; --card:#FFFFFF; --rule:#D5DBD5; --edge:#98A39B;
   --ink:#0F1512; --body:#27302B; --muted:#505B54;
-  --moss:#3B5F4F; --moss-tint:#E5EDE8; --moss-deep:#243A31;
-  --brass:#85601C; --brass-tint:#F1EAD8; --brass-soft:#DDBB70; --soft:#CFDAD2;
+  --moss:#40705A; --moss-tint:#E6F0EA; --moss-deep:#2F5545;
+  --brass:#85601C; --brass-tint:#F1EAD8; --brass-soft:#F0CF84; --soft:#E3ECE6;
   --on-moss:#F4F6F3; --bar-plan:#C3D4CA;
   --serif:'Bricolage Grotesque',system-ui,sans-serif; --logo:'Outfit','Bricolage Grotesque',system-ui,sans-serif; --sans:'Instrument Sans',system-ui,sans-serif;
   --ease:cubic-bezier(.22,1,.36,1);
@@ -14,13 +14,13 @@
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
   --bg:#0F1512; --card:#17211C; --rule:#2A3830; --edge:#5E6E64;
   --ink:#EEF2EE; --body:#C9D3CC; --muted:#9FAEA5;
-  --moss:#A9C9B7; --moss-tint:#1F3027; --moss-deep:#243A31;
-  --brass:#DDBB70; --brass-tint:#3A301A; --bar-plan:#2E4A3D; --on-moss:#0F1512;color-scheme:dark}}
+  --moss:#A9C9B7; --moss-tint:#1F3027; --moss-deep:#2F5545;
+  --brass:#F0CF84; --brass-tint:#3A301A; --bar-plan:#2E4A3D; --on-moss:#0F1512;color-scheme:dark}}
 :root[data-theme="dark"]{
   --bg:#0F1512; --card:#17211C; --rule:#2A3830; --edge:#5E6E64;
   --ink:#EEF2EE; --body:#C9D3CC; --muted:#9FAEA5;
-  --moss:#A9C9B7; --moss-tint:#1F3027; --moss-deep:#243A31;
-  --brass:#DDBB70; --brass-tint:#3A301A; --bar-plan:#2E4A3D; --on-moss:#0F1512;color-scheme:dark}
+  --moss:#A9C9B7; --moss-tint:#1F3027; --moss-deep:#2F5545;
+  --brass:#F0CF84; --brass-tint:#3A301A; --bar-plan:#2E4A3D; --on-moss:#0F1512;color-scheme:dark}
 
 *{box-sizing:border-box}
 html{scroll-behavior:smooth;scroll-padding-top:24px}
@@ -41,7 +41,7 @@ ol,ul{margin:0;padding:0;list-style:none}
 .sub{color:var(--muted);font-size:15px;max-width:68ch}
 
 /* cover */
-.cover{position:relative;background:radial-gradient(110% 90% at 30% 35%,#55674A,#243A31);color:#F4F6F3;overflow:hidden}
+.cover{position:relative;background:radial-gradient(110% 90% at 30% 35%,#55674A,#2F5545);color:#F4F6F3;overflow:hidden}
 .cover::before{content:"";position:absolute;inset:0;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");opacity:.2;mix-blend-mode:multiply;pointer-events:none}
 .cover .in{position:relative;display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,.75fr);gap:56px;align-items:stretch;padding-block:48px 0}
 .cover-l{display:flex;flex-direction:column;gap:36px;padding-bottom:64px}
@@ -135,7 +135,7 @@ td.us{color:var(--ink)}
 .markrow{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:16px}
 .markrow>div{border-radius:16px;min-height:200px;display:flex;align-items:center;justify-content:center;gap:14px;font-family:var(--serif);font-size:44px;letter-spacing:-.01em}
 .mk-l{background:var(--card);color:var(--ink);border:1px solid var(--rule)}
-.mk-d{background:#3B5F4F;color:#F4F6F3}
+.mk-d{background:#40705A;color:#F4F6F3}
 .type{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:40px;align-items:end}
 .type .big{font-family:var(--serif);font-weight:300;font-size:clamp(44px,6vw,80px);line-height:1.02;letter-spacing:-.03em;color:var(--ink)}
 .type .figs{font-weight:500;font-size:clamp(40px,5vw,64px);line-height:1.1;letter-spacing:-.03em;color:var(--ink)}
@@ -281,7 +281,7 @@ i{font-style:normal;color:var(--brass)}
 <header class="cover">
   <div class="in">
     <div class="cover-l">
-      <div class="brand"><svg width="44" height="44" viewBox="0 0 48 48" role="img" aria-label="Adal mark"><g class="beam"><path d="M6 28 H42" stroke="currentColor" stroke-width="4.2" stroke-linecap="round" fill="none"/><circle cx="13" cy="19.2" r="6.8" fill="currentColor"/><circle cx="35" cy="19.2" r="6.8" fill="currentColor"/></g><path d="M24 31 L18 43 H30 Z" fill="currentColor"/><circle cx="24" cy="28" r="3.9" fill="#DDBB70"/></svg><span>Adal</span></div>
+      <div class="brand"><svg width="44" height="44" viewBox="0 0 48 48" role="img" aria-label="Adal mark"><g class="beam"><path d="M6 28 H42" stroke="currentColor" stroke-width="4.2" stroke-linecap="round" fill="none"/><circle cx="13" cy="19.2" r="6.8" fill="currentColor"/><circle cx="35" cy="19.2" r="6.8" fill="currentColor"/></g><path d="M24 31 L18 43 H30 Z" fill="currentColor"/><circle cx="24" cy="28" r="3.9" fill="#F0CF84"/></svg><span>Adal</span></div>
       <h1>A fair auction, built and <i>shown.</i></h1>
       <p>End-of-term report and video plan for the Online Auction Service. A draft for the team to review and revise.</p>
       <div class="cover-meta"><span><b>Team</b> Magzhan, Daniel, Sultanbek, Ayan, Zhibek</span><span><b>Advisor</b> Prof. Michel Lewis</span><span><b>Draft</b> 3 November 2026</span></div>
@@ -406,13 +406,13 @@ i{font-style:normal;color:var(--brass)}
   <p class="lede">Adal means fair and honest. In an auction, fairness is balance: the same rules, the same clock, the same weight for every bid.</p>
   <div class="markrow">
     <div class="mk-l"><svg width="64" height="64" viewBox="0 0 48 48" role="img" aria-label="Adal mark"><g class="beam"><path d="M6 28 H42" stroke="currentColor" stroke-width="4.2" stroke-linecap="round" fill="none"/><circle cx="13" cy="19.2" r="6.8" fill="currentColor"/><circle cx="35" cy="19.2" r="6.8" fill="currentColor"/></g><path d="M24 31 L18 43 H30 Z" fill="currentColor"/><circle cx="24" cy="28" r="3.9" fill="#85601C"/></svg><span>Adal</span></div>
-    <div class="mk-d"><svg width="44" height="44" viewBox="0 0 48 48" role="img" aria-label="Adal mark"><g class="beam"><path d="M6 28 H42" stroke="currentColor" stroke-width="4.2" stroke-linecap="round" fill="none"/><circle cx="13" cy="19.2" r="6.8" fill="currentColor"/><circle cx="35" cy="19.2" r="6.8" fill="currentColor"/></g><path d="M24 31 L18 43 H30 Z" fill="currentColor"/><circle cx="24" cy="28" r="3.9" fill="#DDBB70"/></svg><span>Adal</span></div>
+    <div class="mk-d"><svg width="44" height="44" viewBox="0 0 48 48" role="img" aria-label="Adal mark"><g class="beam"><path d="M6 28 H42" stroke="currentColor" stroke-width="4.2" stroke-linecap="round" fill="none"/><circle cx="13" cy="19.2" r="6.8" fill="currentColor"/><circle cx="35" cy="19.2" r="6.8" fill="currentColor"/></g><path d="M24 31 L18 43 H30 Z" fill="currentColor"/><circle cx="24" cy="28" r="3.9" fill="#F0CF84"/></svg><span>Adal</span></div>
   </div>
   <p class="prose">The mark is two identical weights on a level beam, resting on a fulcrum with one brass point where it balances. The beam is always level. It settles once when it first appears, as at the top of this page.</p>
 
   <div class="sw" role="img" aria-label="Palette: stone, card, moss, ink, brass">
     <div style="flex:4;background:#F4F6F3;color:#0F1512"><b>Stone</b>#F4F6F3, the page</div>
-    <div style="flex:3;background:#3B5F4F;color:#F4F6F3"><b>Moss</b>#3B5F4F, action</div>
+    <div style="flex:3;background:#40705A;color:#F4F6F3"><b>Moss</b>#40705A, action</div>
     <div style="flex:2;background:#0F1512;color:#F4F6F3"><b>Ink</b>#0F1512, text</div>
     <div style="flex:1;background:#85601C;color:#F4F6F3"><b>Brass</b>#85601C</div>
   </div>

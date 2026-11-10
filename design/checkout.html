@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Checkout | Adal</title>
+<meta name="description" content="Checkout after winning an auction, with a fresh code to finalize the purchase.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300;12..96,400;12..96,500;12..96,600&family=Instrument+Sans:wght@400;500;600;700&family=Outfit:wght@500&display=swap">
+<link rel="stylesheet" href="adal.css">
+<script src="adal.js"></script>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>
+<symbol id="mark" viewBox="0 0 190 150"><circle cx="45" cy="37" r="32" fill="currentColor"/><circle cx="148" cy="37" r="32" fill="currentColor"/><rect x="2" y="69" width="189" height="20" rx="10" fill="currentColor"/><path d="M96 97 68 149h57z" fill="currentColor"/><circle cx="96" cy="78" r="18" style="fill:var(--mark-dot,#85601C)"/></symbol>
+<symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></symbol>
+<symbol id="i-down" viewBox="0 0 24 24"><path d="M12 5v14M6 13l6 6 6-6"/></symbol>
+<symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+<symbol id="i-alert" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16.5v.01"/></symbol>
+<symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.01"/></symbol>
+<symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></symbol>
+<symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+<symbol id="i-upload" viewBox="0 0 24 24"><path d="M12 16V5M7 10l5-5 5 5M5 19h14"/></symbol>
+<symbol id="i-dot" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4" style="fill:currentColor"/></symbol>
+<symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+<symbol id="i-eye" viewBox="0 0 24 24"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></symbol>
+</defs></svg>
+<a class="skip" href="#main">Skip to content</a>
+<div class="ann" role="region" aria-label="Notices"><div class="ann-track"><ul><li>Sample screens: items, prices and times are illustrations</li><li>Checkout is simulated: no real payments</li><li>One winner, one price</li><li>The server clock decides what arrived in time</li></ul><ul aria-hidden="true"><li>Sample screens: items, prices and times are illustrations</li><li>Checkout is simulated: no real payments</li><li>One winner, one price</li><li>The server clock decides what arrived in time</li></ul><ul aria-hidden="true"><li>Sample screens: items, prices and times are illustrations</li><li>Checkout is simulated: no real payments</li><li>One winner, one price</li><li>The server clock decides what arrived in time</li></ul><ul aria-hidden="true"><li>Sample screens: items, prices and times are illustrations</li><li>Checkout is simulated: no real payments</li><li>One winner, one price</li><li>The server clock decides what arrived in time</li></ul></div></div>
+<header class="site-head"><div class="wrap">
+<a class="brand" href="index.html"><svg aria-hidden="true"><use href="#mark"/></svg>Adal</a>
+<nav class="site-nav" aria-label="Main" data-glide data-glide-hover><a href="auctions.html">Auctions</a><a href="sell.html">Sell</a><a href="index.html#how">How it works</a></nav>
+<div class="acts"><a class="btn second" href="account.html#sign-in">Account</a></div></div></header>
+<style>
+.page-head{padding:56px 0 32px;display:flex;flex-direction:column;gap:16px}
+.flow{display:flex;gap:0;flex-wrap:wrap;margin:0 0 8px;border-top:1px solid var(--rule)}
+.flow li{flex:1 1 200px;padding:16px 16px 16px 0;border-bottom:1px solid var(--rule);display:flex;gap:12px;align-items:center;color:var(--muted);font-weight:600;font-size:15px}
+.flow li .n{display:grid;place-items:center;width:28px;height:28px;border-radius:50%;border:1px solid var(--edge);font-size:14px}
+.flow li[aria-current="step"]{color:var(--ink);border-bottom:2px solid var(--moss);margin-bottom:-1px}
+.flow li[aria-current="step"] .n{background:var(--moss);color:var(--paper);border-color:var(--moss)}
+.flow li.done .n{background:var(--moss-tint);color:var(--moss);border-color:transparent}
+.lay{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,.8fr);gap:72px;align-items:start;padding-top:32px}
+.step[hidden]{display:none}
+.step{display:flex;flex-direction:column;gap:28px}
+.step h2{font:400 28px/1.2 var(--display);color:var(--ink)}
+.step form{display:flex;flex-direction:column;gap:20px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.sim{display:flex;gap:14px;padding:18px 20px;border-radius:var(--r-surf);background:var(--moss-tint);color:var(--moss)}
+.sim p{color:var(--body);font-size:16px}
+.sim .icon{margin-top:3px}
+.sum{background:var(--card);border:1px solid var(--rule);border-radius:var(--r-surf);padding:24px;display:flex;flex-direction:column;gap:20px;position:sticky;top:24px}
+.sum .lotrow{display:grid;grid-template-columns:88px 1fr;gap:16px;align-items:center}
+.sum .lotrow img{width:88px;height:110px;object-fit:cover;border-radius:var(--r-ctl)}
+.sum .lotrow b{font:400 20px/1.25 var(--display);color:var(--ink);display:block}
+.sum dl{display:grid;grid-template-columns:1fr auto;gap:0}
+.sum dt,.sum dd{padding:12px 0;border-top:1px solid var(--rule);color:var(--muted)}
+.sum dd{text-align:right;color:var(--ink)}
+.sum dt.t,.sum dd.t{font-weight:600;color:var(--ink);font-size:18px}
+.sum dd.t{font:500 28px/1.1 var(--text);letter-spacing:-.02em}
+.done-box{display:flex;flex-direction:column;gap:20px;align-items:flex-start}
+.tick{display:grid;place-items:center;width:56px;height:56px;border-radius:50%;background:var(--moss-tint);color:var(--moss)}
+.tick .icon{width:28px;height:28px}
+@media (max-width:960px){.lay{grid-template-columns:1fr;gap:40px}.sum{position:static;order:-1}.two{grid-template-columns:1fr}}
+</style>
+
+<div class="proto" role="region" aria-label="Prototype states, not part of the product">
+  <div class="wrap">
+    <span class="eyebrow">Prototype states</span>
+    <div id="states" data-glide role="group" aria-label="Choose a state to preview"></div>
+  </div>
+</div>
+
+<main id="main" class="wrap">
+  <header class="page-head">
+    <h1 class="headline" id="h1">Complete your <i>purchase</i></h1>
+  </header>
+
+  <ol class="flow" aria-label="Checkout steps" id="flow">
+    <li data-s="delivery"><span class="n">1</span>Delivery</li>
+    <li data-s="confirm"><span class="n">2</span>Confirm with a code</li>
+    <li data-s="done"><span class="n">3</span>Done</li>
+  </ol>
+
+  <div class="lay">
+    <div>
+      <section class="step enter" id="delivery" aria-labelledby="t1">
+        <h2 id="t1">Delivery and payment</h2>
+        <form onsubmit="return go('confirm')">
+          <div class="field"><label for="nm">Full name</label><input class="input" id="nm" autocomplete="name" required></div>
+          <div class="field"><label for="ad">Address</label><input class="input" id="ad" autocomplete="street-address" required></div>
+          <div class="two">
+            <div class="field"><label for="ci">City</label><input class="input" id="ci" autocomplete="address-level2" required></div>
+            <div class="field"><label for="po">Postal code</label><input class="input" id="po" autocomplete="postal-code" required></div>
+          </div>
+          <div class="sim"><svg class="icon" aria-hidden="true"><use href="#i-info"/></svg><p><b>Simulated payment.</b> No card is charged and no money moves in this version. Completing checkout records the sale.</p></div>
+          <button class="btn" type="submit" style="align-self:flex-start">Continue</button>
+        </form>
+      </section>
+
+      <section class="step enter" id="confirm" aria-labelledby="t2" hidden>
+        <h2 id="t2">Confirm with a fresh code</h2>
+        <p class="measure">To protect this purchase, enter the current 6-digit code from your authenticator app. Being signed in is not enough on its own.</p>
+        <div class="banner msg" id="cerr" role="alert" hidden style="background:var(--brass-tint);padding:12px 14px;border-radius:var(--r-ctl);display:flex;gap:10px;color:var(--brass);font-weight:500">
+          <svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg>
+          <span>That code is not right or has expired. Your purchase is not complete. Wait for the next code and try again.</span>
+        </div>
+        <form onsubmit="return go('done')" style="max-width:420px">
+          <div class="field"><label for="cc">6-digit code</label><input class="input codebox" id="cc" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="000000" required></div>
+          <button class="btn" type="submit">Confirm purchase &middot; 260.00</button>
+          <button class="link-btn" type="button" style="align-self:flex-start" onclick="go('delivery')">Back to delivery</button>
+        </form>
+      </section>
+
+      <section class="step enter" id="done" aria-labelledby="t3" hidden>
+        <div class="done-box">
+          <span class="tick"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg></span>
+          <h2 id="t3">Purchase complete</h2>
+          <p class="measure">One transaction was recorded for this auction. A confirmation was sent to name@example.com. The seller will arrange delivery with you.</p>
+          <p class="note">Reference TX-0001, sample. Nothing was charged.</p>
+          <a class="btn second" href="auctions.html">Back to auctions</a>
+        </div>
+      </section>
+    </div>
+
+    <aside class="sum" aria-label="Order summary">
+      <div class="lotrow"><img src="img/scales.jpg" alt=""><div><b>Box of brass weights with small balance</b><span class="note">You won on Thursday 12 November, 18:00</span></div></div>
+      <dl>
+        <dt>Winning bid</dt><dd>260.00</dd>
+        <dt>Fees</dt><dd>None in this version</dd>
+        <dt class="t">Total</dt><dd class="t">260.00</dd>
+      </dl>
+    </aside>
+  </div>
+</main>
+
+<footer class="site-foot"><div class="wrap">
+<div class="cols">
+<div><a class="brand" href="index.html" style="padding:0"><svg aria-hidden="true" style="width:40px;height:32px"><use href="#mark"/></svg>Adal</a><p style="margin-top:16px;max-width:32ch">Fair and honest. An online auction service where every bid weighs the same.</p></div>
+<div><h2>Buy</h2><a href="auctions.html">Browse auctions</a><a href="index.html#how">How bidding works</a></div>
+<div><h2>Sell</h2><a href="sell.html">Create a listing</a><a href="index.html#formats">Selling formats</a></div>
+<div><h2>Account</h2><a href="account.html#sign-in">Sign in</a><a href="account.html#create">Create account</a></div>
+</div>
+<div class="base"><span>Adal &middot; Senior project, Fall 2026</span><span>Sample lots and prices on these pages are illustrations.</span></div>
+</div></footer>
+<script>
+(function(){
+  var views=[['delivery','Delivery'],['confirm','Code step'],['confirm-error','Wrong code'],['done','Done']];
+  var st=document.getElementById('states');
+  st.innerHTML=views.map(function(v){return '<button type="button" data-k="'+v[0]+'" aria-pressed="false">'+v[1]+'</button>'}).join('');
+  function show(k){
+    var base=k.replace('-error','');
+    ['delivery','confirm','done'].forEach(function(s){document.getElementById(s).hidden=s!==base});
+    document.getElementById('cerr').hidden=k!=='confirm-error';
+    var order=['delivery','confirm','done'],i=order.indexOf(base);
+    document.querySelectorAll('#flow li').forEach(function(li,j){
+      li.className=j<i?'done':''; if(j===i) li.setAttribute('aria-current','step'); else li.removeAttribute('aria-current')});
+    Array.prototype.forEach.call(st.children,function(b){b.setAttribute('aria-pressed',b.dataset.k===k)});
+    document.getElementById('h1').innerHTML=base==='done'?'Thank <i>you</i>':'Complete your <i>purchase</i>';
+  }
+  window.go=function(k){location.hash=k;return false};
+  function route(){var h=location.hash.slice(1)||'delivery'; if(!views.some(function(v){return v[0]===h})) h='delivery'; show(h)}
+  window.addEventListener('hashchange',function(){route();window.scrollTo(0,0)}); route(); window.scrollTo(0,0);
+  st.addEventListener('click',function(e){var b=e.target.closest('button'); if(b) location.hash=b.dataset.k});
+})();
+</script>
+
+</body>
+</html>
