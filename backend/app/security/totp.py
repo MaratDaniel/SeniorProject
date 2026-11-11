@@ -2,6 +2,7 @@
 
 import hashlib
 import hmac
+import io
 import secrets
 import time
 
@@ -36,7 +37,11 @@ def provisioning_uri(secret: str, email: str) -> str:
 
 
 def qr_svg(uri: str) -> str:
-    return segno.make(uri, error="m").svg_inline(scale=5, border=2)
+    """A standalone SVG document. It keeps the SVG namespace (svg_inline() drops it),
+    without which browsers refuse to draw it from a data: URL in an <img>."""
+    out = io.BytesIO()
+    segno.make(uri, error="m").save(out, kind="svg", scale=5, border=2, xmldecl=False, svgns=True, nl=False)
+    return out.getvalue().decode()
 
 
 def current_step(now: float | None = None) -> int:

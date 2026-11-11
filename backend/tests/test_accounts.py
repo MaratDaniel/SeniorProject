@@ -55,6 +55,8 @@ async def test_mfa_setup_then_login_needs_a_fresh_code(client: AsyncClient, acco
     buyer = await accounts("buyer", mfa=False)
     setup = await client.post("/api/auth/mfa/setup", headers=buyer.headers)
     assert setup.status_code == 200 and setup.json()["qr_svg"].lstrip().startswith("<svg")
+    # The front end shows it as <img src="data:image/svg+xml,...">, which needs the SVG namespace.
+    assert 'xmlns="http://www.w3.org/2000/svg"' in setup.json()["qr_svg"]
     secret = setup.json()["secret"]
     wrong = await client.post("/api/auth/mfa/enable", headers=buyer.headers, json={"code": "000000"})
     assert wrong.status_code == 400
