@@ -756,6 +756,8 @@ Scaling path:
 - **Scheduler.** One worker is enough, and more are safe.
 - **Database.** PostgreSQL is the only component that limits a single hot auction, because its bids are serialized by design. Different auctions scale independently.
 
+CI (GitHub Actions, `.github/workflows/`) runs on every push to `main` and every pull request. It runs the backend tests against PostgreSQL 17 and the front-end type-check and build. It smoke-tests this Compose stack: build, start, seed demo data, then load the site, the API and a photo through nginx. It also checks every lockfile against the OSV vulnerability database, and that scan runs weekly as well.
+
 ## 11. Known limits and next steps
 
 | Item | Plan |
@@ -767,4 +769,4 @@ Scaling path:
 | Spring formats, notifications, admin dashboard, flagging | New strategies in `engine/`, new tables for notifications and flags |
 | Search uses `ILIKE` | `pg_trgm` index or full-text search when the catalogue grows |
 | Bids and the audit log grow forever | Monthly partitions and archiving once volume requires it |
-| Base images referenced by tag | Pin by digest; add CI that runs the tests and the dependency scanners |
+| Base images referenced by tag | Pin by digest, and scan the built images in CI |

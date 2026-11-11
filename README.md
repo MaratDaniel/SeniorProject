@@ -34,6 +34,7 @@ backend/
   tools/devdb.sh   local PostgreSQL without Docker
 frontend/          React app built from the design handoff
 docs/API.md        the contract between front end and back end
+.github/workflows/ CI: tests, front-end build, Docker smoke test, dependency scan
 ```
 
 ## Run it locally (no Docker)
@@ -86,6 +87,20 @@ The suite builds a fresh database with the real migration. `tests/test_concurren
 - 25 rising bids at once: every accepted bid is stored, in order, and the final price is the highest accepted bid.
 - The close running 10 times at once creates exactly one transaction.
 - Bids racing the close: none is stored after the close.
+
+## CI
+
+GitHub Actions runs on every push to `main` and on every pull request:
+
+- `.github/workflows/ci.yml` runs the backend tests against PostgreSQL 17 and the front-end type-check and build. It also smoke-tests the Docker stack: build, start, seed the demo data, then load the site, the API and a photo through nginx.
+- `.github/workflows/dependency-scan.yml` checks every lockfile against the [OSV](https://osv.dev) vulnerability database. It also runs every Monday, because new advisories appear without any change here.
+
+Actions are pinned by commit SHA and the scanner binary by its SHA-256. To run the same scan locally with [osv-scanner](https://github.com/google/osv-scanner):
+
+```bash
+osv-scanner scan source --no-resolve -L backend/requirements.txt -L backend/requirements-dev.txt \
+  -L backend/tools/devdb-requirements.txt -L frontend/package-lock.json
+```
 
 ## How correctness is kept
 

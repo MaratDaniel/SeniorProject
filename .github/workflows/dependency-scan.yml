@@ -1,0 +1,45 @@
+# Checks every lockfile against the OSV vulnerability database (osv.dev). Fails on any known vulnerability.
+# Also runs every Monday, because new advisories appear without any change in this repository.
+name: Dependency scan
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  schedule:
+    - cron: "17 5 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: dependency-scan-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  osv:
+    name: OSV scan
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    env:
+      OSV_SCANNER_VERSION: "2.7.1"
+      # SHA-256 of osv-scanner_linux_amd64 in that release (matches its osv-scanner_SHA256SUMS).
+      OSV_SCANNER_SHA256: fb7dab19a8bd9bbe5c3189f09d4b7ee1820c9553a23bac202648a56efd2f6ee8
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Install osv-scanner (release binary, checksum-pinned)
+        run: |
+          curl -fsSL -o "$RUNNER_TEMP/osv-scanner" \
+            "https://github.com/google/osv-scanner/releases/download/v${OSV_SCANNER_VERSION}/osv-scanner_linux_amd64"
+          echo "${OSV_SCANNER_SHA256}  $RUNNER_TEMP/osv-scanner" | sha256sum --check --strict
+          chmod +x "$RUNNER_TEMP/osv-scanner"
+      - name: Scan the lockfiles
+        run: |
+          "$RUNNER_TEMP/osv-scanner" scan source --no-resolve \
+            -L backend/requirements.txt \
+            -L backend/requirements-dev.txt \
+            -L backend/tools/devdb-requirements.txt \
+            -L frontend/package-lock.json
