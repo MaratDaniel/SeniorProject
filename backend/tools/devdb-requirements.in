@@ -1,0 +1,4 @@
+# Disposable local PostgreSQL for machines without Docker (dev and tests only).
+# pgserver ships PostgreSQL binaries; its wheels stop at CPython 3.12, so it lives in its own venv:
+#   uv pip compile tools/devdb-requirements.in --python-version 3.12 --generate-hashes -o tools/devdb-requirements.txt
+pgserver

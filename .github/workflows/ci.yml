@@ -1,0 +1,131 @@
+# Runs on every push to main and every pull request: the backend tests against PostgreSQL,
+# the front-end type-check and build, and a smoke test of the whole Docker Compose stack.
+# Actions are pinned by commit SHA; the comment names the release.
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  backend:
+    name: Backend tests
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    services:
+      postgres:
+        image: postgres:17-alpine
+        env:
+          POSTGRES_USER: adal
+          POSTGRES_HOST_AUTH_METHOD: trust # reachable only from this job
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U adal"
+          --health-interval 2s
+          --health-timeout 3s
+          --health-retries 30
+    env:
+      ADAL_TEST_DATABASE_URL: postgresql+asyncpg://adal@127.0.0.1:5432/adal_test
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2 # v10.3.3
+        with:
+          version: "0.13.7"
+          enable-cache: false
+      - name: Install dependencies (hash-checked)
+        run: |
+          uv venv --python 3.13 .venv
+          uv pip install --python .venv/bin/python --require-hashes -r requirements.txt -r requirements-dev.txt
+      - name: Run the tests
+        run: .venv/bin/pytest
+
+  frontend:
+    name: Front-end build
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: "24"
+          package-manager-cache: false
+      - name: Install dependencies (exactly as locked)
+        run: npm ci --no-audit --no-fund
+      - name: Type-check and build
+        run: npm run build
+
+  docker:
+    name: Docker stack
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Write a throwaway .env
+        run: |
+          {
+            echo "POSTGRES_PASSWORD=$(openssl rand -hex 24)"
+            echo "ADAL_JWT_SECRET=$(openssl rand -hex 32)"
+            echo "ADAL_MFA_ENCRYPTION_KEY=$(python3 -c 'import base64, os; print(base64.urlsafe_b64encode(os.urandom(32)).decode())')"
+            echo "ADAL_ENV=dev"
+            echo "ADAL_FRONTEND_URL=http://localhost:8080"
+            echo "ADAL_COOKIE_SECURE=false"
+          } > .env
+      - name: Build the images
+        run: docker compose build
+      - name: Start the stack
+        run: docker compose up --detach
+      - name: Wait for the API behind nginx
+        run: |
+          for _ in $(seq 60); do
+            if curl -fsS -o /dev/null http://localhost:8080/api/auctions; then exit 0; fi
+            sleep 2
+          done
+          echo "The API did not answer through nginx within 2 minutes." >&2
+          exit 1
+      - name: Seed demo data the way the README does
+        # The accounts are printed; keep them out of the log.
+        run: docker compose run --rm --no-deps -T api python -m app.cli seed-demo --accounts-file - > /dev/null
+      - name: Check the site, the API, a photo and the services
+        run: |
+          curl -fsS -o index.html http://localhost:8080/
+          grep -q '<div id="root">' index.html
+          curl -fsS -o auctions.json http://localhost:8080/api/auctions
+          echo "auctions: $(jq .total auctions.json)"
+          test "$(jq .total auctions.json)" -eq 4
+          cover=$(jq -r '[.items[].cover_url | strings][0]' auctions.json)
+          type=$(curl -fsS -o /dev/null -w '%{content_type}' "http://localhost:8080${cover}")
+          echo "cover photo: ${cover} (${type})"
+          test "${type}" = image/jpeg
+          running=$(docker compose ps --status running --format '{{.Service}}' | sort | xargs)
+          echo "running: ${running}"
+          test "${running}" = "api db redis web worker"
+      - name: Show the logs
+        if: failure()
+        run: |
+          docker compose ps --all
+          docker compose logs --no-color
+      - name: Stop the stack
+        if: always()
+        run: docker compose down --volumes
