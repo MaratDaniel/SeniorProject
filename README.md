@@ -2,7 +2,9 @@
 
 An online auction service where bidding stays correct when many people bid at once: one winner and one price, every time. Senior project, fall 2026 MVP.
 
-The requirements and design live in the team repository (`Online_Auction_Service_Requirements_and_Design_v2.docx`). This repository is the working system.
+The requirements and design live in the team repository (`Online_Auction_Service_Requirements_and_Design_v2.docx`). This repository is the working system:
+- [docs/SYSTEM_DESIGN.md](docs/SYSTEM_DESIGN.md) explains how it works, with the full database schema;
+- [docs/API.md](docs/API.md) is the API contract.
 
 ## Stack
 
