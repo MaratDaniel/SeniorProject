@@ -20,6 +20,3 @@ frontend/dist/
 .DS_Store
 .idea/
 .vscode/
-
-# Local tool settings
-.claude/
