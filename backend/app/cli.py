@@ -3,6 +3,7 @@
     python -m app.cli init-env       write backend/.env with fresh secrets for local development
     python -m app.cli create-admin   create an administrator account (prompts for the password)
     python -m app.cli seed-demo      demo users and auctions; credentials go to .demo-accounts.txt
+                                     (--accounts-file PATH puts them elsewhere, - prints them)
 """
 
 import argparse
@@ -184,13 +185,27 @@ async def _seed_demo() -> list[str]:
     return lines
 
 
-def seed_demo(_: argparse.Namespace) -> int:
+def _can_write(path: Path) -> bool:
+    return os.access(path, os.W_OK) if path.exists() else os.access(path.parent, os.W_OK)
+
+
+def seed_demo(args: argparse.Namespace) -> int:
+    # The passwords exist only in this output, so check where it goes before touching the database.
+    # In the Docker image the app user cannot write to /app: use --accounts-file - there.
+    target = None if args.accounts_file == "-" else Path(args.accounts_file)
+    if target is not None and not _can_write(target):
+        print(f"Cannot write {target}. Pass --accounts-file with a writable path, or - to print the accounts.", file=sys.stderr)
+        return 1
     lines = asyncio.run(_seed_demo())
-    fd = os.open(DEMO_ACCOUNTS, os.O_WRONLY | os.O_CREAT | os.O_TRUNC, 0o600)
+    text = "# Demo accounts for local development only. Add each TOTP secret to an authenticator app.\n" + "\n".join(lines) + "\n"
+    if target is None:
+        sys.stdout.write(text)
+        print("Seeded 3 demo accounts and 4 auctions.", file=sys.stderr)
+        return 0
+    fd = os.open(target, os.O_WRONLY | os.O_CREAT | os.O_TRUNC, 0o600)
     with os.fdopen(fd, "w") as handle:
-        handle.write("# Demo accounts for local development only. Add each TOTP secret to an authenticator app.\n")
-        handle.write("\n".join(lines) + "\n")
-    print(f"Seeded 3 demo accounts and 4 auctions. Credentials: {DEMO_ACCOUNTS}")
+        handle.write(text)
+    print(f"Seeded 3 demo accounts and 4 auctions. Credentials: {target}")
     return 0
 
 
@@ -201,7 +216,13 @@ def main(argv: list[str] | None = None) -> int:
     admin = commands.add_parser("create-admin")
     admin.add_argument("--email", required=True)
     admin.set_defaults(func=create_admin)
-    commands.add_parser("seed-demo").set_defaults(func=seed_demo)
+    seed = commands.add_parser("seed-demo")
+    seed.add_argument(
+        "--accounts-file",
+        default=str(DEMO_ACCOUNTS),
+        help="where to write the demo credentials (default: backend/.demo-accounts.txt); - prints them",
+    )
+    seed.set_defaults(func=seed_demo)
     args = parser.parse_args(argv)
     return args.func(args)
 

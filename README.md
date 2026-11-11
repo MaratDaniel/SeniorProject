@@ -30,7 +30,7 @@ backend/
     security/      passwords, tokens, TOTP, rate limiting
     models.py      schema; migrations/ holds the Alembic migration
     scheduler.py   opens, closes and expires on time (also runs as app/worker.py)
-  tests/           31 tests, including the concurrency tests
+  tests/           34 tests, including the concurrency tests
   tools/devdb.sh   local PostgreSQL without Docker
 frontend/          React app built from the design handoff
 docs/API.md        the contract between front end and back end
@@ -70,7 +70,7 @@ cp .env.example .env    # then fill in the three secrets
 docker compose up --build
 ```
 
-Open http://localhost:8080. To add demo data: `docker compose run --rm api sh -c "python -m app.cli seed-demo && cat .demo-accounts.txt"`.
+Open http://localhost:8080. To add demo data and print the demo accounts: `docker compose run --rm api python -m app.cli seed-demo --accounts-file -`.
 
 ## Tests
 
