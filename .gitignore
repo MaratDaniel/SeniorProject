@@ -1,0 +1,25 @@
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+backend/.venv/
+backend/tools/.venv/
+
+# Local secrets and data (never commit)
+.env
+backend/.env
+backend/.pgdata/
+backend/media/
+backend/.demo-accounts.txt
+
+# Front end
+frontend/node_modules/
+frontend/dist/
+
+# Editors and OS
+.DS_Store
+.idea/
+.vscode/
+
+# Local tool settings
+.claude/

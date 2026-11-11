@@ -1,0 +1,1 @@
+"""Adal online auction service."""

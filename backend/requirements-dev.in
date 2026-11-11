@@ -1,0 +1,5 @@
+# Test and local-development dependencies, constrained to the runtime pins:
+#   uv pip compile requirements-dev.in --generate-hashes -o requirements-dev.txt
+-c requirements.txt
+pytest                  # tests (async tests use the anyio plugin that ships with anyio)
+httpx                   # ASGI test client

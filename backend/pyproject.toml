@@ -1,0 +1,15 @@
+[project]
+name = "adal-backend"
+version = "0.1.0"
+description = "Adal online auction service: API, auction engine and live updates"
+requires-python = ">=3.13"
+# Dependencies are pinned with hashes in requirements.txt / requirements-dev.txt.
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+filterwarnings = [
+    "error::sqlalchemy.exc.SAWarning",
+    "error::sqlalchemy.exc.SADeprecationWarning",
+    "ignore:Using `httpx` with `starlette.testclient`",
+]

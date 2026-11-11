@@ -1,0 +1,17 @@
+# Runtime dependencies. Pinned with hashes in requirements.txt:
+#   uv pip compile requirements.in --generate-hashes -o requirements.txt
+fastapi                 # HTTP + WebSocket API, OpenAPI schema
+uvicorn                 # ASGI server
+websockets              # WebSocket protocol support for uvicorn
+sqlalchemy[asyncio]     # ORM, transactions, SELECT ... FOR UPDATE
+asyncpg                 # PostgreSQL driver
+alembic                 # schema migrations
+pydantic-settings       # settings from environment variables
+email-validator         # EmailStr validation
+argon2-cffi             # password hashing (Argon2id)
+pyjwt                   # access tokens and MFA tickets
+pyotp                   # TOTP codes
+segno                   # QR code (SVG) for the authenticator setup, no dependencies
+cryptography            # Fernet encryption of TOTP secrets at rest
+python-multipart        # photo uploads (multipart/form-data)
+redis                   # pub/sub fan-out of auction events across processes

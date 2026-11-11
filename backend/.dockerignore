@@ -1,0 +1,9 @@
+.venv
+tools/.venv
+.pgdata
+media
+.env
+.demo-accounts.txt
+__pycache__
+.pytest_cache
+tests
