@@ -268,3 +268,150 @@ main:has(> .pg-home) + .site-foot{margin-top:0}
 .pg-me .mail-head{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:baseline}
 .pg-me .mail-body{white-space:pre-wrap;color:var(--body);font-size:15px;overflow-wrap:anywhere}
 .pg-me .mail-links{display:flex;flex-direction:column;gap:6px;overflow-wrap:anywhere}
+
+/* ---------- phones and small tablets ----------
+   The design handoff was drawn for desktop. Below 860px the header collapses into a menu button,
+   and below 620px spacing, type and a few layouts tighten so every screen fits a phone without
+   sideways scrolling. Targets stay at least 44px. */
+.menu-btn,.m-menu,.m-scrim{display:none}
+@media (max-width:860px){
+  .site-head .wrap{flex-wrap:nowrap;min-height:64px;padding-top:0;padding-bottom:0;gap:12px}
+  .site-head .site-nav,.site-head .acts{display:none}
+  .site-head .brand{font-size:24px;gap:10px}
+  .site-head .brand svg{width:34px;height:27px}
+  .menu-btn{display:inline-flex;align-items:center;gap:8px;margin-left:auto;min-height:44px;padding:0 14px 0 12px;
+    border:0;border-radius:999px;background:transparent;color:var(--ink);font:600 16px/1 var(--text);cursor:pointer;
+    box-shadow:inset 0 0 0 1px var(--rule)}
+  .menu-btn[aria-expanded="true"]{background:var(--moss-tint);box-shadow:inset 0 0 0 1px var(--moss)}
+  .m-menu:not([hidden]){display:flex;flex-direction:column;gap:20px;position:absolute;left:0;right:0;top:100%;
+    max-height:calc(100dvh - 64px);overflow-y:auto;overscroll-behavior:contain;
+    padding:8px var(--gutter) 24px;background:var(--paper);border-bottom:1px solid var(--rule);
+    box-shadow:0 16px 32px rgba(15,21,18,.12);animation:pop .4s var(--ease) both}
+  .m-nav{display:flex;flex-direction:column}
+  .m-nav a{display:flex;align-items:center;min-height:56px;border-bottom:1px solid var(--rule);
+    font:400 24px/1.2 var(--display);color:var(--ink);text-decoration:none}
+  .m-nav a[aria-current="page"]{color:var(--moss)}
+  .m-acts{display:flex;flex-direction:column;gap:12px;align-items:stretch}
+  .m-acts .btn{width:100%;min-height:52px}
+  .m-acts .link-btn{min-height:44px}
+  .m-scrim{display:block;position:fixed;inset:0;z-index:15;background:rgba(15,21,18,.32)}
+  html.menu-open{overflow:hidden}
+  .site-head{z-index:30}
+
+  /* account screens: photo becomes a short band, the form fills the width */
+  .pg-account.split{grid-template-columns:minmax(0,1fr);min-height:100dvh;grid-template-rows:auto 1fr}
+  .pg-account .form-area{grid-template-columns:minmax(0,1fr);place-items:start center;padding:32px var(--gutter) 48px}
+}
+@media (max-width:620px){
+  :root{--gutter:16px}
+  body{font-size:16px}
+  .display{font-size:clamp(36px,10.5vw,44px)}
+  .headline{font-size:clamp(30px,8.6vw,36px)}
+  .lede{font-size:18px}
+  .figure{font-size:clamp(44px,13vw,52px)}
+  .btn{padding:0 20px}
+  .ann{font-size:14px}
+  .ann li{padding:10px 0}
+  .ann li::after{margin:0 20px}
+  .site-foot{margin-top:64px;padding:48px 0 32px}
+  .site-foot .cols{gap:32px 24px}
+  .site-foot .base{margin-top:32px}
+
+  /* shared pieces */
+  .desk{padding:22px 18px;gap:16px}
+  .presets{gap:8px}
+  .preset span{font-size:15px}
+  .acc-btn{font-size:20px;padding:20px 0;gap:16px}
+  .acc-panel p{padding-right:0}
+  .tbl{font-size:15px}
+  .tbl th{padding-right:12px}
+  .tbl td{padding:12px 12px 12px 0}
+  .dl{grid-template-columns:112px minmax(0,1fr)}
+  .empty{padding:32px 0}
+  .lot h2,.lot h3{font-size:22px}
+
+  /* home */
+  .hero-split{min-height:0}
+  .hs-photo{min-height:220px}
+  .hs-copy{padding:28px var(--gutter) 40px;gap:24px}
+  .hs-copy .display{font-size:clamp(36px,10.5vw,44px)}
+  .hs-copy .acts .btn{flex:1 1 100%}
+  .pg-home .band{padding:48px 0}
+  .pg-home .promises .title{font-size:28px}
+  .pg-home section.block{padding-top:64px}
+  .pg-home .sec-head{margin-bottom:28px}
+  .pg-home .gallery,.pg-home .gallery .side{gap:32px}
+  .pg-home .gallery .big .ph{aspect-ratio:4/3}
+  .pg-home .gallery .big h3{font-size:26px}
+  .pg-home .how li{grid-template-columns:40px 1fr;gap:12px;padding:20px 0}
+  .pg-home .how li::before{font-size:32px}
+  .pg-home .how li b{font-size:21px}
+  .pg-home .how ol{margin-top:24px}
+  .pg-home .formats li{padding:24px 0;gap:12px}
+  .pg-home .formats .dg{width:160px;height:64px}
+  .pg-home .formats h3{font-size:24px}
+  .pg-home #h-formats{margin-bottom:28px!important}
+  .pg-home .secure{margin-top:64px;padding:56px 0}
+
+  /* browse: status chips scroll sideways in one row */
+  .pg-auctions .page-head{padding:24px 0 24px;gap:24px}
+  .pg-auctions .filters{gap:10px;padding:16px 0}
+  .pg-auctions .filters .field{gap:4px}
+  .pg-auctions .ph-band{aspect-ratio:21/9}
+  .pg-auctions .chips{flex-wrap:nowrap;overflow-x:auto;margin:0 calc(-1*var(--gutter));padding:16px var(--gutter) 4px;scrollbar-width:none}
+  .pg-auctions .chips::-webkit-scrollbar{display:none}
+  .pg-auctions .chip{flex:none}
+  .pg-auctions .count{padding:20px 0}
+  .pg-auctions .pager{padding-top:40px;gap:8px}
+  .pg-auctions .pager-at{min-width:0}
+  .grid{gap:40px}
+  .grid .ph{aspect-ratio:4/3}
+
+  /* auction page */
+  .pg-auction .crumbs{padding:16px 0 4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .pg-auction .lot-top{gap:24px;padding-top:8px}
+  .pg-auction .thumb{width:56px;height:56px}
+  .pg-auction .side{gap:20px}
+  .pg-auction .side h1{font-size:clamp(28px,8vw,34px)}
+  .pg-auction .sec{padding-top:40px}
+  .pg-auction .sec h2{font-size:24px;margin-bottom:12px}
+  .pg-auction .desk .big-note{font-size:21px}
+
+  /* sell */
+  .pg-sell .page-head{padding:28px 0 24px}
+  .pg-sell .sec{padding:32px 0;gap:20px}
+  .pg-sell .sec .legend{font-size:24px}
+  .pg-sell .drop{padding:24px 16px}
+  .pg-sell .drop.has{grid-template-columns:64px minmax(0,1fr);gap:12px;padding:12px}
+  .pg-sell .drop.has img{width:64px;height:64px}
+  .pg-sell .photo-acts{grid-column:1/-1;flex-direction:row;justify-content:flex-end;gap:16px}
+  .pg-sell .form-acts .btn{flex:1 1 100%}
+
+  /* checkout: the step strip stays on one line */
+  .pg-checkout .page-head{padding:28px 0 20px}
+  .pg-checkout .flow{flex-wrap:nowrap}
+  .pg-checkout .flow li{flex:1 1 0;min-width:0;padding:12px 8px 12px 0;gap:8px;font-size:13px;line-height:1.25}
+  .pg-checkout .flow li .n{flex:none;width:24px;height:24px;font-size:13px}
+  .pg-checkout .lay{padding-top:24px;gap:28px}
+  .pg-checkout .step{gap:20px}
+  .pg-checkout .step h2{font-size:24px}
+  .pg-checkout .sum{padding:18px}
+  .pg-checkout .sum .lotrow{grid-template-columns:64px 1fr}
+  .pg-checkout .sum .lotrow img,.pg-checkout .sum .mini-ph{width:64px;height:80px}
+  .pg-checkout .sum dd.t{font-size:24px}
+
+  /* my account and dev mailbox */
+  .pg-me .page-head{padding:28px 0 16px}
+  .pg-me .me-sec{padding:28px 0}
+  .pg-me .me-sec h2{font-size:24px}
+  .pg-me .mail-item{padding:16px}
+
+  /* account screens */
+  .pg-account .side{min-height:120px;padding:20px var(--gutter)}
+  .pg-account .form-area{padding-top:28px}
+  .pg-account .panel{gap:24px}
+  .pg-account .codebox{font-size:24px;letter-spacing:.4em}
+  .pg-account .codes{grid-template-columns:1fr;padding:16px}
+}
+/* safety net: nothing may widen the page past the screen */
+html,body{overflow-x:clip}

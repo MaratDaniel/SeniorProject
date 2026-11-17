@@ -1,4 +1,4 @@
-import { useState, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { Link, Navigate, NavLink, Outlet, useLocation, useNavigate } from "react-router";
 import { api } from "../api/client";
 import type { User } from "../api/types";
@@ -108,16 +108,76 @@ function SiteFooter() {
   );
 }
 
+/** Phones get a menu button instead of the inline nav; the panel closes on navigation and on Escape. */
+function useMobileMenu() {
+  const [open, setOpen] = useState(false);
+  const location = useLocation();
+
+  useEffect(() => {
+    setOpen(false);
+  }, [location.pathname, location.hash]);
+
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setOpen(false);
+    };
+    // Back to the inline nav when the window grows past the phone breakpoint.
+    const wide = window.matchMedia("(min-width: 861px)");
+    const onWide = () => wide.matches && setOpen(false);
+    document.addEventListener("keydown", onKey);
+    wide.addEventListener("change", onWide);
+    document.documentElement.classList.add("menu-open");
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      wide.removeEventListener("change", onWide);
+      document.documentElement.classList.remove("menu-open");
+    };
+  }, [open]);
+
+  return [open, setOpen] as const;
+}
+
 export function SiteLayout() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const toast = useToast();
+  const [menuOpen, setMenuOpen] = useMobileMenu();
 
   async function signOut() {
+    setMenuOpen(false);
     await logout();
     toast("Signed out", "You are signed out on this device.");
     navigate("/");
   }
+
+  const navLinks = (
+    <>
+      <NavLink to="/auctions">Auctions</NavLink>
+      <NavLink to="/sell">Sell</NavLink>
+      <Link to="/#how">How it works</Link>
+    </>
+  );
+
+  const accountActions = user ? (
+    <>
+      <NavLink className="btn second" to="/me">
+        My account
+      </NavLink>
+      <button className="link-btn" type="button" onClick={signOut}>
+        Sign out
+      </button>
+    </>
+  ) : (
+    <>
+      <Link className="btn second" to="/account/sign-in">
+        Sign in
+      </Link>
+      <Link className="btn compact" to="/account/sign-up">
+        Create account
+      </Link>
+    </>
+  );
 
   return (
     <>
@@ -132,33 +192,35 @@ export function SiteLayout() {
             Adal
           </Link>
           <nav className="site-nav" aria-label="Main">
-            <NavLink to="/auctions">Auctions</NavLink>
-            <NavLink to="/sell">Sell</NavLink>
-            <Link to="/#how">How it works</Link>
+            {navLinks}
           </nav>
-          <div className="acts">
-            {user ? (
-              <>
-                <NavLink className="btn second" to="/me">
-                  My account
-                </NavLink>
-                <button className="link-btn" type="button" onClick={signOut}>
-                  Sign out
-                </button>
-              </>
-            ) : (
-              <>
-                <Link className="btn second" to="/account/sign-in">
-                  Sign in
-                </Link>
-                <Link className="btn compact" to="/account/sign-up">
-                  Create account
-                </Link>
-              </>
-            )}
-          </div>
+          <div className="acts">{accountActions}</div>
+          <button
+            className="menu-btn"
+            type="button"
+            aria-expanded={menuOpen}
+            aria-controls="m-menu"
+            onClick={() => setMenuOpen(!menuOpen)}
+          >
+            <Icon name={menuOpen ? "close" : "menu"} />
+            <span>{menuOpen ? "Close" : "Menu"}</span>
+          </button>
+        </div>
+        <div
+          className="m-menu"
+          id="m-menu"
+          hidden={!menuOpen}
+          onClick={(e) => {
+            if ((e.target as HTMLElement).closest("a")) setMenuOpen(false);
+          }}
+        >
+          <nav className="m-nav" aria-label="Main">
+            {navLinks}
+          </nav>
+          <div className="m-acts">{accountActions}</div>
         </div>
       </header>
+      {menuOpen ? <div className="m-scrim" aria-hidden="true" onClick={() => setMenuOpen(false)} /> : null}
       {user && !user.email_verified ? <VerifyBand user={user} /> : null}
       <main id="main">
         <Outlet />
