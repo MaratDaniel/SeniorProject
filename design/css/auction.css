@@ -1,0 +1,3 @@
+.lay{display:grid;grid-template-columns:240px 1fr;gap:32px}.flt{align-self:start}.flt select{width:100%;padding:11px;border:1px solid var(--bd);border-radius:5px;font:inherit;background:#fff}.two{display:flex;gap:8px}.two input{width:50%}
+.pg{display:flex;gap:8px;flex-wrap:wrap;margin:28px 0}.pg .btn{min-width:44px}.row{display:flex;gap:14px;align-items:center;margin:8px 0}.row img{object-fit:contain;background:var(--sf);border-radius:5px}
+.vl .grid{grid-template-columns:1fr}.vl .grid .card{display:flex}.vl .grid .card .im{width:150px;flex:none}
