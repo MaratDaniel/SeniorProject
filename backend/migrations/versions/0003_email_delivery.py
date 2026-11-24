@@ -1,13 +1,23 @@
 """Track delivery of account email through Resend."""
 
 import sqlalchemy as sa
-from alembic import op
+from alembic import context, op
 
-revision = "0002"
-down_revision = "0001"
+revision = "0003"
+down_revision = "0002"
 
 
 def upgrade() -> None:
+    if not context.is_offline_mode():
+        # Both branches used revision 0002 before merging. A database stamped
+        # with that revision may have applied only the email migration.
+        inspector = sa.inspect(op.get_bind())
+        if not any(column["name"] == "currency" for column in inspector.get_columns("listings")):
+            op.add_column("listings", sa.Column("currency", sa.String(length=3), server_default="USD", nullable=False))
+            op.create_check_constraint(op.f("ck_listings_currency"), "listings", "currency IN ('USD', 'EUR', 'GBP', 'KZT')")
+        if any(column["name"] == "delivery_key" for column in inspector.get_columns("email_outbox")):
+            return
+
     op.add_column("email_outbox", sa.Column("template", sa.String(64)))
     op.add_column("email_outbox", sa.Column("template_link", sa.Text()))
     op.add_column("email_outbox", sa.Column("expires_at", sa.DateTime(timezone=True)))

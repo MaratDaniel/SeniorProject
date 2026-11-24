@@ -113,7 +113,7 @@ jobs:
           grep -q '<div id="root">' index.html
           curl -fsS -o auctions.json http://localhost:8080/api/auctions
           echo "auctions: $(jq .total auctions.json)"
-          test "$(jq .total auctions.json)" -eq 4
+          test "$(jq .total auctions.json)" -eq 8
           cover=$(jq -r '[.items[].cover_url | strings][0]' auctions.json)
           type=$(curl -fsS -o /dev/null -w '%{content_type}' "http://localhost:8080${cover}")
           echo "cover photo: ${cover} (${type})"
