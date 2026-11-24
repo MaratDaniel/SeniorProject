@@ -6,7 +6,7 @@ The front end and back end both build against this file. If something here is wr
 
 - REST under `/api`, WebSocket under `/ws`, uploaded photos under `/media`. In development the Vite server proxies all three to the backend at `http://127.0.0.1:8000`, so the browser sees one origin.
 - JSON everywhere except the photo upload (multipart).
-- **Money** is a string with two decimals: `"245.00"`. Never a float. No currency symbol is shown (the currency is undecided).
+- **Money** is a string with two decimals: `"245.00"`. Never a float. Each listing has a `currency` (`USD` by default; `EUR`, `GBP`, `KZT` can be chosen by the seller when creating it). Amounts carry no conversion.
 - **Times** are ISO 8601 in UTC: `"2026-11-12T18:00:00Z"`. The server clock is the only authority; the client shows countdowns using `server_time` to correct its own clock.
 - **Auth**: `Authorization: Bearer <access_token>` (JWT, 15 minutes). The refresh token is an httpOnly cookie `adal_refresh` (path `/api/auth`, SameSite=Strict). Keep the access token in memory only. On page load call `POST /api/auth/refresh`; on a `401` with code `token_expired`, refresh once and retry.
 - **Errors** always have this shape, with a stable `code` the UI can switch on:

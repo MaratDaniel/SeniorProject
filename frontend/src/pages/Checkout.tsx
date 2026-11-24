@@ -7,7 +7,7 @@ import { Icon } from "../components/Icons";
 import { ErrorBanner, FieldError, Loading, RequireAuth } from "../components/Layout";
 import { NoPhoto } from "../components/LotCard";
 import { useToast } from "../components/Toasts";
-import { dateLong, money } from "../lib/format";
+import { dateLong, money, setCurrency } from "../lib/format";
 
 type Step = "delivery" | "confirm" | "done";
 
@@ -76,6 +76,7 @@ function CheckoutPage() {
   const { user } = useAuth();
   const toast = useToast();
   const [tx, setTx] = useState<Transaction | null>(null);
+  if (tx) setCurrency(tx.currency);
   const [loadError, setLoadError] = useState<ApiError | null>(null);
   const [step, setStep] = useState<Step>("delivery");
   const [delivery, setDelivery] = useState<Delivery>({ full_name: "", address: "", city: "", postal_code: "" });

@@ -38,7 +38,7 @@ export function LotCard({ card, now, variant = "grid" }: { card: AuctionCard; no
   if (phase === "live" || phase === "closing") {
     price = (
       <div className="price">
-        <b>{money(displayPrice(card))}</b>
+        <b>{money(displayPrice(card), card.currency)}</b>
         <span>{card.current_price ? "Current price" : "Starting price"}</span>
         {phase === "live" && (ending || variant === "big") ? (
           <span className={ending ? "ending" : "ends-in"}>
@@ -58,7 +58,7 @@ export function LotCard({ card, now, variant = "grid" }: { card: AuctionCard; no
         <span>Opens {dateLong(card.starts_at)}</span>
       </div>
     );
-    note = `Starting price ${money(card.starting_price)} · Closes ${dateLong(card.ends_at)}`;
+    note = `Starting price ${money(card.starting_price, card.currency)} · Closes ${dateLong(card.ends_at)}`;
   } else if (phase === "cancelled") {
     price = (
       <div className="price">
@@ -68,7 +68,7 @@ export function LotCard({ card, now, variant = "grid" }: { card: AuctionCard; no
   } else if (card.status === "closed") {
     price = (
       <div className="price">
-        <b>{money(displayPrice(card))}</b>
+        <b>{money(displayPrice(card), card.currency)}</b>
         <span>Sold</span>
       </div>
     );
@@ -76,7 +76,7 @@ export function LotCard({ card, now, variant = "grid" }: { card: AuctionCard; no
   } else {
     price = (
       <div className="price">
-        {card.current_price ? <b>{money(card.current_price)}</b> : null}
+        {card.current_price ? <b>{money(card.current_price, card.currency)}</b> : null}
         <span>No sale</span>
       </div>
     );

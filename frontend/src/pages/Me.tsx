@@ -148,7 +148,7 @@ function MePage() {
                   </td>
                   <td>{t.role === "buyer" ? "Bought" : "Sold"}</td>
                   <td>{TX_STATUS[t.status]}</td>
-                  <td className="num">{money(t.amount)}</td>
+                  <td className="num">{money(t.amount, t.currency)}</td>
                   <td>
                     <Link to={`/checkout/${t.id}`}>
                       {t.role === "buyer" && t.status === "pending" ? "Complete purchase" : "View"}

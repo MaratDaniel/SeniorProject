@@ -7,6 +7,7 @@ import { Auctions } from "./pages/Auctions";
 import { Checkout } from "./pages/Checkout";
 import { DevMailbox } from "./pages/DevMailbox";
 import { Home } from "./pages/Home";
+import { HowItWorks } from "./pages/HowItWorks";
 import { Me } from "./pages/Me";
 import { NotFound, RouteError } from "./pages/NotFound";
 import { Sell } from "./pages/Sell";
@@ -31,6 +32,7 @@ export const router = createBrowserRouter([
         element: <SiteLayout />,
         children: [
           { index: true, element: <Home /> },
+          { path: "how-it-works", element: <HowItWorks /> },
           { path: "auctions", element: <Auctions /> },
           { path: "auctions/:id", element: <AuctionPage /> },
           { path: "sell", element: <Sell /> },

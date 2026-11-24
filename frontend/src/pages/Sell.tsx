@@ -1,14 +1,14 @@
 import { useEffect, useRef, useState, type ChangeEvent, type DragEvent, type FormEvent, type ReactNode } from "react";
 import { Link, useNavigate } from "react-router";
 import { api, isApiError, serverNow, uploadImage } from "../api/client";
-import type { AuctionDetail, Listing } from "../api/types";
+import type { AuctionDetail, Currency, Listing } from "../api/types";
 import { useAuth } from "../auth/AuthContext";
 import { Icon } from "../components/Icons";
 import { ErrorBanner, FieldError, Loading, RequireAuth } from "../components/Layout";
 import { NoPhoto } from "../components/LotCard";
 import { useToast } from "../components/Toasts";
 import { useCategories } from "../hooks/useCategories";
-import { dateLong, fromLocalInput, money, parseAmount, toCents, toLocalInput } from "../lib/format";
+import { CURRENCIES, DEFAULT_CURRENCY, dateLong, fromLocalInput, money, parseAmount, setCurrency, toCents, toLocalInput } from "../lib/format";
 
 const MAX_PHOTOS = 8;
 const MAX_BYTES = 5 * 1024 * 1024;
@@ -103,6 +103,8 @@ function SellForm() {
   const [category, setCategory] = useState("");
   const [photos, setPhotos] = useState<Photo[]>([]);
   const [startingPrice, setStartingPrice] = useState("");
+  const [currency, setCurrencyChoice] = useState<Currency>(DEFAULT_CURRENCY);
+  setCurrency(currency);
   const [reserve, setReserve] = useState("");
   const [step, setStep] = useState("5.00");
   const [openNow, setOpenNow] = useState(true);
@@ -238,6 +240,7 @@ function SellForm() {
             category,
             starting_price: startingParsed,
             reserve_price: reserveParsed,
+            currency,
             image_ids: photos.filter((p) => p.status === "done" && p.id !== undefined).map((p) => p.id),
           },
         });
@@ -355,6 +358,7 @@ function SellForm() {
                   ref={fileInput}
                   className="vh"
                   type="file"
+                  aria-label="Choose photos"
                   accept="image/jpeg,image/png"
                   multiple
                   tabIndex={-1}
@@ -456,6 +460,22 @@ function SellForm() {
             <h2 className="legend" id="g3">
               <span className="num">3</span>Price and schedule
             </h2>
+            <div className="field">
+              <label htmlFor="currency">Currency</label>
+              <select
+                className="select"
+                id="currency"
+                value={currency}
+                onChange={(e) => setCurrencyChoice(e.target.value as Currency)}
+              >
+                {CURRENCIES.map((c) => (
+                  <option key={c.code} value={c.code}>
+                    {c.code} ({c.symbol}) {c.name}
+                  </option>
+                ))}
+              </select>
+              <span className="hint">Bidders pay in this currency. US dollars unless you choose another.</span>
+            </div>
             <div className="two">
               <div className={`field${errors.starting_price ? " bad" : ""}`}>
                 <label htmlFor="start">Starting price</label>
@@ -545,7 +565,7 @@ function SellForm() {
             <p className="price">
               <span className="label">Starting price</span>
               <br />
-              <b>{startingParsed ? money(startingParsed) : "0.00"}</b>
+              <b>{money(startingParsed || "0.00")}</b>
             </p>
             <ul className="ruled">
               <li>

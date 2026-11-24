@@ -1,4 +1,4 @@
-import { useEffect, useState, type ReactNode } from "react";
+import { useEffect, useState, type FormEvent, type ReactNode } from "react";
 import { Link, Navigate, NavLink, Outlet, useLocation, useNavigate } from "react-router";
 import { api } from "../api/client";
 import type { User } from "../api/types";
@@ -7,26 +7,31 @@ import { useDevMode } from "../hooks/useDevMode";
 import { Icon, Mark } from "./Icons";
 import { useToast } from "./Toasts";
 
-const NOTICES = [
-  "Checkout is simulated: no real payments",
-  "One winner, one price",
-  "The server clock decides what arrived in time",
-  "Bidders are shown by number, never by name",
-];
-
-function Notices() {
+/** Search on every page; it opens the auctions list filtered by the words typed. */
+function HeadSearch({ id, className }: { id: string; className: string }) {
+  const navigate = useNavigate();
+  const [text, setText] = useState("");
+  function submit(e: FormEvent) {
+    e.preventDefault();
+    const q = text.trim();
+    navigate(q ? `/auctions?q=${encodeURIComponent(q)}` : "/auctions");
+  }
   return (
-    <div className="ann" role="region" aria-label="Notices">
-      <div className="ann-track">
-        {[0, 1, 2, 3].map((copy) => (
-          <ul key={copy} aria-hidden={copy > 0 ? true : undefined}>
-            {NOTICES.map((n) => (
-              <li key={n}>{n}</li>
-            ))}
-          </ul>
-        ))}
-      </div>
-    </div>
+    <form className={`head-search ${className}`} role="search" onSubmit={submit}>
+      <label className="vh" htmlFor={id}>
+        Search auctions
+      </label>
+      <Icon name="search" />
+      <input
+        id={id}
+        className="input"
+        type="search"
+        placeholder="Search items"
+        autoComplete="off"
+        value={text}
+        onChange={(e) => setText(e.target.value)}
+      />
+    </form>
   );
 }
 
@@ -62,47 +67,18 @@ function VerifyBand({ user }: { user: User }) {
 function SiteFooter() {
   const dev = useDevMode();
   return (
-    <footer className="site-foot">
+    <footer className="site-foot slim">
       <div className="wrap">
-        <div className="cols">
-          <div>
-            <Link className="brand" to="/" style={{ padding: 0 }}>
-              <Mark style={{ width: 40, height: 32 }} />
-              Adal
-            </Link>
-            <p style={{ marginTop: 16, maxWidth: "32ch" }}>
-              Fair and honest. An online auction service where every bid weighs the same.
-            </p>
-          </div>
-          <div>
-            <h2>Buy</h2>
-            <Link to="/auctions">Browse auctions</Link>
-            <Link to="/#how">How bidding works</Link>
-          </div>
-          <div>
-            <h2>Sell</h2>
-            <Link to="/sell">Create a listing</Link>
-            <Link to="/#formats">Selling formats</Link>
-          </div>
-          <div>
-            <h2>Account</h2>
-            <Link to="/account/sign-in">Sign in</Link>
-            <Link to="/account/sign-up">Create account</Link>
-            <Link to="/account/security">Two-step sign-in</Link>
-          </div>
-        </div>
-        <div className="base">
-          <span>Adal &middot; Senior project, Fall 2026</span>
-          <span>
-            Checkout is simulated. No money moves.
-            {dev ? (
-              <>
-                {" "}
-                &middot; <Link to="/dev/mailbox">Dev mailbox</Link>
-              </>
-            ) : null}
-          </span>
-        </div>
+        <span>Adal &middot; Senior project, Fall 2026</span>
+        <span>
+          <Link to="/how-it-works">How bidding works</Link> &middot; Checkout is simulated. No money moves.
+          {dev ? (
+            <>
+              {" "}
+              &middot; <Link to="/dev/mailbox">Dev mailbox</Link>
+            </>
+          ) : null}
+        </span>
       </div>
     </footer>
   );
@@ -143,6 +119,10 @@ export function SiteLayout() {
   const navigate = useNavigate();
   const toast = useToast();
   const [menuOpen, setMenuOpen] = useMobileMenu();
+  const { pathname } = useLocation();
+  // The landing page and the auctions list already have a search field of their own.
+  const showSearch = pathname !== "/" && pathname !== "/auctions";
+  const isLanding = pathname === "/";
 
   async function signOut() {
     setMenuOpen(false);
@@ -155,7 +135,7 @@ export function SiteLayout() {
     <>
       <NavLink to="/auctions">Auctions</NavLink>
       <NavLink to="/sell">Sell</NavLink>
-      <Link to="/#how">How it works</Link>
+      <Link to="/how-it-works">How it works</Link>
     </>
   );
 
@@ -180,11 +160,10 @@ export function SiteLayout() {
   );
 
   return (
-    <>
+    <div className={isLanding ? "site-root landing" : "site-root"}>
       <a className="skip" href="#main">
         Skip to content
       </a>
-      <Notices />
       <header className="site-head">
         <div className="wrap">
           <Link className="brand" to="/">
@@ -194,7 +173,10 @@ export function SiteLayout() {
           <nav className="site-nav" aria-label="Main">
             {navLinks}
           </nav>
-          <div className="acts">{accountActions}</div>
+          <div className="acts">
+            {showSearch ? <HeadSearch id="hs-d" className="desk-only" /> : null}
+            {accountActions}
+          </div>
           <button
             className="menu-btn"
             type="button"
@@ -206,6 +188,7 @@ export function SiteLayout() {
             <span>{menuOpen ? "Close" : "Menu"}</span>
           </button>
         </div>
+        {showSearch ? <HeadSearch id="hs-m" className="phone-only" /> : null}
         <div
           className="m-menu"
           id="m-menu"
@@ -226,7 +209,7 @@ export function SiteLayout() {
         <Outlet />
       </main>
       <SiteFooter />
-    </>
+    </div>
   );
 }
 
@@ -238,19 +221,13 @@ export function AccountLayout() {
       </a>
       <div className="pg-account split">
         <aside className="side dark" aria-label="Adal">
-          <div className="ph">
-            <img src="/img/beam.jpg" alt="" />
-          </div>
           <Link className="brand" to="/">
             <Mark />
             Adal
           </Link>
-          <div>
-            <p className="quote">
-              Every bid weighs the <i>same</i>.
-            </p>
-            <p className="cred">Beam balance, public domain.</p>
-          </div>
+          <p className="quote">
+            Every bid weighs the <i>same</i>.
+          </p>
         </aside>
         <div className="main">
           <main id="main" className="form-area">

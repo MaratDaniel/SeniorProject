@@ -13,7 +13,7 @@ import { useAuctionSocket } from "../hooks/useAuctionSocket";
 import { categoryName, useCategories } from "../hooks/useCategories";
 import { useNow } from "../hooks/useNow";
 import { phaseOf } from "../lib/auction";
-import { countdown, dateLong, ENDING_SOON_MS, formatName, fromCents, money, parseAmount, timeOfDay, toCents } from "../lib/format";
+import { countdown, dateLong, ENDING_SOON_MS, formatName, fromCents, money, parseAmount, setCurrency, timeOfDay, toCents } from "../lib/format";
 
 // ---------------------------------------------------------------------------
 // State merging. REST responses, the socket snapshot and events can arrive in any
@@ -85,6 +85,7 @@ export function AuctionPage() {
   const categories = useCategories();
 
   const [auction, setAuction] = useState<AuctionDetail | null>(null);
+  if (auction) setCurrency(auction.currency);
   const [loadError, setLoadError] = useState<ApiError | null>(null);
   const [lastUpdate, setLastUpdate] = useState<string | null>(null);
   const [photo, setPhoto] = useState(0);
