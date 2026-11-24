@@ -35,7 +35,7 @@ The seller picks the auction format per listing (English, Dutch, sealed first-pr
 - Security targets: OWASP Top Ten (2021) items A01, A02, A03, A05, A07, A09; audit log entries cannot be edited through the application.
 - Reserve price is hidden from bidders; English auctions show only whether it is met.
 - Open decisions marked [TBD] in the document: minimum increment (fixed or percentage), sniping values, sealed-bid revision before close, email delivery of notifications.
-- Currency is undecided; no symbol is specified in the document.
+- Currency is chosen per listing by the seller; US dollars (USD) is the default. Other options: EUR, GBP, KZT. No conversion between currencies.
 
 ## Brand Commitments
 - Name: **Adal**, meaning fair and honest. The brand uses English only.

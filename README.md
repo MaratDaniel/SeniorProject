@@ -4,7 +4,7 @@ An online auction service where bidding stays correct when many people bid at on
 
 | File | What it is |
 |---|---|
-| `Adal-presentation.html` | Final deck, one self-contained file (21 slides, ~7 min). Open in a browser; arrows / space / click to move. |
+| `Adal-presentation.html` | Final deck, one self-contained file (18 slides, ~6 min). Open in a browser; arrows / space / click to move. |
 | `Adal-report.html` | End-of-term report, one self-contained file. |
 | `design/` | Web screens for the frontend team: landing, browse, auction page with bidding states, sign-in and two-step, create listing, checkout. Open `design/index.html`. See `design/README.md`. |
 | `brandbook/` | Brandbook sources (design canvas). Live copy: https://claude.ai/artifact/DdaGY8GP3Qj1Bvi1aNEJrX |
@@ -45,7 +45,7 @@ backend/
     security/      passwords, tokens, TOTP, rate limiting
     models.py      schema; migrations/ holds the Alembic migration
     scheduler.py   opens, closes and expires on time (also runs as app/worker.py)
-  tests/           34 tests, including the concurrency tests
+  tests/           38 tests, including the concurrency tests
   tools/devdb.sh   local PostgreSQL without Docker
 frontend/          React app built from the screens in design/
 docs/API.md        the contract between front end and back end
@@ -65,7 +65,7 @@ uv pip install --python tools/.venv/bin/python --require-hashes -r tools/devdb-r
 tools/devdb.sh start                  # PostgreSQL on 127.0.0.1:54329
 .venv/bin/python -m app.cli init-env  # writes backend/.env with fresh secrets
 .venv/bin/alembic upgrade head
-.venv/bin/python -m app.cli seed-demo # optional: demo accounts in .demo-accounts.txt, 4 auctions
+.venv/bin/python -m app.cli seed-demo # optional: demo accounts in .demo-accounts.txt, 8 auctions
 tools/run-api.sh                      # http://127.0.0.1:8000, API explorer at /api/docs
 ```
 
