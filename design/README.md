@@ -1,118 +1,112 @@
-# Adal web design (handoff)
+# TuraLot — front-end prototype (demo)
 
-High-fidelity, static screens for the frontend team. Plain HTML and one CSS file, no build step. Open any `.html` file in a browser (fonts load from Google Fonts, so exact type needs internet). The rules come from `../DESIGN.md` and `../PRODUCT.md`; this folder is what those rules look like on real screens.
+A navigable online-auction marketplace prototype built with plain HTML, CSS and vanilla JavaScript. No framework, no build step, no backend.
 
-## Screens
+**Everything is illustrative.** Auctions, lots, sellers, ratings and prices are made-up sample data. Accounts, bids, registrations and seller questions are simulated and stored only in your browser (LocalStorage). No payments, no real authentication, no messages to sellers.
 
-| File | Screen | Needed for MVP because |
+## Run it
+
+```
+cd turalot
+python3 -m http.server
+# open http://localhost:8000
+```
+
+Opening `index.html` directly from disk also works, because mock data is loaded from `js/data.js` and not fetched.
+
+## Project structure
+
+```
+turalot/
+├── index.html            Home
+├── auctions.html         All auctions (search, status filter, sort)
+├── auction.html          One auction and its lots
+├── lot.html              One lot: gallery, bidding, tabs
+├── search.html           Search results with filters
+├── categories.html       All categories
+├── category.html         One category (same filters as search)
+├── auction-house.html    Seller profile
+├── saved.html            Saved items, followed searches, followed houses
+├── my-bids.html          Demo bid history
+├── account.html          Profile, activity, following, settings
+├── how-it-works.html     Steps, explanations, FAQ
+├── css/
+│   ├── variables.css     Colour palette (CSS custom properties)
+│   ├── global.css        Base type, layout wrapper, header, nav, footer
+│   ├── components.css    Buttons, cards, forms, modals, tabs, toast, dropdown
+│   ├── home.css          Hero, tiles, carousel
+│   ├── auction.css       Filter sidebar, pagination, list view
+│   ├── lot.css           Gallery, bidding panel, item details
+│   └── responsive.css    Breakpoints (loaded last)
+├── js/
+│   ├── i18n.js           UI label table (English only; Kazakh/Russian slots empty)
+│   ├── data.js           Mock data: categories, houses, auctions, lots
+│   ├── utils.js          State helpers, formatting, icons, image fallback
+│   ├── auth.js           Modal component, login / join / forgot-password
+│   ├── search.js         Search, category and categories pages
+│   ├── auction.js        Auctions, auction and auction-house pages
+│   ├── lot.js            Lot page, bidding, inquiry form
+│   ├── saved.js          Saved, my-bids and account pages
+│   └── app.js            Header, footer, cards, carousels, home, how-it-works, start-up
+└── assets/
+    ├── logo/             turalot-icon.svg, turalot-wordmark.svg
+    ├── icons/            (empty; icons are inline SVG in utils.js)
+    └── images/           (empty; see "Adding real photos")
+```
+
+Each page file registers a function in `PAGES`; `app.js` runs the one matching `<body data-page="...">`. Scripts load in the order listed above, and `app.js` is last.
+
+## Pages and URL parameters
+
+| Page | Parameters | Notes |
 |---|---|---|
-| `index.html` | Landing page | First impression; states the promise, shows lots, explains the bid, the four formats, and security |
-| `auctions.html` | Browse and filter | A buyer must find an auction (search, format, status, sort) |
-| `auction.html` | Auction page with the bidding desk | The core screen. Eight states, switch them with the dashed "Prototype states" bar |
-| `account.html` | Create account, verify email, sign in, 6-digit code, set up two-step, recovery code, reset password | Requirements: email verification, roles, TOTP MFA (mandatory for sellers and admins). Ten states |
-| `sell.html` | Create a listing | A seller picks the format, price, reserve and schedule, and sees what bidders will see |
-| `checkout.html` | Delivery, fresh code, done | Each sale makes one transaction, simulated checkout, fresh MFA code to finalize |
+| `auctions.html` | `status=Upcoming\|Live\|Completed` | Search, status filter, sort by date or title |
+| `auction.html` | `id=a1`…`a6` | Countdown, register, `.ics` calendar download, lot search/sort, 4/8/12 per page, pagination, list/grid toggle |
+| `lot.html` | `id=lot-001`…`lot-024` | Gallery, zoom, tabs, bidding, save, share, ask a question, related items |
+| `search.html` | `q`, `st`, `cd`, `hs`, `pmin`, `pmax`, `sort` | Filters are reflected in the URL |
+| `category.html` | `c=art\|jewelry\|antiques\|furniture\|collectibles\|electronics\|home\|fashion\|coins\|other` | Same filters as search, category fixed |
+| `auction-house.html` | `id=h1`…`h4` | Auctions grouped Current / Upcoming / Previous, plus items |
 
-The dashed "Prototype states" bars exist only to show every state to the team. They are not product UI. Do not build them.
+## Demo behaviour
 
-## Files
+- **Sign in:** any valid email format and any non-empty password works. Registration needs a name, a valid email, an 8+ character password and a matching confirmation. Only name and email are stored, never the password. Google/Apple sign-in is shown as unavailable.
+- **Bidding** (`lot.html`): not signed in opens the login modal. Signed in but not registered for that auction opens a demo registration step. Then pick a quick amount or type one; it must be at least the next minimum and in steps of the bid increment. A confirmation modal states the bid is simulated; confirming records it locally and updates the displayed current bid and My bids.
+- **Ask a question** and **forgot password** only save or explain locally; nothing is sent.
+- **Dates:** auction dates are generated relative to the moment the page loads, so countdowns always have time left and restart on reload. Statuses (Upcoming / Live / Completed) are computed from those dates.
+- **Currency and formatting:** Kazakhstani tenge (`₸`), with thousands separators.
 
-- `adal.css`: all tokens (`:root`) and shared components (header, footer, buttons, fields, presets, bidding desk, lot card, pills, tables). Class names are plain and can map to React components one to one.
-- `adal.js`: small motion helpers (sliding highlight, sliding number, toast, accordion, scroll reveal). No dependencies.
-- `img/`: four public-domain museum images (beam balance, brass balance, box of weights, Christie's Auction Room print, 1808). These are stand-ins for real listing photos.
-- Each page carries its own small `<style>` block for layout that belongs to that page only.
+## Data model (`js/data.js`)
 
-## Component map
+- `CATS`: `[id, label]` pairs (10 categories).
+- `HOUSES`: `{id, name, loc, desc}` (4 fictional houses, 3 in Kazakhstan, 1 in Türkiye).
+- `AUCTIONS`: `{id, title, houseId, description, startDate, endDate, location}` (6).
+- `LOTS`: `{id, auctionId, lotNumber, title, description, category, estimateMin, estimateMax, startingBid, currentBid, bidIncrement, bidCount, condition, dimensions, location, endDate}` (24; 12 item types, each used twice). Optional `images: [url, ...]`.
 
-| Component | Class | Notes |
-|---|---|---|
-| Bidding desk | `.desk` | The one raised object. Holds status pill, price (`.figure`), time, presets, one primary button |
-| Bid preset | `.presets > .preset` | Three equal radios. First is preselected. Button text repeats the amount |
-| Status | `.pill.live / .win / .out / .plain`, `.ending` | Always a word plus an icon |
-| Lot card | `.lot` | Photo, status, format, title, price, time |
-| Field | `.field`, `.input`, `.select`, `.textarea`, `.codebox` | 48px, visible label, error is a message with an icon and the next step |
-| Message | `.msg`, `.banner` | Brass for problems, moss for confirmations. Never color alone |
-| Buttons | `.btn`, `.btn.second` | One primary per view |
+The same data feeds every page, so title, lot number, price and seller are identical wherever an item appears.
 
-## Auction page states (`auction.html`)
+## State (LocalStorage keys)
 
-Live, Ending soon, Winning, Outbid, Bid not placed (price moved, tells the user the next amount), Connection lost (bidding paused, prices flagged as possibly stale), You won (goes to checkout), No sale (reserve not met).
-For the backend: the page is driven by price, status, time left, whether the reserve is met, and the lowest allowed next bid. The desk re-renders when any of these change over the WebSocket.
+`turalot_demo_session`, `turalot_saved_lots`, `turalot_followed_searches`, `turalot_followed_houses`, `turalot_demo_bids`, `turalot_registered`. Account → Settings → "Clear all demo data" removes everything except the session.
 
-## Palette (lighter green, v2)
+## Accessibility and responsiveness
 
-The first pass used a deep green (`#3B5F4F` action, `#243A31` fields). It was too heavy, so the web screens now use a fresher, lighter sage. Contrast was computed for every pair.
+Semantic landmarks, labelled form fields, visible focus rings, `aria-expanded` on menus, modals that trap focus, close on Escape and return focus, reduced-motion support. Breakpoints: mobile ≤767px, tablet 768–1023px, desktop ≥1024px. On mobile the nav and search collapse behind ☰ and ⌕ buttons.
 
-| Token | Value | Use | Contrast |
-|---|---|---|---|
-| `--moss` | `#40705A` | Buttons, links, selected states | 5.25:1 with paper text |
-| `--moss-hover` | `#4A7A63` | Button hover | 4.54:1 with paper text |
-| `--field` / `--moss-deep` | `#3F6E59` / `#2F5545` | Dark photographic fields (hero, security band, sign-in panel), centre to edge | paper text 5.4 to 7.7:1 |
-| `--moss-tint` | `#E6F0EA` | Selected preset, live pill, highlights | moss on it 4.8:1 |
-| `--sage` | `#DCEAE1` | The footer, now a light band instead of a dark block | ink 14.9:1 |
-| `--brass-on-dark` | `#F0CF84` | The one brass word on dark fields (large text only) | 3.9 to 5.6:1 |
-| `--soft` | `#E3ECE6` | Secondary text on dark fields | 4.9 to 7:1 |
+## Adding real photos
 
-Paper, card, rule, ink, body, muted and brass are unchanged. `DESIGN.md`, the deck, the report and the brandbook now use the same green.
+Put files in `assets/images/` and add `images: ["assets/images/lot-001-1.jpg", ...]` to a lot in `data.js`. Cards, gallery and zoom then use them. A missing file falls back to a neutral placeholder. Until then, items show generated placeholder tiles.
 
-## Motion
+## Adding translations
 
-Patterns are taken from Animate UI (animate-ui.com), a React library, and rebuilt in plain CSS and JS in `adal.js` so these static screens need no React. When the team builds in React, the matching Animate UI components can replace them one to one.
+Labels in `js/i18n.js` are looked up with `t("key")`; fill the `kk` and `ru` objects and set `LANG`. Only header, footer and navigation labels use this so far; labels on other pages are still inline in the page scripts and need moving into the table first. No language switch is shown until translations exist.
 
-| Pattern | Where | Animate UI equivalent |
-|---|---|---|
-| Sliding highlight | Header nav, status chips, prototype state bars, bid presets, format cards | Tabs, Radio Group |
-| Sliding number | The price on the auction page rolls digit by digit when it changes | Sliding Number |
-| Accordion | Questions on the landing page | Accordion |
-| Toast | "Bid placed" and "Photo added" | Toast |
-| Progress | Photo upload on the sell page | Progress |
-| Animated checkbox | "Keep me signed in" | Checkbox |
-| Entrance | Hero text rises once, sections appear once on scroll | n/a |
+## Known limitations
 
-Rules: springs for movement, plain eases for fades, every effect plays once, and `prefers-reduced-motion` turns all of it off. Without JavaScript the screens show their normal static state.
+- Layout was smoke-tested for errors in a simulated browser (jsdom) but not reviewed visually at all target widths.
+- Product images are placeholders.
+- Not implemented: search-by-image, back-to-top button, a maximum-bid feature (bids are exact amounts), rating/review pages, real localisation.
+- The footer's Terms and Privacy links point to a placeholder page.
 
-## Rules kept on every screen
+## Replacing the mock logic later
 
-- One brass word per headline. Brass marks Outbid, Ending soon and the balance point, nothing else.
-- Every number is tabular. Every status is a word plus an icon.
-- 10px corners on controls, 16px on surfaces. Only the bidding desk has a shadow.
-- Targets are at least 44px. Focus is a 2px moss outline. Reduced motion removes all movement.
-- Voice is plain and calm: no exclamation marks, no emoji, no hype.
-- Bidders are shown by number, never by name. The reserve price is never shown, only whether it is met.
-
-## What is sample content (replace before launch)
-
-- Every lot, price, time, bid history and seller on the pages. Each page says "Sample" near it.
-- Photos in `img/`.
-- The QR code and key on the two-step screen.
-- Landing claims such as "within a second for most watchers" must be verified by the load tests before they go live. The page does not state a number.
-
-## Open decisions that change these screens
-
-From `PRODUCT.md`: minimum increment (the presets assume "current plus a step"), sniping protection values (rule text avoids numbers), whether a sealed bid can be revised before close, email delivery of notifications, and currency (no symbol is shown anywhere). The three non-English formats are shown as "Coming soon"; their bidding desks (Dutch accept-price desk, sealed bid desk) still need designing for Spring 2027.
-
-## Not designed yet
-
-My bids and watchlist, seller listing management and edit, notification center, admin dashboard and audit log (Spring 2027), loading skeletons, 404 and empty search results, and the account menu once signed in.
-
-## Second pass: Resore-style motion and an unslop audit
-
-- Added on the landing page: words of the headline rise out of a clipped line, a slow strip of the four selling formats and their status (pauses on hover), numbered steps that light up in order, and an "Open lot" label that slides over lot photos on hover.
-- Unslop audit applied to the HTML and CSS: one non-overshooting ease-out curve instead of springs, no scale pops, the eyebrow label in sentence case without wide tracking. No copy or data changed.
-- All of it is transform and opacity only, runs once, and is removed under `prefers-reduced-motion`.
-- Credit: the audit follows unslop by Damir Sokolovsky (@heydamir), CC BY 4.0, github.com/heydamir/unslop.
-
-## Third pass: Resore layout ideas, checked with the impeccable detector
-
-- Split landing hero: headline, one primary action and a dashed fact card on the left, the 1808 print full height on the right.
-- Centred wordmark in the header with navigation left and account actions right (desktop). Applied to every page except `account.html`, which has its own panel layout.
-- A thin notice bar above the header (all pages except `account.html`). It carries true notices only: sample screens, simulated checkout, one winner and one price, the server clock. It scrolls slowly and pauses on hover.
-- Removed the second marquee (selling formats). The detector flags looping tickers because they hide content, and the formats already have their own section.
-- Not taken from Resore: the yellow field (brass stays a small accent), monospaced uppercase labels (not in DESIGN.md), the product and review sections (no real data).
-
-## Fourth pass
-
-- Removed the small label above headings on every page (a ban in the impeccable craft floor).
-- Landing: a sage band with the three promises in large display type and dashed dividers; the four selling formats each carry a small drawn diagram of how the price behaves (rising steps, falling steps, hidden bids with the winner and the price paid); the header now sticks to the top.
-- Auctions: the page head pairs the title with a photograph.
-- Browser details themed from the palette: text selection, caret, scrollbar, accent colour, link underline offset.
+All data access goes through the lookups in `utils.js` (`lot()`, `auc()`, `house()`) and the `LS` / `toggle()` state helpers, so a backend can replace those without redesigning the pages.

@@ -160,6 +160,7 @@ class Listing(Base):
         CheckConstraint("starting_price > 0", name="starting_price_positive"),
         CheckConstraint("reserve_price IS NULL OR reserve_price >= starting_price", name="reserve_not_below_start"),
         CheckConstraint(_one_of("status", ListingStatus), name="status"),
+        CheckConstraint("currency IN ('USD', 'EUR', 'GBP', 'KZT')", name="currency"),
     )
 
     id: Mapped[int] = _id()
@@ -169,6 +170,7 @@ class Listing(Base):
     category: Mapped[str] = mapped_column(String(32), index=True)
     starting_price: Mapped[Decimal]
     reserve_price: Mapped[Decimal | None]
+    currency: Mapped[str] = mapped_column(String(3), default="USD", server_default="USD")
     status: Mapped[str] = mapped_column(String(12), default=ListingStatus.ACTIVE, server_default=ListingStatus.ACTIVE.value)
     created_at: Mapped[datetime] = _created()
     updated_at: Mapped[datetime] = mapped_column(server_default=func.now(), onupdate=func.now())

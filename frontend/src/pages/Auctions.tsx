@@ -104,18 +104,12 @@ export function Auctions() {
 
   return (
     <div className="pg-auctions wrap">
-      <header className="page-head split">
-        <h1 className="headline">
-          Every lot, with its rules <i>shown</i> first
-        </h1>
-        <div className="ph-band">
-          <img src="/img/balance.jpg" alt="" />
-        </div>
-      </header>
-
-      <form className="filters" role="search" aria-label="Filter auctions" onSubmit={(e) => e.preventDefault()}>
-        <div className="field search-f">
-          <label htmlFor="q">Search</label>
+      <header className="auc-head">
+        <h1 className="headline">Auctions</h1>
+        <form className="auc-search" role="search" aria-label="Search auctions" onSubmit={(e) => e.preventDefault()}>
+          <label className="vh" htmlFor="q">
+            Search
+          </label>
           <div className="search">
             <Icon name="search" />
             <input
@@ -127,58 +121,65 @@ export function Auctions() {
               onChange={(e) => setSearch(e.target.value)}
             />
           </div>
-        </div>
-        <div className="field">
-          <label htmlFor="fmt">Selling format</label>
-          <select className="select" id="fmt" value={format} onChange={(e) => update({ format: e.target.value, page: null })}>
-            {FORMATS.map((f) => (
-              <option key={f.value} value={f.value}>
-                {f.label}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div className="field">
-          <label htmlFor="sort">Sort by</label>
-          <select
-            className="select"
-            id="sort"
-            value={chip.sort ?? sort}
-            disabled={Boolean(chip.sort)}
-            onChange={(e) => update({ sort: e.target.value, page: null })}
-          >
-            {SORTS.map((s) => (
-              <option key={s.value} value={s.value}>
-                {s.label}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div className="field">
-          <label htmlFor="cat">Category</label>
-          <select className="select" id="cat" value={category} onChange={(e) => update({ category: e.target.value, page: null })}>
-            <option value="">All categories</option>
-            {categories.map((c) => (
-              <option key={c.slug} value={c.slug}>
-                {c.name}
-              </option>
-            ))}
-          </select>
-        </div>
-      </form>
+        </form>
+      </header>
 
-      <div className="chips" role="group" aria-label="Auction status">
-        {CHIPS.map((c) => (
-          <button
-            key={c.key}
-            className="chip"
-            type="button"
-            aria-pressed={c.key === chip.key}
-            onClick={() => update({ show: c.key === "all" ? null : c.key, page: null })}
-          >
-            {c.label}
-          </button>
-        ))}
+      <div className="auc-bar">
+        <div className="chips" role="group" aria-label="Auction status">
+          {CHIPS.map((c) => (
+            <button
+              key={c.key}
+              className="chip"
+              type="button"
+              aria-pressed={c.key === chip.key}
+              onClick={() => update({ show: c.key === "all" ? null : c.key, page: null })}
+            >
+              {c.label}
+            </button>
+          ))}
+        </div>
+        <details className="more-filters">
+          <summary>Filters</summary>
+          <div className="mf-body">
+            <div className="field">
+              <label htmlFor="fmt">Selling format</label>
+              <select className="select" id="fmt" value={format} onChange={(e) => update({ format: e.target.value, page: null })}>
+                {FORMATS.map((f) => (
+                  <option key={f.value} value={f.value}>
+                    {f.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="field">
+              <label htmlFor="cat">Category</label>
+              <select className="select" id="cat" value={category} onChange={(e) => update({ category: e.target.value, page: null })}>
+                <option value="">All categories</option>
+                {categories.map((c) => (
+                  <option key={c.slug} value={c.slug}>
+                    {c.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="field">
+              <label htmlFor="sort">Sort by</label>
+              <select
+                className="select"
+                id="sort"
+                value={chip.sort ?? sort}
+                disabled={Boolean(chip.sort)}
+                onChange={(e) => update({ sort: e.target.value, page: null })}
+              >
+                {SORTS.map((s) => (
+                  <option key={s.value} value={s.value}>
+                    {s.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+        </details>
       </div>
 
       <div className="count">

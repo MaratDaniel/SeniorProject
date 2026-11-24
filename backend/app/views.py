@@ -91,6 +91,7 @@ def card(auction: Auction, listing: Listing, images: list[ListingImage]) -> Auct
         status=auction.status,
         starting_price=listing.starting_price,
         current_price=auction.current_price,
+        currency=listing.currency,
         bid_count=auction.bid_count,
         starts_at=auction.starts_at,
         ends_at=auction.ends_at,
@@ -194,6 +195,7 @@ async def load_listing(session: AsyncSession, listing_id: int, viewer: User | No
         description=listing.description,
         category=listing.category,
         starting_price=listing.starting_price,
+        currency=listing.currency,
         reserve_price=listing.reserve_price if is_owner else None,  # never shown to bidders (FR-39)
         images=[ImageOut(id=i.id, url=media_url(i.storage_key)) for i in images],
         status=listing.status,
@@ -210,6 +212,7 @@ def transaction_out(tx: Transaction, auction: Auction, listing: Listing, cover: 
         title=listing.title,
         cover_url=cover,
         amount=tx.amount,
+        currency=listing.currency,
         status=tx.status,
         role="buyer" if tx.buyer_id == viewer_id else "seller",
         created_at=tx.created_at,

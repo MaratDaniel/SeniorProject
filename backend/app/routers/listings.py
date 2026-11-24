@@ -154,6 +154,7 @@ async def create_listing(body: ListingCreateIn, request: Request, user: SellerUs
             category=body.category,
             starting_price=body.starting_price,
             reserve_price=body.reserve_price,
+            currency=body.currency,
         )
         session.add(listing)
         await session.flush()

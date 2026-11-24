@@ -112,6 +112,7 @@ class ListingCreateIn(In):
     category: str = Field(max_length=32)
     starting_price: MoneyIn
     reserve_price: MoneyIn | None = None
+    currency: Literal["USD", "EUR", "GBP", "KZT"] = "USD"
     image_ids: list[int] = Field(default_factory=list, max_length=8)
 
 
@@ -131,6 +132,7 @@ class ListingOut(BaseModel):
     category: str
     starting_price: MoneyOut
     reserve_price: MoneyOut | None
+    currency: str
     images: list[ImageOut]
     status: str
     auction_id: int | None
@@ -158,6 +160,7 @@ class AuctionCardOut(BaseModel):
     status: str
     starting_price: MoneyOut
     current_price: MoneyOut | None
+    currency: str
     bid_count: int
     starts_at: datetime
     ends_at: datetime
@@ -232,6 +235,7 @@ class TransactionOut(BaseModel):
     title: str
     cover_url: str | None
     amount: MoneyOut
+    currency: str
     status: str
     role: Literal["buyer", "seller"]
     created_at: datetime

@@ -15,12 +15,28 @@ export function fromCents(cents: number): string {
   return `${whole}.${frac}`;
 }
 
-/** "1180.00" -> "1,180.00". Never shows a currency symbol (the currency is undecided). */
-export function money(amount: string | null | undefined): string {
+export const CURRENCIES = [
+  { code: "USD", symbol: "$", name: "US dollar" },
+  { code: "EUR", symbol: "\u20ac", name: "Euro" },
+  { code: "GBP", symbol: "\u00a3", name: "British pound" },
+  { code: "KZT", symbol: "\u20b8", name: "Kazakhstani tenge" },
+] as const;
+
+export const DEFAULT_CURRENCY = "USD";
+
+// The page showing one auction or transaction sets this once; every amount on it then uses that currency.
+let activeCurrency: string = DEFAULT_CURRENCY;
+export function setCurrency(code: string | undefined | null): void {
+  activeCurrency = code ?? DEFAULT_CURRENCY;
+}
+
+/** "1180.00" -> "$1,180.00". The currency belongs to the listing; USD is the default. */
+export function money(amount: string | null | undefined, currency: string = activeCurrency): string {
   if (amount === null || amount === undefined) return "";
   const [whole, frac = "00"] = amount.split(".");
   const grouped = whole.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-  return `${grouped}.${(frac + "00").slice(0, 2)}`;
+  const symbol = CURRENCIES.find((c) => c.code === currency)?.symbol ?? "";
+  return `${symbol}${grouped}.${(frac + "00").slice(0, 2)}`;
 }
 
 /** Parses what a person types ("1,250", "1250.5") into "1250.50", or null. */

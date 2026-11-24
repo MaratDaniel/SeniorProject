@@ -14,6 +14,8 @@ export type User = {
 export type AuctionStatus = "scheduled" | "active" | "closed" | "no_sale" | "cancelled";
 export type AuctionFormat = "english" | "dutch" | "sealed_first_price" | "vickrey";
 
+export type Currency = "USD" | "EUR" | "GBP" | "KZT";
+
 export type AuctionCard = {
   id: number;
   listing_id: number;
@@ -24,6 +26,7 @@ export type AuctionCard = {
   status: AuctionStatus;
   starting_price: string;
   current_price: string | null;
+  currency: Currency;
   bid_count: number;
   starts_at: string;
   ends_at: string;
@@ -62,6 +65,7 @@ export type Listing = {
   category: string;
   starting_price: string;
   reserve_price: string | null;
+  currency: Currency;
   images: { id: number; url: string }[];
   status: "active" | "withdrawn";
   auction_id: number | null;
@@ -79,6 +83,7 @@ export type Transaction = {
   title: string;
   cover_url: string | null;
   amount: string;
+  currency: Currency;
   status: TransactionStatus;
   role: "buyer" | "seller";
   created_at: string;

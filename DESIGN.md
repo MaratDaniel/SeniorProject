@@ -115,7 +115,7 @@ components:
 
 Adal means fair and honest, and the system makes fairness visible as balance. The mark is two identical weights on a level beam, balanced on a fulcrum with a single brass point where it rests. The rest of the system behaves the same way: calm stone ground, quiet type, one primary action, and a bidding desk that gives every bidder the same facts in the same place.
 
-The mood is a quiet viewing room, not a sales floor. Photography of real objects is the main material, shown large and unframed, with soft grain and low light. Headlines are light grotesque with one brass word; numbers are clean and tabular so they can be read and compared. Motion is slow and eased, and happens once.
+The mood is a quiet viewing room, not a sales floor. Photography of real objects is the main material, shown large and unframed, with soft grain and low light. Headlines are light grotesque and ink; only the landing headline takes one brass word; numbers are clean and tabular so they can be read and compared. Motion is slow and eased, and happens once.
 
 Confirmed rejections: loud colors, the earlier arch and clock marks, hard black rules, hype wording, decorative gold, and the earlier warm beige and terracotta palette.
 
@@ -152,7 +152,7 @@ A cool, muted palette. Almost everything is paper and ink; moss carries action; 
 **Body Font:** Instrument Sans (with system-ui)
 **Wordmark Font:** Outfit Medium, for the name "Adal" only. **Figures:** Instrument Sans with tabular figures
 
-**Character:** A light, tight grotesque for the big statements and a clear text face for every task. One word in a headline takes the brass colour; there is no italic. The wordmark is set in a round geometric face so its letters echo the circles of the mark.
+**Character:** A light, tight grotesque for the big statements and a clear text face for every task. Only the landing headline takes a brass word; there is no italic. The wordmark is set in a round geometric face so its letters echo the circles of the mark.
 
 ### Hierarchy
 - **Display** (300, up to 92px, 1.05, -0.02em): cover and hero, with one brass word.
@@ -167,7 +167,7 @@ A cool, muted palette. Almost everything is paper and ink; moss carries action; 
 
 ## Layout
 
-Web content sits in a 1200px container with 48px side padding. The home page opens with a full-bleed photographic field, then a three-promise strip, then a gallery that pairs one large portrait lot with two smaller ones, then the formats as ruled rows. The auction page places photography on the left and the bidding desk on the right; on phones the desk follows the photo. Spacing steps are 8, 12, 16 and 48px, with generous separation between sections and tight grouping inside them. Targets are at least 44px.
+Web content sits in a 1200px container with 48px side padding. The home page is one screen with no scrolling: a short headline, one search field and three quick links on the left, the lots ending soonest on the right, and a one-line footer. Sign-in and sign-up put a slim moss brand band across the top and the form centred below it. Every other page carries a search field in the header and a one-line footer. The auction page places photography on the left and the bidding desk on the right; on phones the desk follows the photo. Spacing steps are 8, 12, 16 and 48px, with generous separation between sections and tight grouping inside them. Targets are at least 44px.
 
 ## Elevation & Depth
 
@@ -211,7 +211,7 @@ A card with the faint layered shadow. Top row: "Current price" and the Live pill
 - **Do** lead with large, real photography in even, low light.
 - **Do** keep one primary action per view, in moss.
 - **Do** keep the beam level and the weights identical in the mark; let it settle once on first appearance.
-- **Do** credit photographs that need it (demo images are The Metropolitan Museum of Art, CC0).
+- **Do** say when photographs are illustrations: the demo item photos are AI-generated, and each demo lot says so.
 
 ### Don't:
 - **Don't** add gold, bright accents, gradients on text, or hard shadows.
@@ -222,6 +222,6 @@ A card with the faint layered shadow. Top row: "Current price" and the Live pill
 
 ## Open decisions
 
-Currency symbol; minimum increment; sniping extension length; whether a sealed bid can be revised before close. Demo photographs are museum public-domain images and must be replaced with sellers' own listing photos.
+minimum increment; sniping extension length; whether a sealed bid can be revised before close. The demo item photos are AI-generated and are replaced by sellers' own listing photos.
 
 Brandbook (7 boards, private): https://claude.ai/artifact/DdaGY8GP3Qj1Bvi1aNEJrX

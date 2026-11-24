@@ -1,0 +1,1 @@
+Real product photos go here (e.g. lot-001-1.jpg). Then add an `images:["assets/images/lot-001-1.jpg", ...]` array to the lot in js/data.js; img() uses it and falls back to the placeholder if a file is missing.

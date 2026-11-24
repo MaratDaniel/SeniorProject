@@ -240,7 +240,7 @@ export function SignIn() {
   }
 
   return (
-    <Panel id="t-in" title={<>Sign in to <i>Adal</i></>}>
+    <Panel id="t-in" title="Sign in">
       {error ? <ErrorBanner>{error}</ErrorBanner> : null}
       <form onSubmit={submitPassword}>
         <div className="field">
@@ -257,12 +257,11 @@ export function SignIn() {
           />
         </div>
         <div className="field">
-          <label htmlFor="p1">Password</label>
+          <div className="row2">
+            <label htmlFor="p1">Password</label>
+            <Link to="/account/forgot">Forgot password</Link>
+          </div>
           <PasswordInput id="p1" value={password} onChange={setPassword} autoComplete="current-password" />
-        </div>
-        <div className="row2">
-          <span />
-          <Link to="/account/forgot">Forgot password</Link>
         </div>
         <button className="btn block" type="submit" disabled={busy}>
           {busy ? "Signing in" : "Sign in"}

@@ -85,18 +85,31 @@ def create_admin(args: argparse.Namespace) -> int:
 
 DEMO_LOTS = [
     # (image, title, category, description, starting, reserve, step, opens in, runs for)
-    ("scales.jpg", "Box of brass weights with small balance", "antiques",
-     "An oak case holding a folding hand balance and a set of stamped brass weights. Cleveland Museum of Art, public domain.",
-     "200.00", "250.00", "5.00", timedelta(hours=-1), timedelta(hours=3)),
-    ("balance.jpg", "Brass pedestal balance", "antiques",
-     "A gilded brass beam balance on a fluted column and a white marble base. The Metropolitan Museum of Art, public domain.",
-     "120.00", None, "5.00", timedelta(minutes=-50), timedelta(minutes=58)),
-    ("beam.jpg", "Beam balance, 16th century", "collectibles",
-     "An early beam balance with hanging pans. The Metropolitan Museum of Art, public domain.",
-     "300.00", "400.00", "10.00", timedelta(hours=-2), timedelta(days=2)),
-    ("auction-room.jpg", "Christie's Auction Room, print, 1808", "art",
-     "Hand-coloured aquatint of a London sale room. The Metropolitan Museum of Art, public domain.",
-     "80.00", None, "2.00", timedelta(days=1), timedelta(days=1, hours=6)),
+    # Sample items for the demo. The pictures are illustrations, not photographs of real objects.
+    ("clock.jpg", "Brass mantel clock", "antiques",
+     "A sample item for the demo: a brass-cased mantel clock with a white enamel dial. The picture is an illustration.",
+     "90.00", "120.00", "5.00", timedelta(hours=-1), timedelta(minutes=58)),
+    ("lamp.jpg", "Table lamp with linen shade", "home",
+     "A sample item for the demo: a black-stemmed table lamp with a pleated linen shade. The picture is an illustration.",
+     "60.00", None, "5.00", timedelta(minutes=-40), timedelta(hours=2)),
+    ("painting.jpg", "Hills at dusk, oil on canvas", "art",
+     "A sample item for the demo: a landscape in oils in a gilt frame. The picture is an illustration.",
+     "150.00", "200.00", "10.00", timedelta(hours=-3), timedelta(days=1)),
+    ("chair.jpg", "Oak side chair", "furniture",
+     "A sample item for the demo: a carved oak chair with a woven back panel. The picture is an illustration.",
+     "110.00", None, "5.00", timedelta(hours=-2), timedelta(days=2)),
+    ("vase.jpg", "Glazed ceramic vase", "home",
+     "A sample item for the demo: a pale green glazed vase with a brass-coloured wave pattern. The picture is an illustration.",
+     "45.00", None, "5.00", timedelta(hours=-5), timedelta(days=3)),
+    ("trunk.jpg", "Leather travel trunk", "fashion",
+     "A sample item for the demo: a brown leather trunk with brass fittings. The picture is an illustration.",
+     "130.00", "180.00", "10.00", timedelta(hours=6), timedelta(days=2)),
+    ("camera.jpg", "Rangefinder camera", "electronics",
+     "A sample item for the demo: a compact film camera with a green leatherette body. The picture is an illustration.",
+     "75.00", None, "5.00", timedelta(days=1), timedelta(days=3)),
+    ("textile.jpg", "Woven wall rug", "collectibles",
+     "A sample item for the demo: a hand-woven rug with a diamond motif and fringed edges. The picture is an illustration.",
+     "100.00", None, "5.00", timedelta(days=2), timedelta(days=4)),
 ]
 
 
@@ -175,7 +188,7 @@ async def _seed_demo() -> list[str]:
             auctions = list(
                 await session.scalars(select(Auction).where(Auction.status == AuctionStatus.ACTIVE).order_by(Auction.id).limit(2))
             )
-        for auction, amounts in zip(auctions, [["200.00", "210.00", "225.00"], ["120.00"]], strict=False):
+        for auction, amounts in zip(auctions, [["90.00", "95.00", "105.00"], ["60.00"]], strict=False):
             for index, amount in enumerate(amounts):
                 bidder = people["buyer1"] if index % 2 == 0 else people["buyer2"]
                 async with sessionmaker() as session, session.begin():
@@ -200,12 +213,12 @@ def seed_demo(args: argparse.Namespace) -> int:
     text = "# Demo accounts for local development only. Add each TOTP secret to an authenticator app.\n" + "\n".join(lines) + "\n"
     if target is None:
         sys.stdout.write(text)
-        print("Seeded 3 demo accounts and 4 auctions.", file=sys.stderr)
+        print(f"Seeded 3 demo accounts and {len(DEMO_LOTS)} auctions.", file=sys.stderr)
         return 0
     fd = os.open(target, os.O_WRONLY | os.O_CREAT | os.O_TRUNC, 0o600)
     with os.fdopen(fd, "w") as handle:
         handle.write(text)
-    print(f"Seeded 3 demo accounts and 4 auctions. Credentials: {target}")
+    print(f"Seeded 3 demo accounts and {len(DEMO_LOTS)} auctions. Credentials: {target}")
     return 0
 
 
