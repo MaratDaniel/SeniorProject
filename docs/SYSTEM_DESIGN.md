@@ -336,7 +336,7 @@ sequenceDiagram
 | Edit or withdraw a listing | Its seller. Prices are locked after the first bid; withdrawal is refused once bids exist |
 | Sales | Buyer or seller of that sale; anyone else gets 404. Only the buyer can confirm |
 | Audit log | Admin with two-step sign-in |
-| Email outbox | Mounted only when `ADAL_ENV=dev` |
+| Email outbox | The development API exposes it when email delivery is disabled or limited to a test recipient |
 
 ### Other controls
 
@@ -682,9 +682,14 @@ In production the application should connect as a role that does not own the tab
 | subject | varchar(200) | no | | |
 | body | text | no | | May contain one-time links: never logged |
 | created_at | timestamptz | no | now() | |
-| sent_at | timestamptz | yes | | For a future delivery worker; nothing sends mail yet |
+| sent_at | timestamptz | yes | | Time Resend accepted the message |
+| template, template_link | varchar(64), text | yes | | Account template selector and verification or reset URL |
+| delivery_key | varchar(32) | yes | | Unique idempotency key. Older development rows have no delivery key |
+| expires_at, next_attempt_at, failed_at | timestamptz | yes | | Delivery deadline, next retry, and terminal failure time |
+| attempts | integer | no | 0 | Number of delivery attempts |
+| provider_id | varchar(64) | yes | | Resend message ID |
 
-Rows are written in the same transaction as their cause (registration, sale, completed purchase), so an email is queued exactly when its event commits.
+Rows are written in the same transaction as their cause (registration, sale, completed purchase), so an email is queued exactly when its event commits. The Resend worker claims pending rows, retries transient failures, and uses the same delivery key across retries.
 
 ### State machines
 
@@ -740,6 +745,8 @@ No transition leaves `closed`, `no_sale`, `cancelled`, `completed` or `expired`.
 | worker | backend image | `python -m app.worker` |
 | web | frontend image (nginx, unprivileged) | Port 8080; serves the app and proxies the rest |
 
+`docker compose --profile email up --build` also starts the Resend delivery worker. See the [README](../README.md#deliver-email-to-other-users-from-a-local-instance) for sender, recipient, and domain settings.
+
 | Setting | Meaning |
 |---|---|
 | `ADAL_ENV` | `dev`, `test` or `prod`. `prod` hides the API explorer, adds HSTS and requires https origins |
@@ -764,7 +771,7 @@ CI (GitHub Actions, `.github/workflows/`) runs on every push to `main` and every
 |---|---|
 | Rate limits are counted per process | Move the counters to Redis before running several API processes |
 | Photos are type-checked but not re-encoded (metadata kept) | Re-encode on upload and strip EXIF |
-| Email is queued, not sent | A delivery worker that sends `email_outbox` rows and sets `sent_at` |
+| The Resend test sender is limited to one configured recipient | Verify a sending domain before clearing the test recipient |
 | NFR-3 and NFR-4 are not measured yet | Locust or k6 load test: 200 watchers × 20 auctions, bid latency at p95 |
 | Spring formats, notifications, admin dashboard, flagging | New strategies in `engine/`, new tables for notifications and flags |
 | Search uses `ILIKE` | `pg_trgm` index or full-text search when the catalogue grows |

@@ -1,4 +1,4 @@
-"""Development-only helpers. This router is not mounted unless ADAL_ENV=dev."""
+"""Local mailbox for development and single-recipient email testing."""
 
 import re
 

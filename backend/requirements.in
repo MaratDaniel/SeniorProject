@@ -15,3 +15,4 @@ segno                   # QR code (SVG) for the authenticator setup, no dependen
 cryptography            # Fernet encryption of TOTP secrets at rest
 python-multipart        # photo uploads (multipart/form-data)
 redis                   # pub/sub fan-out of auction events across processes
+resend[async]            # transactional account email from the outbox worker

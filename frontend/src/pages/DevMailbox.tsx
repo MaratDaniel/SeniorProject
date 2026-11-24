@@ -36,7 +36,7 @@ export function DevMailbox() {
       .catch((e) =>
         setError(
           isApiError(e) && e.status === 404
-            ? "The dev mailbox is only available when the backend runs with ADAL_ENV=dev."
+            ? "The dev mailbox is available in development when email delivery is off or limited to a test recipient."
             : e instanceof Error
               ? e.message
               : "The mailbox could not be loaded.",
@@ -55,7 +55,7 @@ export function DevMailbox() {
         <h1 className="headline">
           Dev <i>mailbox</i>
         </h1>
-        <p className="lede">Email is not delivered in development. Verification and reset links land here instead.</p>
+        <p className="lede">See queued messages, including verification and password reset links.</p>
         <div className="acts-row">
           <button className="btn second" type="button" onClick={load}>
             Refresh

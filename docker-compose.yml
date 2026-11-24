@@ -47,6 +47,8 @@ services:
     environment:
       <<: *api-env
       ADAL_SCHEDULER_ENABLED: "false"  # the worker service runs the scheduler
+      ADAL_MAIL_FROM: ${ADAL_MAIL_FROM:-}
+      ADAL_MAIL_TEST_RECIPIENT: ${ADAL_MAIL_TEST_RECIPIENT:-}
     volumes:
       - media:/app/media
     depends_on:
@@ -64,6 +66,21 @@ services:
         condition: service_completed_successfully
       redis:
         condition: service_healthy
+
+  mail:
+    profiles: [email]
+    build: ./backend
+    command: ["python", "-m", "app.mail_worker"]
+    environment:
+      ADAL_DATABASE_URL: postgresql+asyncpg://adal:${POSTGRES_PASSWORD}@db:5432/adal
+      ADAL_RESEND_API_KEY: ${ADAL_RESEND_API_KEY:-}
+      ADAL_MAIL_FROM: ${ADAL_MAIL_FROM:-}
+      ADAL_MAIL_TEST_RECIPIENT: ${ADAL_MAIL_TEST_RECIPIENT:-}
+      ADAL_RESEND_VERIFY_TEMPLATE: ${ADAL_RESEND_VERIFY_TEMPLATE:-}
+      ADAL_RESEND_RESET_TEMPLATE: ${ADAL_RESEND_RESET_TEMPLATE:-}
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
 
   web:
     build: ./frontend

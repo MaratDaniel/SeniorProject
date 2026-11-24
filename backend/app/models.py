@@ -284,6 +284,14 @@ class EmailOutbox(Base):
     """Outgoing email, written in the same transaction as the event that causes it."""
 
     __tablename__ = "email_outbox"
+    __table_args__ = (
+        Index(
+            "ix_email_outbox_pending_delivery",
+            "next_attempt_at",
+            "id",
+            postgresql_where=text("delivery_key IS NOT NULL AND sent_at IS NULL AND failed_at IS NULL"),
+        ),
+    )
 
     id: Mapped[int] = _id()
     to_address: Mapped[str] = mapped_column(String(320))
@@ -291,3 +299,11 @@ class EmailOutbox(Base):
     body: Mapped[str] = mapped_column(Text)
     created_at: Mapped[datetime] = _created()
     sent_at: Mapped[datetime | None]
+    template: Mapped[str | None] = mapped_column(String(64))
+    template_link: Mapped[str | None] = mapped_column(Text)
+    expires_at: Mapped[datetime | None]
+    delivery_key: Mapped[str | None] = mapped_column(String(32), unique=True)
+    next_attempt_at: Mapped[datetime | None]
+    attempts: Mapped[int] = mapped_column(server_default=text("0"))
+    failed_at: Mapped[datetime | None]
+    provider_id: Mapped[str | None] = mapped_column(String(64))

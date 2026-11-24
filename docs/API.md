@@ -107,7 +107,7 @@ type Transaction = {
 
 | Method and path | Auth | Body | Success | Error codes |
 |---|---|---|---|---|
-| `POST /api/auth/register` | none | `{email, password, role: "buyer"\|"seller"}` | `201 {user}`; sends a verification email | `email_taken` 409, `weak_password` 422, `rate_limited` 429 |
+| `POST /api/auth/register` | none | `{email, password, role: "buyer"\|"seller"}` | `201 {user}`; queues a verification email | `email_taken` 409, `weak_password` 422, `rate_limited` 429 |
 | `POST /api/auth/verify-email` | none | `{token}` | `200 {verified: true}` | `invalid_token` 400, `token_expired` 400 |
 | `POST /api/auth/resend-verification` | none | `{email}` | `202 {}` (always, no account enumeration) | `rate_limited` 429 |
 | `POST /api/auth/login` | none | `{email, password}` | `200 {status: "ok", access_token, user}` and the refresh cookie, **or** `200 {status: "mfa_required", mfa_ticket}` | `invalid_credentials` 401, `account_locked` 423 (`details.locked_until`), `rate_limited` 429 |

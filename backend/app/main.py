@@ -77,7 +77,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
 
     for module in (auth, listings, auctions, transactions, admin):
         app.include_router(module.router)
-    if settings.env == "dev":
+    if settings.dev_mailbox_enabled:
         app.include_router(dev.router)
     app.include_router(ws.router)
     app.mount("/media", StaticFiles(directory=media_dir), name="media")

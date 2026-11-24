@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-// The dev mailbox exists only when the backend runs with ADAL_ENV=dev. Checked once per page load.
+// Check once per page load whether the API exposes the development mailbox.
 let known: boolean | null = null;
 let pending: Promise<boolean> | null = null;
 

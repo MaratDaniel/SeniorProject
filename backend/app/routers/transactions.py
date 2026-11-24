@@ -98,12 +98,14 @@ async def confirm(
                     to=buyer.email,
                     subject=f"Purchase complete: {listing.title}",  # type: ignore[union-attr]
                     body=f"Your purchase of \"{listing.title}\" for {tx.amount:.2f} is complete. Reference {reference}. Nothing was charged in this version.\n",  # type: ignore[union-attr]
+                    now=now,
                 )
                 queue_email(
                     session,
                     to=seller.email,  # type: ignore[union-attr]
                     subject=f"Ready to deliver: {listing.title}",  # type: ignore[union-attr]
                     body=f"The buyer completed checkout for \"{listing.title}\". Reference {reference}. Delivery details are on the sale page.\n",  # type: ignore[union-attr]
+                    now=now,
                 )
     if error is not None:
         raise error

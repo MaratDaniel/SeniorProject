@@ -77,7 +77,7 @@ npm ci
 npm run dev                           # http://localhost:5173
 ```
 
-Email is not delivered in development: verification and reset links appear at http://localhost:5173/dev/mailbox. The demo accounts already have two-step sign-in; add each TOTP secret from `.demo-accounts.txt` to an authenticator app.
+By default, verification and reset links appear at http://localhost:5173/dev/mailbox. The demo accounts already have two-step sign-in. Add each TOTP secret from `.demo-accounts.txt` to an authenticator app.
 
 ## Run it with Docker
 
@@ -87,6 +87,21 @@ docker compose up --build
 ```
 
 Open http://localhost:8080. To add demo data and print the demo accounts: `docker compose run --rm api python -m app.cli seed-demo --accounts-file -`.
+
+## Test account email with Resend
+
+1. Set `ADAL_RESEND_API_KEY` and `ADAL_MAIL_TEST_RECIPIENT` in your local `.env`. Use a sending-only key and the email address you use to sign in to Resend. The default sender is `Adal <onboarding@resend.dev>`, and the worker only picks up messages addressed to your test recipient.
+2. Run `docker compose --profile email up --build`. Register with that email address and open the link from your inbox. Use **Forgot password** with the same account to test the reset link. The frontend address in `ADAL_FRONTEND_URL` must be reachable from the device that opens the email.
+
+The backend renders verification and reset emails from its own templates. A new Resend workspace only needs the sending key and the permitted test recipient. Verification links last 24 hours and reset links last one hour.
+
+### Deliver email to other users from a local instance
+
+1. Add a subdomain you control in Resend and publish the DNS records it provides. The sending subdomain does not need a website. See [Resend's domain setup guide](https://resend.com/docs/add-a-domain).
+2. Once Resend verifies it, set `ADAL_MAIL_FROM` to an address at that subdomain and clear `ADAL_MAIL_TEST_RECIPIENT` in `.env`. Run `docker compose --profile email up --build` to apply the settings. Adal hides the development mailbox while sending to unrestricted recipients.
+3. Set `ADAL_FRONTEND_URL` to the address recipients use to open Adal. `http://localhost:8080` works on the computer running the stack. For a private test on another device on the same network, use the host's reachable LAN address and have testers open that address in the browser. For a public deployment, use `ADAL_ENV=prod`, an HTTPS frontend URL, secure cookies, and a production database.
+
+The worker delivers signup verification, verification resends, password resets, auction wins and sale outcomes, and buyer and seller checkout confirmations. Account emails include local HTML and plain text. Auction and checkout notifications use plain text. Previously queued development-only notifications stay in the outbox and are not sent retroactively.
 
 ## Tests
 
@@ -156,6 +171,6 @@ Spring 2027, not started:
 Known gaps:
 - Rate limits are counted per process; move them to Redis before running several API processes.
 - Uploaded photos are checked by their first bytes but not re-encoded, so EXIF metadata is kept.
-- Email is queued in a table, not sent.
+- Email delivery is opt-in through the Resend worker. Delivery to arbitrary recipients requires a verified sending domain.
 - Base images are referenced by tag; pin them by digest before a public deployment.
 - No load test yet for NFR-3 and NFR-4 (Locust or k6).

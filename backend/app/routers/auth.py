@@ -12,7 +12,7 @@ from app.config import Settings
 from app.db import db_now
 from app.deps import CurrentUser, LimiterDep, SessionDep, SettingsDep, client_ip
 from app.errors import ApiError
-from app.mail import queue_email
+from app.mail import queue_account_email
 from app.models import EmailToken, RecoveryCode, RefreshToken, Role, TokenPurpose, User
 from app.schemas import (
     AuthOk,
@@ -147,9 +147,18 @@ async def _consume_email_token(session: AsyncSession, raw: str, purpose: TokenPu
     return token
 
 
-def _verification_email(settings: Settings, raw: str) -> tuple[str, str]:
+def _queue_verification_email(session: AsyncSession, settings: Settings, to: str, raw: str, now: datetime) -> None:
     link = f"{settings.frontend_url.rstrip('/')}/verify-email?token={raw}"
-    return "Confirm your email for Adal", f"Confirm your email address to start bidding and selling:\n\n{link}\n\nThe link works for 24 hours.\n"
+    queue_account_email(
+        session,
+        to=to,
+        subject="Confirm your email for Adal",
+        body=f"Confirm your email address to start bidding and selling:\n\n{link}\n\nThe link works for 24 hours.\n",
+        purpose=TokenPurpose.VERIFY_EMAIL,
+        link=link,
+        now=now,
+        ttl=VERIFY_TTL,
+    )
 
 
 async def _lock_user(session: AsyncSession, user_id: int) -> User | None:
@@ -181,8 +190,7 @@ async def register(body: RegisterIn, request: Request, session: SessionDep, sett
             await session.flush()
             now = await db_now(session)
             raw = await _new_email_token(session, user, TokenPurpose.VERIFY_EMAIL, VERIFY_TTL, now)
-            subject, text = _verification_email(settings, raw)
-            queue_email(session, to=email, subject=subject, body=text)
+            _queue_verification_email(session, settings, email, raw, now)
             audit.record(session, "auth.registered", actor_id=user.id, target_type="user", target_id=user.id, ip=ip, data={"role": body.role})
     except IntegrityError as exc:  # two sign-ups with one email at the same moment
         raise ApiError(409, "email_taken", "An account with this email already exists.") from exc
@@ -209,9 +217,9 @@ async def resend_verification(body: EmailIn, request: Request, session: SessionD
     async with session.begin():
         user = await session.scalar(select(User).where(User.email == email))
         if user is not None and user.email_verified_at is None:
-            raw = await _new_email_token(session, user, TokenPurpose.VERIFY_EMAIL, VERIFY_TTL, await db_now(session))
-            subject, text = _verification_email(settings, raw)
-            queue_email(session, to=email, subject=subject, body=text)
+            now = await db_now(session)
+            raw = await _new_email_token(session, user, TokenPurpose.VERIFY_EMAIL, VERIFY_TTL, now)
+            _queue_verification_email(session, settings, email, raw, now)
     return {}  # the same answer whether or not the account exists
 
 
@@ -439,13 +447,18 @@ async def forgot_password(body: EmailIn, request: Request, session: SessionDep, 
     async with session.begin():
         user = await session.scalar(select(User).where(User.email == email))
         if user is not None:
-            raw = await _new_email_token(session, user, TokenPurpose.RESET_PASSWORD, RESET_TTL, await db_now(session))
+            now = await db_now(session)
+            raw = await _new_email_token(session, user, TokenPurpose.RESET_PASSWORD, RESET_TTL, now)
             link = f"{settings.frontend_url.rstrip('/')}/reset-password?token={raw}"
-            queue_email(
+            queue_account_email(
                 session,
                 to=email,
                 subject="Reset your Adal password",
                 body=f"Choose a new password here:\n\n{link}\n\nThe link works for one hour. If you did not ask for this, ignore this email.\n",
+                purpose=TokenPurpose.RESET_PASSWORD,
+                link=link,
+                now=now,
+                ttl=RESET_TTL,
             )
             audit.record(session, "auth.reset_requested", actor_id=user.id, target_type="user", target_id=user.id, ip=client_ip(request))
     return {}

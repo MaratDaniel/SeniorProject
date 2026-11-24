@@ -218,12 +218,15 @@ async def close_auction(
                 f"Complete the purchase within {int(transaction_expiry.total_seconds() // 3600)} hours: "
                 f"{frontend_url}/checkout/{tx.id}\n"
             ),
+            now=now,
+            ttl=transaction_expiry,
         )
         queue_email(
             session,
             to=seller.email,
             subject=f"Sold: {listing.title}",
             body=f"\"{listing.title}\" sold at {outcome.price:.2f}. The buyer has been asked to complete checkout.\n",
+            now=now,
         )
         return [
             {
@@ -244,6 +247,7 @@ async def close_auction(
         to=seller.email,
         subject=f"No sale: {listing.title}",
         body=f"\"{listing.title}\" closed without a sale ({reason.replace('_', ' ')}).\n",
+        now=now,
     )
     return [
         {

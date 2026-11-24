@@ -3,6 +3,7 @@
 Secrets have no defaults on purpose: the app refuses to start without them.
 """
 
+from email.utils import parseaddr
 from functools import lru_cache
 from typing import Literal
 from urllib.parse import urlsplit
@@ -30,6 +31,10 @@ class Settings(BaseSettings):
     # Extra exact origins allowed for CORS and WebSockets. Empty means same-origin only.
     cors_origins: list[str] = []
     cookie_secure: bool = True
+
+    # The development mailbox shows private account links. Hide it during unrestricted delivery.
+    mail_from: str = ""
+    mail_test_recipient: str = ""
 
     media_dir: str = "media"
     max_upload_bytes: int = 5 * 1024 * 1024
@@ -77,6 +82,11 @@ class Settings(BaseSettings):
         if self.env == "dev":
             origins |= {"http://localhost:5173", "http://127.0.0.1:5173"}
         return frozenset(origins)
+
+    @property
+    def dev_mailbox_enabled(self) -> bool:
+        sender_domain = parseaddr(self.mail_from)[1].rpartition("@")[2].lower()
+        return self.env == "dev" and (not self.mail_from or sender_domain == "resend.dev" or bool(self.mail_test_recipient))
 
 
 @lru_cache
