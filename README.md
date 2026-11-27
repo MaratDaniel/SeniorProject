@@ -15,6 +15,7 @@ An online auction service where bidding stays correct when many people bid at on
 | `backend/`, `frontend/` | The working system: FastAPI back end and React front end. How to run it is below. |
 | `docs/SYSTEM_DESIGN.md` | How the system works, with the full database schema. |
 | `docs/API.md` | The API contract between the front end and the back end. |
+| `docs/DEMO.md` | How to show the three demos on the running system. |
 | `docker-compose.yml` | The whole stack with one command. |
 
 Fonts load from Google Fonts, so the deck needs internet for exact typography.
