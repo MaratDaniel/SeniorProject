@@ -249,6 +249,7 @@ main:has(> .pg-home) + .site-foot{margin-top:0}
 .pg-me .sec-head{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:20px}
 .pg-me .sec-head h2{margin-bottom:0}
 .pg-me .tbl{display:block;overflow-x:auto}
+.pg-me .tbl .num{padding-right:16px} /* an action column follows the amount here */
 .pg-me .mailbox{display:flex;flex-direction:column;gap:16px;padding-top:24px}
 .pg-me .mail-item{background:var(--card);border:1px solid var(--rule);border-radius:var(--r-surf);padding:20px 24px;display:flex;flex-direction:column;gap:12px}
 .pg-me .mail-head{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:baseline}

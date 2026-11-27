@@ -3,14 +3,14 @@
 from typing import Literal
 
 from fastapi import APIRouter, Query, Request
-from sqlalchemy import Select, func, or_, select
+from sqlalchemy import Select, case, func, or_, select
 
 from app import audit
 from app.deps import BrokerDep, CurrentUser, LimiterDep, OptionalUser, SessionDep, SessionmakerDep, StrategiesDep, client_ip, ensure_verified
 from app.engine.base import BidRejected
 from app.engine.service import place_bid
 from app.errors import ApiError, forbidden, not_found
-from app.models import Auction, AuctionStatus, Bid, Listing, Role
+from app.models import OPEN_STATUSES, Auction, AuctionStatus, Bid, Listing, Role
 from app.realtime.broker import channel_for
 from app.schemas import AuctionCardOut, AuctionDetailOut, AuctionPage, BidIn, BidOut, PlaceBidOut
 from app.views import cards, load_auction_detail
@@ -56,8 +56,10 @@ async def browse(
 
     total = await session.scalar(select(func.count()).select_from(stmt.order_by(None).subquery()))
     price = func.coalesce(Auction.current_price, Listing.starting_price)
+    still_open = Auction.status.in_(OPEN_STATUSES)
     order = {
-        "ending_soon": (Auction.ends_at.asc(), Auction.id.asc()),
+        # Auctions that can still be bid on come first, soonest end on top; ended ones follow, latest first.
+        "ending_soon": (still_open.desc(), case((still_open, Auction.ends_at)).asc().nulls_last(), Auction.ends_at.desc(), Auction.id.asc()),
         "newest": (Auction.created_at.desc(), Auction.id.desc()),
         "price_low": (price.asc(), Auction.id.asc()),
         "price_high": (price.desc(), Auction.id.desc()),

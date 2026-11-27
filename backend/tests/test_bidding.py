@@ -3,6 +3,7 @@
 import pytest
 from httpx import AsyncClient
 
+from app.scheduler import Scheduler
 from tests.conftest import make_auction, move_end
 
 pytestmark = pytest.mark.anyio
@@ -74,4 +75,12 @@ async def test_browse_filters_and_searches(client: AsyncClient, app, accounts) -
     page = (await client.get("/api/auctions", params={"q": "brass", "status": "live", "category": "antiques"})).json()
     assert page["total"] >= 1 and all(item["status"] == "active" for item in page["items"])
     assert (await client.get("/api/auctions", params={"q": "%_"})).status_code == 200  # wildcards are escaped
+
+    # The default order puts auctions that can still be bid on before ended ones.
+    ended = await make_auction(app, seller)
+    await move_end(app, ended, -1)
+    await Scheduler(app.state.sessionmaker, app.state.broker, app.state.strategies, app.state.settings).close_due()
+    statuses = [item["status"] for item in (await client.get("/api/auctions", params={"page_size": 48})).json()["items"]]
+    open_now = [status in ("scheduled", "active") for status in statuses]
+    assert open_now == sorted(open_now, reverse=True) and True in open_now, statuses
     assert (await client.get("/api/auctions", params={"status": "nonsense"})).status_code == 422
