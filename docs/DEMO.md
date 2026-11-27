@@ -47,5 +47,5 @@ How to show the three demos of the final presentation (slides "Demo 1" to "Demo 
 
 ## Evidence on screen
 
-- `cd backend && .venv/bin/pytest -q` runs the 50 tests in a few seconds.
+- `cd backend && .venv/bin/pytest -q` runs the 55 tests in a few seconds.
 - `.venv/bin/python -m tools.loadtest` prints the bid and delivery times for one busy auction in about ten seconds.

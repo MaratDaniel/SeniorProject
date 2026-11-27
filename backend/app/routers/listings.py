@@ -202,8 +202,9 @@ async def withdraw_listing(listing_id: int, request: Request, user: SellerUser, 
         if auction is not None and auction.bid_count > 0:
             raise ApiError(409, "has_bids", "A listing with bids cannot be withdrawn: a bid is a binding offer.")  # DR-8
         if auction is not None and auction.status in OPEN_STATUSES:
+            now = await db_now(session)  # read first: the status and its closing time must reach the database together
             auction.status = AuctionStatus.CANCELLED
-            auction.closed_at = await db_now(session)
+            auction.closed_at = now
             events.append({"type": "status_changed", "auction_id": auction.id, "status": AuctionStatus.CANCELLED.value})
         listing.status = ListingStatus.WITHDRAWN
         audit.record(session, "listing.withdrawn", actor_id=user.id, target_type="listing", target_id=listing.id, ip=client_ip(request))

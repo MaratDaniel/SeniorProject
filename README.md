@@ -44,7 +44,7 @@ backend/
     security/      passwords, tokens, TOTP, rate limiting
     models.py      schema; migrations/ holds the four Alembic migrations
     scheduler.py   opens, closes and expires on time (also runs as app/worker.py)
-  tests/           50 tests, including the concurrency and database-constraint tests
+  tests/           55 tests, including the concurrency and database-constraint tests
   tools/devdb.sh   local PostgreSQL without Docker
   tools/loadtest.py  load measurement for NFR-3 and NFR-4
 frontend/          React app built from the screens in design/
