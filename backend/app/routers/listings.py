@@ -17,7 +17,7 @@ from app.db import db_now
 from app.deps import BrokerDep, LimiterDep, OptionalUser, SellerUser, SessionDep, SettingsDep, StrategiesDep, client_ip
 from app.engine.service import lock_auction
 from app.errors import ApiError, field_error, forbidden, not_found
-from app.models import OPEN_STATUSES, Auction, AuctionStatus, Listing, ListingImage, ListingStatus, User
+from app.models import CATEGORIES, OPEN_STATUSES, Auction, AuctionStatus, Listing, ListingImage, ListingStatus, User
 from app.realtime.broker import channel_for
 from app.schemas import (
     AuctionCreateIn,
@@ -32,16 +32,6 @@ from app.views import load_auction_detail, load_listing, media_url
 
 router = APIRouter(prefix="/api", tags=["listings"])
 
-CATEGORIES: dict[str, str] = {
-    "art": "Art",
-    "antiques": "Antiques",
-    "collectibles": "Collectibles",
-    "books": "Books",
-    "electronics": "Electronics",
-    "fashion": "Fashion",
-    "home": "Home and garden",
-    "other": "Other",
-}
 MIN_DURATION = timedelta(minutes=5)
 MAX_DURATION = timedelta(days=30)
 START_SLACK = timedelta(minutes=1)
@@ -212,8 +202,9 @@ async def withdraw_listing(listing_id: int, request: Request, user: SellerUser, 
         if auction is not None and auction.bid_count > 0:
             raise ApiError(409, "has_bids", "A listing with bids cannot be withdrawn: a bid is a binding offer.")  # DR-8
         if auction is not None and auction.status in OPEN_STATUSES:
+            now = await db_now(session)  # read first: the status and its closing time must reach the database together
             auction.status = AuctionStatus.CANCELLED
-            auction.closed_at = await db_now(session)
+            auction.closed_at = now
             events.append({"type": "status_changed", "auction_id": auction.id, "status": AuctionStatus.CANCELLED.value})
         listing.status = ListingStatus.WITHDRAWN
         audit.record(session, "listing.withdrawn", actor_id=user.id, target_type="listing", target_id=listing.id, ip=client_ip(request))

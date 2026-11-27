@@ -4,6 +4,7 @@
     python -m app.cli create-admin   create an administrator account (prompts for the password)
     python -m app.cli seed-demo      demo users and auctions; credentials go to .demo-accounts.txt
                                      (--accounts-file PATH puts them elsewhere, - prints them)
+    python -m app.cli close-in ID    demo helper: make live auction ID end in 30 seconds (--seconds N)
 """
 
 import argparse
@@ -20,11 +21,13 @@ from pathlib import Path
 from cryptography.fernet import Fernet
 from sqlalchemy import select
 
-from app.config import get_settings
+from app import audit
+from app.config import Settings, get_settings
 from app.db import db_now, make_engine, make_sessionmaker
 from app.engine.registry import default_registry
-from app.engine.service import place_bid
+from app.engine.service import lock_auction, place_bid
 from app.models import Auction, AuctionStatus, Listing, ListingImage, Role, User
+from app.realtime.broker import RedisBroker, channel_for
 from app.security.passwords import hash_password
 from app.security.totp import SecretBox, new_secret
 
@@ -222,6 +225,40 @@ def seed_demo(args: argparse.Namespace) -> int:
     return 0
 
 
+async def _close_in(settings: Settings, auction_id: int, seconds: int) -> None:
+    """Move a live auction's end to a few seconds from now, so a demo can show the close without waiting."""
+    if settings.env != "dev":
+        raise SystemExit("close-in is a demo helper: it only runs with ADAL_ENV=dev.")
+    if seconds < 1:
+        raise SystemExit("--seconds must be at least 1.")
+    engine = make_engine(settings.database_url)
+    try:
+        async with make_sessionmaker(engine)() as session, session.begin():
+            auction = await lock_auction(session, auction_id)  # the same lock a bid and the close take
+            if auction is None or auction.status != AuctionStatus.ACTIVE:
+                raise SystemExit(f"Auction {auction_id} is not live.")
+            auction.ends_at = await db_now(session) + timedelta(seconds=seconds)
+            auction.original_ends_at = min(auction.original_ends_at, auction.ends_at)
+            audit.record(session, "auction.end_moved", target_type="auction", target_id=auction_id, data={"seconds": seconds})
+            ends_at = auction.ends_at
+    finally:
+        await engine.dispose()
+    if settings.redis_url:  # open auction pages follow the new end at once; without Redis they pick it up on reload
+        broker = RedisBroker(settings.redis_url)
+        await broker.start()
+        try:
+            event = {"type": "time_extended", "auction_id": auction_id, "ends_at": ends_at.isoformat().replace("+00:00", "Z")}
+            await broker.publish(channel_for(auction_id), event)
+        finally:
+            await broker.stop()
+
+
+def close_in(args: argparse.Namespace) -> int:
+    asyncio.run(_close_in(get_settings(), args.auction_id, args.seconds))
+    print(f"Auction {args.auction_id} now ends in {args.seconds} seconds. Reload its page to see the new end.")
+    return 0
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(prog="python -m app.cli")
     commands = parser.add_subparsers(dest="command", required=True)
@@ -236,6 +273,10 @@ def main(argv: list[str] | None = None) -> int:
         help="where to write the demo credentials (default: backend/.demo-accounts.txt); - prints them",
     )
     seed.set_defaults(func=seed_demo)
+    soon = commands.add_parser("close-in")
+    soon.add_argument("auction_id", type=int)
+    soon.add_argument("--seconds", type=int, default=30)
+    soon.set_defaults(func=close_in)
     args = parser.parse_args(argv)
     return args.func(args)
 

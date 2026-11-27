@@ -222,6 +222,6 @@ A card with the faint layered shadow. Top row: "Current price" and the Live pill
 
 ## Open decisions
 
-minimum increment; sniping extension length; whether a sealed bid can be revised before close. The demo item photos are AI-generated and are replaced by sellers' own listing photos.
+Whether a sealed bid can be revised before close (spring 2027). The minimum increment (a fixed amount set by the seller) and the sniping extension (2 minutes) are decided. The demo item photos are AI-generated and are replaced by sellers' own listing photos.
 
-Brandbook (7 boards, private): https://claude.ai/artifact/DdaGY8GP3Qj1Bvi1aNEJrX
+Brandbook (7 boards): sources in `brandbook/`.

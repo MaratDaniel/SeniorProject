@@ -6,6 +6,7 @@ per auction, and an audit log that rejects UPDATE and DELETE (trigger in the mig
 """
 
 import enum
+from collections.abc import Iterable
 from datetime import datetime
 from decimal import Decimal
 from typing import Any
@@ -16,6 +17,7 @@ from sqlalchemy import (
     CheckConstraint,
     DateTime,
     ForeignKey,
+    ForeignKeyConstraint,
     Identity,
     Index,
     Integer,
@@ -83,8 +85,24 @@ class TokenPurpose(enum.StrEnum):
     RESET_PASSWORD = "reset_password"
 
 
-def _one_of(column: str, values: type[enum.StrEnum]) -> str:
-    return f"{column} IN ({', '.join(repr(v.value) for v in values)})"
+# Listing categories, slug to display name. The slugs are also a CHECK constraint on listings.
+CATEGORIES: dict[str, str] = {
+    "art": "Art",
+    "antiques": "Antiques",
+    "collectibles": "Collectibles",
+    "furniture": "Furniture",
+    "books": "Books",
+    "electronics": "Electronics",
+    "fashion": "Fashion",
+    "home": "Home and garden",
+    "other": "Other",
+}
+# Every format the schema accepts. The engine registry decides which of them are switched on.
+AUCTION_FORMATS = ("english", "dutch", "sealed_first_price", "vickrey")
+
+
+def _one_of(column: str, values: Iterable[str]) -> str:
+    return f"{column} IN ({', '.join(repr(str(v)) for v in values)})"
 
 
 def _id() -> Mapped[int]:
@@ -104,6 +122,8 @@ class User(Base):
     __table_args__ = (
         CheckConstraint(_one_of("role", Role), name="role"),
         CheckConstraint("email = lower(email)", name="email_lowercase"),
+        CheckConstraint("failed_logins >= 0", name="failed_logins_non_negative"),
+        CheckConstraint("NOT mfa_enabled OR mfa_secret_enc IS NOT NULL", name="mfa_enabled_has_secret"),
     )
 
     id: Mapped[int] = _id()
@@ -161,6 +181,7 @@ class Listing(Base):
         CheckConstraint("reserve_price IS NULL OR reserve_price >= starting_price", name="reserve_not_below_start"),
         CheckConstraint(_one_of("status", ListingStatus), name="status"),
         CheckConstraint("currency IN ('USD', 'EUR', 'GBP', 'KZT')", name="currency"),
+        CheckConstraint(_one_of("category", CATEGORIES), name="category"),
     )
 
     id: Mapped[int] = _id()
@@ -196,6 +217,17 @@ class Auction(Base):
         CheckConstraint("min_increment > 0", name="min_increment_positive"),
         CheckConstraint(_one_of("status", AuctionStatus), name="status"),
         CheckConstraint("bid_count >= 0", name="bid_count_non_negative"),
+        CheckConstraint(_one_of("format", AUCTION_FORMATS), name="format"),
+        # State consistency: these hold in every row, so no code path can leave an auction half-closed.
+        CheckConstraint("ends_at >= original_ends_at", name="end_only_extends"),
+        CheckConstraint("(leader_id IS NULL) = (current_price IS NULL)", name="leader_with_price"),
+        CheckConstraint(
+            "(status = 'closed') = (winner_id IS NOT NULL) AND (winner_id IS NULL) = (final_price IS NULL)",
+            name="winner_only_when_closed",
+        ),
+        CheckConstraint(
+            "(status IN ('closed', 'no_sale', 'cancelled')) = (closed_at IS NOT NULL)", name="closed_at_when_final"
+        ),
         Index("ix_auctions_status_ends_at", "status", "ends_at"),
         Index("ix_auctions_status_starts_at", "status", "starts_at"),
     )
@@ -219,7 +251,17 @@ class Auction(Base):
 
 class Bid(Base):
     __tablename__ = "bids"
-    __table_args__ = (CheckConstraint("amount > 0", name="amount_positive"),)
+    __table_args__ = (
+        CheckConstraint("amount > 0", name="amount_positive"),
+        CheckConstraint("bidder_number > 0", name="bidder_number_positive"),
+        # bidder_number repeats auction_participants.number so bid history needs no join;
+        # this key makes it impossible for the copy to disagree with the participant row.
+        ForeignKeyConstraint(
+            ["auction_id", "bidder_id", "bidder_number"],
+            ["auction_participants.auction_id", "auction_participants.user_id", "auction_participants.number"],
+            name="fk_bids_participant",
+        ),
+    )
 
     id: Mapped[int] = _id()
     auction_id: Mapped[int] = _fk("auctions.id")
@@ -237,7 +279,10 @@ class AuctionParticipant(Base):
     """Bidders are shown by number, never by name. Numbers are per auction, in order of first bid."""
 
     __tablename__ = "auction_participants"
-    __table_args__ = (UniqueConstraint("auction_id", "number", name="uq_auction_participants_number"),)
+    __table_args__ = (
+        UniqueConstraint("auction_id", "number", name="uq_auction_participants_number"),
+        UniqueConstraint("auction_id", "user_id", "number", name="uq_auction_participants_identity"),  # target of fk_bids_participant
+    )
 
     auction_id: Mapped[int] = _fk("auctions.id", primary_key=True)
     user_id: Mapped[int] = _fk("users.id", primary_key=True)
@@ -252,6 +297,7 @@ class Transaction(Base):
         CheckConstraint(_one_of("status", TransactionStatus), name="status"),
         CheckConstraint("buyer_id <> seller_id", name="distinct_parties"),
         CheckConstraint("amount > 0", name="amount_positive"),
+        CheckConstraint("(status = 'completed') = (completed_at IS NOT NULL)", name="completed_at_when_completed"),
     )
 
     id: Mapped[int] = _id()

@@ -1,13 +1,11 @@
 # Product
 
-<!-- impeccable:product-schema 1 -->
-
 ## Platform
 
 web
 
 ## Stack
-Decided in the requirements document: React frontend, Django + Django REST Framework backend, Django Channels (WebSockets) for live updates, PostgreSQL with row-level locking, Docker for portability. The interface is responsive on desktop and mobile browsers.
+React frontend, FastAPI backend with WebSockets for live updates, PostgreSQL with row-level locking, Docker for portability. The requirements document proposed Django; the final report records the change. The interface is responsive on desktop and mobile browsers.
 
 ## Users
 Primary audience at launch: the general public, buying and selling in an open marketplace (confirmed by the team).
@@ -34,7 +32,7 @@ The seller picks the auction format per listing (English, Dutch, sealed first-pr
 - Stretch goals: tamper-evident bid ledger, reputation checks, large-scale load deployment.
 - Security targets: OWASP Top Ten (2021) items A01, A02, A03, A05, A07, A09; audit log entries cannot be edited through the application.
 - Reserve price is hidden from bidders; English auctions show only whether it is met.
-- Open decisions marked [TBD] in the document: minimum increment (fixed or percentage), sniping values, sealed-bid revision before close, email delivery of notifications.
+- Decided since the requirements document: the minimum increment is a fixed amount set by the seller; a bid in the last 2 minutes extends the close by 2 minutes; email is delivered through an outbox worker. Still open for spring: whether a sealed bid can be revised before the close.
 - Currency is chosen per listing by the seller; US dollars (USD) is the default. Other options: EUR, GBP, KZT. No conversion between currencies.
 
 ## Brand Commitments
@@ -43,7 +41,7 @@ The seller picks the auction format per listing (English, Dutch, sealed first-pr
 
 ## Evidence on Hand
 - Requirements and design document: Online_Auction_Service_Requirements_and_Design_v2.docx, with diagrams and a buyer-page wireframe.
-- A brandbook at https://claude.ai/artifact/TbaDcisGpKsF6WTLMWZeA1 (private) and the prior TuraLot_Brand_Book.pdf.
+- A brandbook (sources in `brandbook/`) and the prior TuraLot_Brand_Book.pdf.
 - No real users, testimonials, listings, photography or traffic data exist yet. Do not fabricate them.
 
 ## Product Principles

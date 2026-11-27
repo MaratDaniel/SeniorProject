@@ -5,21 +5,20 @@ An online auction service where bidding stays correct when many people bid at on
 | File | What it is |
 |---|---|
 | `Adal-presentation.html` | Final deck, one self-contained file (19 slides, ~6 min). Open in a browser; arrows / space / click to move. |
-| `Adal-report.html` | End-of-term report, one self-contained file. |
+| `Adal-final-report.docx` | Final report, fall 2026. |
+| `Adal-report.html` | Earlier draft of the report with the video plan, one self-contained file. |
 | `design/` | Web screens for the frontend team: landing, browse, auction page with bidding states, sign-in and two-step, create listing, checkout. Open `design/index.html`. See `design/README.md`. |
-| `brandbook/` | Brandbook sources (design canvas). Live copy: https://claude.ai/artifact/DdaGY8GP3Qj1Bvi1aNEJrX |
+| `brandbook/` | Brandbook sources (design canvas). |
 | `DESIGN.md` | Design tokens and rules. |
 | `PRODUCT.md` | Product context. |
 | `Online_Auction_Service_Requirements_and_Design_v2.docx` | Requirements and design (source of truth). |
 | `backend/`, `frontend/` | The working system: FastAPI back end and React front end. How to run it is below. |
 | `docs/SYSTEM_DESIGN.md` | How the system works, with the full database schema. |
 | `docs/API.md` | The API contract between the front end and the back end. |
+| `docs/DEMO.md` | How to show the three demos on the running system. |
 | `docker-compose.yml` | The whole stack with one command. |
 
 Fonts load from Google Fonts, so the deck needs internet for exact typography.
-
-## Still to fill in
-Usability and design scores, two Security cells (sector slide); method name, chat tool, sync time, team lead; course calendar dates; real test numbers.
 
 ## Stack
 
@@ -32,7 +31,7 @@ Usability and design scores, two Security cells (sector slide); method name, cha
 | Accounts | Argon2id passwords, short-lived JWT access tokens, rotating refresh token in an httpOnly cookie, TOTP (pyotp) at sign-in and again at checkout |
 | Packaging | Docker Compose: PostgreSQL, Redis, migrations, API, scheduler worker, nginx |
 
-> The design document v2 proposed Django + DRF + Channels. The backend here is FastAPI; the database design, locking, strategy pattern and WebSocket events are the same. Open issue #1 in the document (the stack) still needs the advisor's sign-off.
+> The design document v2 proposed Django + DRF + Channels. The backend here is FastAPI; the database design, locking, strategy pattern and WebSocket events are the same. The final report records the change.
 
 ## Layout
 
@@ -43,10 +42,11 @@ backend/
     realtime/      WebSocket endpoint and the event broker
     routers/       auth, listings, auctions, transactions, admin, dev
     security/      passwords, tokens, TOTP, rate limiting
-    models.py      schema; migrations/ holds the Alembic migration
+    models.py      schema; migrations/ holds the four Alembic migrations
     scheduler.py   opens, closes and expires on time (also runs as app/worker.py)
-  tests/           38 tests, including the concurrency tests
+  tests/           55 tests, including the concurrency and database-constraint tests
   tools/devdb.sh   local PostgreSQL without Docker
+  tools/loadtest.py  load measurement for NFR-3 and NFR-4
 frontend/          React app built from the screens in design/
 docs/API.md        the contract between front end and back end
 .github/workflows/ CI: tests, front-end build, Docker smoke test, dependency scan
@@ -78,6 +78,8 @@ npm run dev                           # http://localhost:5173
 ```
 
 By default, verification and reset links appear at http://localhost:5173/dev/mailbox. The demo accounts already have two-step sign-in. Add each TOTP secret from `.demo-accounts.txt` to an authenticator app.
+
+To show an auction closing without waiting for its end, run `.venv/bin/python -m app.cli close-in 3 --seconds 30` in `backend/`: live auction 3 then ends in 30 seconds. It works only with `ADAL_ENV=dev`. Open pages pick up the new end on reload.
 
 ## Run it with Docker
 
@@ -118,6 +120,27 @@ The suite builds a fresh database with the real migration. `tests/test_concurren
 - The close running 10 times at once creates exactly one transaction.
 - Bids racing the close: none is stored after the close.
 
+`tests/test_schema_integrity.py` checks that the database itself refuses a broken row. It writes nine invalid rows with plain SQL, for example a winner on an open auction or a bid under another bidder's number, and PostgreSQL rejects each one.
+
+## Load measurement
+
+```bash
+cd backend
+tools/devdb.sh start
+.venv/bin/python -m tools.loadtest                                              # one busy auction
+.venv/bin/python -m tools.loadtest --auctions 20 --bidders 5 --pause 1 --bids-each 15   # the target load
+```
+
+The tool starts its own API process on the test database, opens the watchers' WebSockets and lets the bidders compete. It fails unless every watcher received every accepted bid. First results, from one API process on a laptop (Apple M5 Pro), 27 November 2026:
+
+| Load | Bid time, p95 (target 300 ms) | Delivery time, p95 (target 1 s) | Lost events |
+|---|---|---|---|
+| 1 auction, 200 watchers, 25 bidders with no pause | 67 ms | 10 ms | 0 of 6,200 |
+| 20 auctions, 4,000 watchers, 100 bidders, about one bid a second each | 47 ms | 15 ms | 0 of 270,000 |
+| 20 auctions, 4,000 watchers, 500 bidders, a bid about every 3 s each | 1.7 s | 35 ms | 0 of 469,600 |
+
+Both targets hold at the target load up to about 80 bids a second. Near 100 bids a second one API process saturates and bids start to queue; `docs/SYSTEM_DESIGN.md` has the details.
+
 ## CI
 
 GitHub Actions runs on every push to `main` and on every pull request:
@@ -137,7 +160,7 @@ osv-scanner scan source --no-resolve -L backend/requirements.txt -L backend/requ
 - **One lock per auction.** A bid locks the auction row (`SELECT … FOR UPDATE`), re-reads it, checks it with the database clock and commits. Other bids on the same auction wait; other auctions are not blocked.
 - **The server clock decides.** `clock_timestamp()` from PostgreSQL is read after the lock is held. A bid counts only if it is strictly before the end (FR-20).
 - **The close takes the same lock.** It is idempotent and re-checks the state, so a bid and the close cannot interleave. Running it twice is safe (UC-7).
-- **The database enforces the invariants.** There is one auction per listing, one transaction per auction (unique keys) and one bidder number per bidder. Money is `numeric(12,2)`, never a float.
+- **The database enforces the invariants.** There is one auction per listing, one transaction per auction (unique keys) and one bidder number per bidder. CHECK constraints keep an auction from being half-closed: a winner and a final price exist exactly when it is closed, and the end only moves later. Money is `numeric(12,2)`, never a float.
 - **Events go out after the commit.** Watchers never see a bid that was rolled back.
 - **Strategy pattern.** Each format is one class (`engine/english.py`). Adding Dutch or sealed formats means registering a strategy in `engine/registry.py`; locking stays in `engine/service.py`.
 
@@ -173,4 +196,4 @@ Known gaps:
 - Uploaded photos are checked by their first bytes but not re-encoded, so EXIF metadata is kept.
 - Email delivery is opt-in through the Resend worker. Delivery to arbitrary recipients requires a verified sending domain.
 - Base images are referenced by tag; pin them by digest before a public deployment.
-- No load test yet for NFR-3 and NFR-4 (Locust or k6).
+- NFR-3 and NFR-4 are measured on a laptop only. One API process saturates near 100 bids a second with 4,000 watchers; the run on server hardware with two API processes is part of the spring evaluation.

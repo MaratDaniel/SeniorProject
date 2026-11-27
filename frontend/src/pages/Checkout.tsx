@@ -19,6 +19,20 @@ const LABELS: Record<keyof Delivery, string> = {
   postal_code: "Postal code",
 };
 
+function TwoStepPrompt({ txId }: { txId: number }) {
+  return (
+    <>
+      <p className="measure">
+        Finishing a purchase needs a fresh code from an authenticator app, and this account does not have two-step
+        sign-in yet. Set it up, then come back to this page.
+      </p>
+      <Link className="btn" style={{ alignSelf: "flex-start" }} to={`/account/security?next=${encodeURIComponent(`/checkout/${txId}`)}`}>
+        Set up two-step sign-in
+      </Link>
+    </>
+  );
+}
+
 function Flow({ step }: { step: Step }) {
   const order: Step[] = ["delivery", "confirm", "done"];
   const at = order.indexOf(step);
@@ -267,7 +281,15 @@ function CheckoutPage() {
         <div>
           {error ? <ErrorBanner>{error}</ErrorBanner> : null}
 
-          {step === "delivery" ? (
+          {/* Asked before the delivery form, so nothing typed is lost on the way to the setup page. */}
+          {step === "delivery" && user && !user.mfa_enabled ? (
+            <section className="step enter" aria-labelledby="t0">
+              <h2 id="t0">Set up two-step sign-in first</h2>
+              <TwoStepPrompt txId={tx.id} />
+            </section>
+          ) : null}
+
+          {step === "delivery" && !(user && !user.mfa_enabled) ? (
             <section className="step enter" aria-labelledby="t1">
               <h2 id="t1">Delivery and payment</h2>
               <p className="note">Confirm by {dateLong(tx.expires_at)}, or the purchase expires.</p>
@@ -328,19 +350,7 @@ function CheckoutPage() {
             <section className="step enter" aria-labelledby="t2">
               <h2 id="t2">Confirm with a fresh code</h2>
               {user && !user.mfa_enabled ? (
-                <>
-                  <p className="measure">
-                    Finishing a purchase needs a fresh code from an authenticator app, and this account does not have
-                    two-step sign-in yet. Set it up, then come back to this page.
-                  </p>
-                  <Link
-                    className="btn"
-                    style={{ alignSelf: "flex-start" }}
-                    to={`/account/security?next=${encodeURIComponent(`/checkout/${tx.id}`)}`}
-                  >
-                    Set up two-step sign-in
-                  </Link>
-                </>
+                <TwoStepPrompt txId={tx.id} />
               ) : (
                 <>
                   <p className="measure">
