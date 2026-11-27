@@ -78,7 +78,7 @@ In local development the same code runs as one process: the scheduler runs insid
 | `app/security/` | Password hashing, tokens, TOTP and recovery codes, rate limiter |
 | `app/scheduler.py`, `app/worker.py` | The periodic jobs and their standalone process |
 | `app/audit.py`, `app/mail.py` | Audit entries and the email outbox, written inside the caller's transaction |
-| `migrations/` | Alembic migration that creates the schema and the audit trigger |
+| `migrations/` | Alembic migrations: the schema, the audit trigger and the integrity constraints |
 
 ## 3. Request lifecycle
 
@@ -210,6 +210,12 @@ In both cases it writes the audit entry and queues the emails.
 | At most one sale per auction, even if the close runs twice in parallel | `UNIQUE (transactions.auction_id)` plus the row lock |
 | One number per bidder per auction, numbers never reused | `PRIMARY KEY (auction_id, user_id)`, `UNIQUE (auction_id, number)`, assigned under the row lock |
 | Valid statuses and schedules | `CHECK` constraints on every status column, `ends_at > starts_at`, positive prices and increments |
+| Only known categories, currencies and formats | `CHECK` constraints on `listings.category`, `listings.currency` and `auctions.format` |
+| An auction is never half-closed | `CHECK` constraints: a winner and a final price exist exactly when the status is `closed`; a final status always has `closed_at`; a current price always has a leader |
+| Sniping protection only moves the end later | `CHECK (ends_at >= original_ends_at)` |
+| The bidder number on a bid is that bidder's own number | Composite `FOREIGN KEY (auction_id, bidder_id, bidder_number)` to `auction_participants` |
+| A completed sale has a completion time | `CHECK ((status = 'completed') = (completed_at IS NOT NULL))` |
+| Two-step sign-in is never on without a secret | `CHECK (NOT mfa_enabled OR mfa_secret_enc IS NOT NULL)` |
 | Reserve never below the starting price | `CHECK (reserve_price IS NULL OR reserve_price >= starting_price)` |
 | A buyer is never the seller of the same sale | `CHECK (buyer_id <> seller_id)` |
 | Exact money | `numeric(12,2)` everywhere; Python `Decimal`; strings in JSON |
@@ -232,6 +238,20 @@ The design document compares three approaches: row locks, optimistic versioning 
 - 25 rising bids at once → every accepted bid stored, applied in order, final price = highest accepted;
 - 10 simultaneous closes → exactly one transaction;
 - bids racing the close → none stored after the close.
+
+`backend/tests/test_schema_integrity.py` writes around the application with plain SQL, the way a bug or a manual fix would. It tries nine rows that break an invariant (an unknown category, a winner on an open auction, a bid under another bidder's number and so on) and PostgreSQL refuses each one.
+
+### Load measurement
+
+`python -m tools.loadtest` (from `backend/`) starts its own API process on the test database, opens WebSocket watchers and lets bidders compete at the same time. It fails unless every watcher received every accepted bid and every stored result matches. First results, from one API process and PostgreSQL 16 on a laptop (Apple M5 Pro), 27 November 2026:
+
+| Load | Bid time, p95 (NFR-4: 300 ms) | Delivery time, p95 (NFR-3: 1 s) | Lost events |
+|---|---|---|---|
+| 1 auction, 200 watchers, 25 bidders with no pause (about 490 requests/s) | 67 ms | 10 ms | 0 of 6,200 |
+| 20 auctions, 4,000 watchers, 100 bidders each bidding about once a second (about 78 requests/s) | 47 ms | 15 ms | 0 of 270,000 |
+| 20 auctions, 4,000 watchers, 500 bidders each bidding about every 3 s (about 107 requests/s) | 1.7 s | 35 ms | 0 of 469,600 |
+
+Bid time is request to response for `POST /bids`. Delivery time runs from the database accepting a bid to a watcher receiving it. Both targets hold at the target load of the requirements (200 watchers on each of 20 auctions) up to about 80 bids a second. Near 100 bids a second with 4,000 watchers a single API process saturates: delivery stays fast, but bids start to queue. The API holds no state, so the next step is a second API process behind nginx; that and a run on server hardware are part of the spring evaluation.
 
 ## 6. Live updates
 
@@ -360,7 +380,7 @@ PostgreSQL 16 or later.
 - **Time and money.** Every timestamp is `timestamptz` and the session time zone is UTC. All money is `numeric(12,2)`.
 - **Constraint names** follow `pk_<table>`, `fk_<table>_<column>_<referred table>`, `uq_<table>_<columns>`, `ck_<table>_<name>` and `ix_<table>_<columns>`.
 
-The schema is created by the Alembic migration `backend/migrations/versions/0001_initial_schema.py`; upgrade and downgrade are both tested.
+The schema has 12 tables, 25 CHECK constraints and 17 foreign keys. It is created by four Alembic migrations in `backend/migrations/versions/`: `0001` the initial schema and the audit trigger, `0002` the listing currency, `0003` email delivery, `0004` the integrity constraints. The test suite builds its database with them, and the whole chain has been run down to an empty database and back up.
 
 ### Entity relationships
 
@@ -401,6 +421,7 @@ erDiagram
         text description
         varchar category
         numeric starting_price
+        varchar currency "USD, EUR, GBP or KZT"
         numeric reserve_price "hidden from bidders"
         varchar status "active, withdrawn"
         timestamptz created_at
@@ -439,7 +460,7 @@ erDiagram
         bigint bidder_id FK
         numeric amount
         timestamptz placed_at "database clock"
-        int bidder_number
+        int bidder_number "FK with auction_id and bidder_id"
     }
     auction_participants {
         bigint auction_id PK, FK
@@ -514,11 +535,11 @@ erDiagram
 | password_hash | varchar(255) | no | | Argon2id |
 | role | varchar(10) | no | | `CHECK (role IN ('buyer','seller','admin'))`. Sign-up offers buyer or seller only |
 | email_verified_at | timestamptz | yes | | Null until the link is opened; bidding and selling need it |
-| mfa_enabled | boolean | no | false | Mandatory for sellers (to sell) and admins |
+| mfa_enabled | boolean | no | false | Mandatory for sellers (to sell) and admins. `CHECK (NOT mfa_enabled OR mfa_secret_enc IS NOT NULL)` |
 | mfa_secret_enc | bytea | yes | | Active TOTP secret, Fernet-encrypted |
 | mfa_pending_secret_enc | bytea | yes | | Secret shown during setup, until the first code confirms it |
 | mfa_last_step | bigint | yes | | Last accepted 30 s step; only newer steps are accepted |
-| failed_logins | integer | no | 0 | Reset on success; 5 locks the account |
+| failed_logins | integer | no | 0 | `CHECK (failed_logins >= 0)`. Reset on success; 5 locks the account |
 | locked_until | timestamptz | yes | | |
 | created_at | timestamptz | no | now() | |
 
@@ -563,9 +584,10 @@ erDiagram
 | seller_id | bigint | no | | FK → users; indexed |
 | title | varchar(80) | no | | 3 to 80 characters |
 | description | text | no | '' | At most 4,000 characters (API) |
-| category | varchar(32) | no | | One of the fixed category slugs; indexed |
+| category | varchar(32) | no | | `CHECK (category IN (…))`: one of the nine category slugs; indexed |
 | starting_price | numeric(12,2) | no | | `CHECK (starting_price > 0)` |
 | reserve_price | numeric(12,2) | yes | | `CHECK (reserve_price IS NULL OR reserve_price >= starting_price)`; never sent to bidders |
+| currency | varchar(3) | no | 'USD' | `CHECK (currency IN ('USD','EUR','GBP','KZT'))`; every amount of the listing, its bids and its sale is in this currency |
 | status | varchar(12) | no | 'active' | `CHECK (status IN ('active','withdrawn'))` |
 | created_at | timestamptz | no | now() | |
 | updated_at | timestamptz | no | now() | Updated by the ORM on change |
@@ -589,18 +611,18 @@ erDiagram
 |---|---|---|---|---|
 | id | bigint identity | no | | PK |
 | listing_id | bigint | no | | FK → listings; **unique**: one auction per listing |
-| format | varchar(24) | no | | Strategy name; only `english` is registered in the MVP |
+| format | varchar(24) | no | | `CHECK (format IN ('english','dutch','sealed_first_price','vickrey'))`; only `english` is registered in the MVP |
 | status | varchar(12) | no | 'scheduled' | `CHECK (status IN ('scheduled','active','closed','no_sale','cancelled'))` |
 | starts_at | timestamptz | no | | |
-| ends_at | timestamptz | no | | `CHECK (ends_at > starts_at)`; moved later by sniping protection |
+| ends_at | timestamptz | no | | `CHECK (ends_at > starts_at)` and `CHECK (ends_at >= original_ends_at)`; moved later by sniping protection, never earlier |
 | original_ends_at | timestamptz | no | | The end the seller set, kept for reporting |
 | min_increment | numeric(12,2) | no | | `CHECK (min_increment > 0)`; fixed amount chosen by the seller |
 | current_price | numeric(12,2) | yes | | Null until the first bid |
-| leader_id | bigint | yes | | FK → users; the current highest bidder |
+| leader_id | bigint | yes | | FK → users; the current highest bidder. `CHECK ((leader_id IS NULL) = (current_price IS NULL))` |
 | bid_count | integer | no | 0 | `CHECK (bid_count >= 0)`; doubles as the version clients use to order events |
-| winner_id | bigint | yes | | FK → users; set when closed with a sale |
-| final_price | numeric(12,2) | yes | | |
-| closed_at | timestamptz | yes | | Set for closed, no_sale and cancelled |
+| winner_id | bigint | yes | | FK → users. `CHECK`: set exactly when the status is `closed` |
+| final_price | numeric(12,2) | yes | | `CHECK`: set exactly when there is a winner |
+| closed_at | timestamptz | yes | | `CHECK`: set exactly for closed, no_sale and cancelled |
 | created_at | timestamptz | no | now() | |
 
 Indexes: `ix_auctions_status_ends_at (status, ends_at)` for the close query and "ending soon", `ix_auctions_status_starts_at (status, starts_at)` for opening.
@@ -614,7 +636,7 @@ Indexes: `ix_auctions_status_ends_at (status, ends_at)` for the close query and 
 | bidder_id | bigint | no | | FK → users; indexed (for "my bids") |
 | amount | numeric(12,2) | no | | `CHECK (amount > 0)` |
 | placed_at | timestamptz | no | | Database clock read under the lock |
-| bidder_number | integer | no | | Copied from auction_participants for cheap history reads |
+| bidder_number | integer | no | | `CHECK (bidder_number > 0)`. Repeats auction_participants.number so bid history needs no join; `fk_bids_participant (auction_id, bidder_id, bidder_number)` → auction_participants keeps the copy equal to the participant's number |
 
 Index: `ix_bids_auction_ranking (auction_id, amount DESC, placed_at, id)`, the exact FR-19 ranking order, used by the close.
 
@@ -626,7 +648,7 @@ Bids are immutable: a bid is a binding offer (DR-8). There is no update path in 
 |---|---|---|---|---|
 | auction_id | bigint | no | | PK part; FK → auctions |
 | user_id | bigint | no | | PK part; FK → users |
-| number | integer | no | | `UNIQUE (auction_id, number)`; bidders are shown as "Bidder 3", never by name |
+| number | integer | no | | `UNIQUE (auction_id, number)`; bidders are shown as "Bidder 3", never by name. `UNIQUE (auction_id, user_id, number)` is the target of `fk_bids_participant` |
 
 #### transactions
 
@@ -640,7 +662,7 @@ Bids are immutable: a bid is a binding offer (DR-8). There is no update path in 
 | status | varchar(12) | no | 'pending' | `CHECK (status IN ('pending','completed','expired'))` |
 | created_at | timestamptz | no | | The close time (database clock) |
 | expires_at | timestamptz | no | | `created_at + 48 h` |
-| completed_at | timestamptz | yes | | |
+| completed_at | timestamptz | yes | | `CHECK`: set exactly when the status is `completed` |
 | payment_ref | varchar(40) | yes | | `SIM-…`; payment is simulated |
 | delivery | jsonb | yes | | `{full_name, address, city, postal_code}` given at checkout |
 
@@ -772,7 +794,7 @@ CI (GitHub Actions, `.github/workflows/`) runs on every push to `main` and every
 | Rate limits are counted per process | Move the counters to Redis before running several API processes |
 | Photos are type-checked but not re-encoded (metadata kept) | Re-encode on upload and strip EXIF |
 | The Resend test sender is limited to one configured recipient | Verify a sending domain before clearing the test recipient |
-| NFR-3 and NFR-4 are not measured yet | Locust or k6 load test: 200 watchers × 20 auctions, bid latency at p95 |
+| NFR-3 and NFR-4 are measured on a laptop only; one API process saturates near 100 bids a second with 4,000 watchers (section 5) | Run `tools/loadtest.py` on server hardware with two API processes behind nginx and Redis |
 | Spring formats, notifications, admin dashboard, flagging | New strategies in `engine/`, new tables for notifications and flags |
 | Search uses `ILIKE` | `pg_trgm` index or full-text search when the catalogue grows |
 | Bids and the audit log grow forever | Monthly partitions and archiving once volume requires it |
