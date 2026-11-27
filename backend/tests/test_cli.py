@@ -1,10 +1,15 @@
-"""The developer CLI. These tests replace the seeding itself, so they never touch a database."""
+"""The developer CLI. The seed-demo tests replace the seeding itself, so they never touch a database."""
 
+from datetime import timedelta
 from pathlib import Path
 
 import pytest
+from sqlalchemy import select
 
 from app import cli
+from app.db import db_now
+from app.models import Auction, AuditLog
+from tests.conftest import make_auction
 
 ACCOUNT_LINE = "buyer  buyer1@example.com     password: pw   TOTP secret: SECRET"
 
@@ -43,3 +48,20 @@ def test_seed_demo_prints_the_accounts_for_a_dash(monkeypatch: pytest.MonkeyPatc
 
     assert cli.main(["seed-demo", "--accounts-file", "-"]) == 0
     assert ACCOUNT_LINE in capsys.readouterr().out
+
+
+@pytest.mark.anyio
+async def test_close_in_moves_a_live_auction_to_its_end_in_development_only(app, settings, accounts) -> None:  # type: ignore[no-untyped-def]
+    auction_id = await make_auction(app, await accounts("seller"), ends_in=timedelta(hours=1))
+
+    with pytest.raises(SystemExit, match="ADAL_ENV=dev"):
+        await cli._close_in(settings, auction_id, 30)  # the test settings are not a development environment
+
+    await cli._close_in(settings.model_copy(update={"env": "dev"}), auction_id, 30)
+
+    async with app.state.sessionmaker() as session:
+        auction = await session.get(Auction, auction_id)
+        now = await db_now(session)
+        logged = await session.scalar(select(AuditLog.id).where(AuditLog.action == "auction.end_moved", AuditLog.target_id == auction_id))
+    assert timedelta(seconds=25) < auction.ends_at - now <= timedelta(seconds=30)
+    assert auction.original_ends_at == auction.ends_at and logged is not None

@@ -74,6 +74,7 @@ async def _bidder_number(session: AsyncSession, auction_id: int, user_id: int) -
     )
     number = int(highest or 0) + 1
     session.add(AuctionParticipant(auction_id=auction_id, user_id=user_id, number=number))
+    await session.flush()  # the bid row references this participant (fk_bids_participant), so it must exist first
     return number
 
 

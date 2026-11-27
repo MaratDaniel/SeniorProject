@@ -176,8 +176,10 @@ async def move_end(app: FastAPI, auction_id: int, seconds_from_now: float) -> No
     async with app.state.sessionmaker() as session, session.begin():
         await session.execute(
             text(
-                "UPDATE auctions SET ends_at = clock_timestamp() + make_interval(secs => :s), "
-                "starts_at = LEAST(starts_at, clock_timestamp() + make_interval(secs => :s) - interval '1 second') WHERE id = :id"
+                # One reading of the clock for all three columns, so ends_at can never fall before original_ends_at.
+                "UPDATE auctions SET ends_at = x.t, original_ends_at = LEAST(original_ends_at, x.t), "
+                "starts_at = LEAST(starts_at, x.t - interval '1 second') "
+                "FROM (SELECT clock_timestamp() + make_interval(secs => :s) AS t) AS x WHERE id = :id"
             ),
             {"s": seconds_from_now, "id": auction_id},
         )

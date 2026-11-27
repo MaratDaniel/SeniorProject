@@ -17,7 +17,7 @@ from app.db import db_now
 from app.deps import BrokerDep, LimiterDep, OptionalUser, SellerUser, SessionDep, SettingsDep, StrategiesDep, client_ip
 from app.engine.service import lock_auction
 from app.errors import ApiError, field_error, forbidden, not_found
-from app.models import OPEN_STATUSES, Auction, AuctionStatus, Listing, ListingImage, ListingStatus, User
+from app.models import CATEGORIES, OPEN_STATUSES, Auction, AuctionStatus, Listing, ListingImage, ListingStatus, User
 from app.realtime.broker import channel_for
 from app.schemas import (
     AuctionCreateIn,
@@ -32,16 +32,6 @@ from app.views import load_auction_detail, load_listing, media_url
 
 router = APIRouter(prefix="/api", tags=["listings"])
 
-CATEGORIES: dict[str, str] = {
-    "art": "Art",
-    "antiques": "Antiques",
-    "collectibles": "Collectibles",
-    "books": "Books",
-    "electronics": "Electronics",
-    "fashion": "Fashion",
-    "home": "Home and garden",
-    "other": "Other",
-}
 MIN_DURATION = timedelta(minutes=5)
 MAX_DURATION = timedelta(days=30)
 START_SLACK = timedelta(minutes=1)
